@@ -2,6 +2,7 @@
 import { jsx, keyframes } from '@emotion/react'
 import styled from '@emotion/styled/macro'
 import * as colors from './styles/colors'
+import { Input } from './input'
 
 import { FaSpinner } from 'react-icons/fa'
 
@@ -83,4 +84,4 @@ function FullPageErrorFallback({ error }) {
   )
 }
 
-export { FullPageErrorFallback, CircleButton, Spinner, FullPageSpinner }
+export { FullPageErrorFallback, CircleButton, Spinner, FullPageSpinner, Input }

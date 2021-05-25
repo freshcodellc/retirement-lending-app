@@ -14,6 +14,7 @@
   },
    "scripts": {
      "start-client": "yarn workspace client start & yarn workspace @solera/ui start",
+     "start-admin": "yarn workspace admin start & yarn workspace @solera/ui start",
      "start-ui": "yarn workspace @solera/ui start",
      "start": "npx concurrently --raw `yarn start-client` `yarn start-ui`"
    }

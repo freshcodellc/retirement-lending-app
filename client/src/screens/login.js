@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/auth-context'
 import { useAsync } from '../utils/hooks'
-import { Input } from '@solera/ui'
+import { Button, Input, TextLink } from '@solera/ui'
 
 function LoginForm({ onSubmit }) {
   const { isLoading, isError, error, run } = useAsync();
@@ -20,16 +21,26 @@ function LoginForm({ onSubmit }) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(d => submitForm(d))}
-      css={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "stretch",
-      }}
-    >
-      <div>
-        <label htmlFor="password">Password</label>
+    <div css={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      maxWidth: "600px",
+      width: "100%"
+    }}>
+      <h1>Log in</h1>
+      <form
+        onSubmit={handleSubmit(d => submitForm(d))}
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+          width: "100%",
+          "& div": {
+            marginTop: "65px"
+          }
+        }}
+      >
         <Input id="email"
           label="Email"
           name="email"
@@ -40,12 +51,23 @@ function LoginForm({ onSubmit }) {
           name="password"
           type="password"
           {...register("password")} />
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-      {isError ? <div>An error happened</div> : null}
-    </form>
+        <div css={{
+          marginTop: "75px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }}>
+          <Button type="submit">Submit</Button>
+          <Link to="forgot-password" css={{
+            marginTop: '40px'
+          }}>
+            <TextLink>Forgot your password?</TextLink>
+          </Link>
+        </div>
+        {isError ? <div>An error happened</div> : null}
+      </form>
+
+    </div>
   );
 }
 
@@ -55,7 +77,7 @@ function LoginScreen() {
     <div
       css={{
         height: "100%",
-        display: "grid",
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}

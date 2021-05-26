@@ -1,6 +1,8 @@
 import * as React from "react";
+import { Global, css } from "@emotion/react";
 import { useAuth } from "./context/auth-context";
-import { FullPageSpinner } from "@solera/ui";
+import { FullPageSpinner, colors } from "@solera/ui";
+import normalize from "normalize.css";
 
 const AuthenticatedApp = React.lazy(() =>
   import(/* webpackPrefetch: true */ "./authenticated-app")
@@ -11,6 +13,15 @@ function App() {
   const { user } = useAuth();
   return (
     <React.Suspense fallback={<FullPageSpinner />}>
+      <Global
+        styles={css`
+          ${normalize}
+          * {
+            font-family: 'Work Sans';
+            color: ${colors.tertiary};
+          }
+        `}
+      />
       {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </React.Suspense>
   );

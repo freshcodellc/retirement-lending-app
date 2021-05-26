@@ -19,7 +19,12 @@ const Button = styled.button(
     borderRadius: '4px',
     textTransform: 'uppercase',
     padding: '12px 15px',
-    lineHeight: '1'
+    lineHeight: '1',
+    maxWidth: '300px',
+    width: '100%',
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
   ({ variant = 'primary' }) => variants[variant]
 )

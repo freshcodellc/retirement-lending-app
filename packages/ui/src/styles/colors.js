@@ -14,3 +14,4 @@ export const orange = 'orange'
 
 export const primary = '#E24038'
 export const secondary = '#764AF3'
+export const tertiary = '#152B2C'

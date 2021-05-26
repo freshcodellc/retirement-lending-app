@@ -56,3 +56,4 @@ function FullPageErrorFallback({ error }) {
 
 export { FullPageErrorFallback, Spinner, FullPageSpinner, Input, colors }
 export { Button, CircleButton } from './button'
+export { TextLink } from './textLink'

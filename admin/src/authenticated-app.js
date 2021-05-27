@@ -6,7 +6,7 @@ import AdminScreen from './screens/admin'
 import NotFoundScreen from './screens/not-found'
 import {FullPageErrorFallback, colors} from '@solera/ui'
 
-export default function AppAuthenticated() {
+export default function AuthenticatedApp() {
   return (
     <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
       <div>

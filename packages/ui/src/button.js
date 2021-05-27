@@ -18,7 +18,7 @@ const Button = styled.button(
     border: 0,
     borderRadius: '4px',
     textTransform: 'uppercase',
-    padding: '12px 15px',
+    padding: '11px 15px',
     lineHeight: '1',
     maxWidth: '300px',
     width: '100%',
@@ -28,6 +28,15 @@ const Button = styled.button(
   },
   ({ variant = 'primary' }) => variants[variant]
 )
+
+const IconButton = styled.button({
+  border: 0,
+  padding: '6px',
+  background: 'none',
+  '&:hover': {
+    cursor: 'pointer'
+  }
+})
 
 const CircleButton = styled(
   'button',
@@ -59,4 +68,4 @@ const CircleButton = styled(
     : '/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVxQiIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBzdHlsZWQgZnJvbSAnQGVtb3Rpb24vc3R5bGVkL21hY3JvJ1xuXG5jb25zdCBDaXJjbGVCdXR0b24gPSBzdHlsZWQuYnV0dG9uKHtcbiAgYm9yZGVyUmFkaXVzOiAnMzBweCcsXG4gIHBhZGRpbmc6ICcwJyxcbiAgd2lkdGg6ICc0MHB4JyxcbiAgaGVpZ2h0OiAnNDBweCcsXG4gIGxpbmVIZWlnaHQ6ICcxJyxcbiAgZGlzcGxheTogJ2ZsZXgnLFxuICBhbGlnbkl0ZW1zOiAnY2VudGVyJyxcbiAganVzdGlmeUNvbnRlbnQ6ICdjZW50ZXInLFxuICBiYWNrZ3JvdW5kOiAncmVkJyxcbiAgY29sb3I6ICdibGFjaycsXG4gIGJvcmRlcjogYDFweCBzb2xpZCBibGFja2AsXG4gIGN1cnNvcjogJ3BvaW50ZXInXG59KVxuXG5leHBvcnQgeyBDaXJjbGVCdXR0b24gfVxuIl19 */'
 )
 
-export { Button, CircleButton }
+export { Button, CircleButton, IconButton }

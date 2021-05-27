@@ -30,6 +30,7 @@ function LoginForm({ onSubmit }) {
     }}>
       <h1>Log in</h1>
       <form
+        name="login"
         onSubmit={handleSubmit(d => submitForm(d))}
         css={{
           display: "flex",
@@ -62,6 +63,12 @@ function LoginForm({ onSubmit }) {
             marginTop: '40px'
           }}>
             <TextLink>Forgot your password?</TextLink>
+          </Link>
+          <p>- OR -</p>
+          <Link to="sign-up" css={{
+            marginTop: '40px'
+          }}>
+            <TextLink>Sign up</TextLink>
           </Link>
         </div>
         {isError ? <div>An error happened</div> : null}

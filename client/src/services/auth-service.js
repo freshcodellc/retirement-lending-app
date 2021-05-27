@@ -15,8 +15,10 @@ function login({ email, password }) {
   return client("auth/login", { data: { email, password } }).then(handleUserResponse);
 }
 
-function register({ email, password }) {
-  return client("register", { email, password }).then(handleUserResponse);
+function register(applicantData) {
+  return client("users/register-applicant", {
+    data: { user: { ...applicantData } }
+  }).then((res) => res);
 }
 
 async function logout() {

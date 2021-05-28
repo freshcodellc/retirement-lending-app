@@ -15,8 +15,8 @@ function Input(props) {
       <input
         css={{
           border: 'none',
-          borderBottom: `1px solid ${colors.tertiary}`,
           alignSelf: 'stretch',
+          borderBottom: `1px solid ${colors.tertiary}`,
           ...props.css
         }}
         {...props}
@@ -25,19 +25,16 @@ function Input(props) {
   )
 }
 
-function InputAdornment({ children, position = 'start' }) {
-  const posStyles =
-    position === 'end'
-      ? { right: 0, marginLeft: '4px' }
-      : { left: 0, marginRight: '4px' }
+function InputAdornment({ children, end = false }) {
+  const posStyles = end
+    ? { right: 0, marginLeft: '4px' }
+    : { left: 0, marginRight: '4px' }
   return (
     <div
       css={{
         position: 'absolute',
-        top: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        transform: 'translate(0px, -50%)',
+        margin: '0.3rem 0',
+        bottom: 0,
         ...posStyles
       }}
     >

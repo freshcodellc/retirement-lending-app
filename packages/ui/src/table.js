@@ -21,7 +21,7 @@ const Th = styled.th({
 })
 
 const Tr = styled.tr({
-  '&:nth-child(even)': {
+  '&:nth-of-type(even)': {
     backgroundColor: colors.gray10
   }
 })

@@ -5,6 +5,7 @@ import ApplicantsScreen from './screens/applicants'
 import AdminScreen from './screens/admin'
 import NotFoundScreen from './screens/not-found'
 import {FullPageErrorFallback, colors} from '@solera/ui'
+import {ReactComponent as Logo} from 'assets/logo.svg'
 
 export default function AuthenticatedApp() {
   return (
@@ -51,7 +52,7 @@ function Nav(params) {
         color: colors.base,
       }}
     >
-      <div>logo here</div>
+      <div><Logo /></div>
       <ul
         css={{
           margin: 0,

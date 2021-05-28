@@ -1,6 +1,7 @@
 import * as React from "react";
 import { queryClient } from ".";
 import * as auth from "../services/auth-service";
+import * as userService from "../services/user-service";
 import { client } from "../utils/api-client";
 import { useAsync } from "../utils/hooks";
 import { FullPageSpinner, FullPageErrorFallback } from "@solera/ui";
@@ -48,18 +49,24 @@ function AuthProvider(props) {
     (form) => auth.register(form).then((data) => data),
     [setData]
   );
+  const resetPassword = React.useCallback(
+    (form) => userService.resetPassword(form).then((data) => data),
+    [setData]
+  );
+  const confirmReset = React.useCallback(
+    (form) => console.log('RESET') || userService.confirmReset(form).then((data) => data),
+    [setData]
+  );
   const logout = React.useCallback(() => {
     auth.logout();
     queryClient.clear();
     setData(null);
   }, [setData]);
 
-  const value = React.useMemo(() => ({ user, login, logout, register }), [
-    login,
-    logout,
-    register,
-    user,
-  ]);
+  const value = React.useMemo(
+    () => ({ user, login, logout, register, resetPassword, confirmReset }),
+    [login, logout, register, user, resetPassword, confirmReset]
+  );
 
   if (isLoading || isIdle) {
     return <FullPageSpinner />;

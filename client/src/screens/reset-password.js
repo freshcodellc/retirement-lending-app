@@ -1,20 +1,27 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import { useAsync } from "../utils/hooks";
 import { Button, Input, TextLink } from "@solera/ui";
 
-function ForgotPasswordForm({ onSubmit }) {
+function useQueryParams() {
+  return new URLSearchParams(useLocation().search);
+}
+
+function ResetPasswordForm({ onSubmit }) {
   const { isLoading, isError, isSuccess, data, error, run } = useAsync();
   const { register, reset, handleSubmit } = useForm();
+  const query = useQueryParams();
+  const token = query.get('token');
 
   function submitForm(formData) {
-    const { email } = formData;
+    const { new_password } = formData;
     run(
       onSubmit({
-        email,
+        reset_token: token,
+        new_password,
       })
     );
   }
@@ -37,7 +44,7 @@ function ForgotPasswordForm({ onSubmit }) {
     >
       <h1>Forgot Password</h1>
       <form
-        name="forgot-password"
+        name="confirm-reset"
         onSubmit={handleSubmit((d) => submitForm(d))}
         css={{
           display: "flex",
@@ -50,11 +57,11 @@ function ForgotPasswordForm({ onSubmit }) {
         }}
       >
         <Input
-          id="email"
-          label="Email"
-          name="email"
-          type="email"
-          {...register("email")}
+          id="newPassword"
+          label="New Password"
+          name="new_password"
+          type="password"
+          {...register("new_password")}
         />
         <div
           css={{
@@ -77,7 +84,7 @@ function ForgotPasswordForm({ onSubmit }) {
         {isError ? <div>An error happened</div> : null}
         {isSuccess ? (
           <div>
-            Success! Please check your email for a link to reset your password.
+            Success! Please log in with your new password.
           </div>
         ) : null}
       </form>
@@ -85,8 +92,9 @@ function ForgotPasswordForm({ onSubmit }) {
   );
 }
 
-function ForgotPasswordScreen() {
-  const { resetPassword } = useAuth();
+function ResetPasswordScreen() {
+  const { confirmReset } = useAuth();
+  console.log('CRS', confirmReset)
   return (
     <div
       css={{
@@ -96,9 +104,9 @@ function ForgotPasswordScreen() {
         justifyContent: "center",
       }}
     >
-      <ForgotPasswordForm onSubmit={resetPassword} />
+      <ResetPasswordForm onSubmit={confirmReset} />
     </div>
   );
 }
 
-export { ForgotPasswordScreen };
+export { ResetPasswordScreen };

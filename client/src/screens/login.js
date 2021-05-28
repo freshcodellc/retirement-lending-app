@@ -66,7 +66,7 @@ function LoginForm({ onSubmit }) {
           </Link>
           <p>- OR -</p>
           <Link to="sign-up" css={{
-            marginTop: '40px'
+            marginTop: '0px'
           }}>
             <TextLink>Sign up</TextLink>
           </Link>

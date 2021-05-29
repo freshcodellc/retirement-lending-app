@@ -11,11 +11,11 @@ async function bootstrapAppData() {
 
   const token = await auth.getToken();
   if (token) {
-    const data = await client("bootstrap", { token });
-    queryClient.setQueryData("list-items", data.listItems, {
+    const data = await client("loan-applications", { token });
+    queryClient.setQueryData("applications", data.loan_applications, {
       staleTime: 5000,
     });
-    user = data.user;
+    user = { token };
   }
   return user;
 }

@@ -54,7 +54,7 @@ function AuthProvider(props) {
     [setData]
   );
   const confirmReset = React.useCallback(
-    (form) => console.log('RESET') || userService.confirmReset(form).then((data) => data),
+    (form) => userService.confirmReset(form).then((data) => data),
     [setData]
   );
   const logout = React.useCallback(() => {

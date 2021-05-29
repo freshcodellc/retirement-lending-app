@@ -8,7 +8,8 @@ function Input(props) {
       css={{
         display: 'flex',
         flexDirection: 'column',
-        width: '100%'
+        width: '100%',
+        marginTop: '65px'
       }}
     >
       <label htmlFor={props.name}>{props.label}</label>
@@ -17,6 +18,7 @@ function Input(props) {
           border: 'none',
           alignSelf: 'stretch',
           borderBottom: `1px solid ${colors.tertiary}`,
+          marginTop: `15px`,
           ...props.css
         }}
         {...props}

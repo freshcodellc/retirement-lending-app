@@ -8,6 +8,7 @@ import {
   ListboxOption as SelectOption
 } from '@reach/listbox'
 import * as colors from './styles/colors'
+import { FaCaretDown } from 'react-icons/fa'
 
 import '@reach/listbox/styles.css'
 
@@ -23,13 +24,13 @@ function Select({ children, label, name, css, ...props }) {
       <label htmlFor={name}>{label}</label>
       <ListboxInput {...props}>
         <ListboxButton
-          arrow
+          arrow={<FaCaretDown size='2em' />}
           css={{
             border: 'none',
             width: '100%',
-            padding: '7px 0',
+            padding: '0.5rem 0',
             alignSelf: 'stretch',
-            borderBottom: `1px solid ${colors.tertiary}`,
+            borderBottom: `2px solid ${colors.tertiary}`
           }}
         />
         <ListboxPopover>

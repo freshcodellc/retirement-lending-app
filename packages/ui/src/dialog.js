@@ -8,8 +8,8 @@ import '@reach/dialog/styles.css'
 
 const Dialog = styled(ReachDialog)({
   borderRadius: 0,
-  border: `5px solid ${colors.gray20}`,
-  boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
+  border: `5px solid ${colors.gray40}`,
+  boxShadow: `0 10px 30px -5px rgba(0, 0, 0, 0.2)`,
   margin: '10vh auto 0',
   [mq.small]: {
     width: '100%',

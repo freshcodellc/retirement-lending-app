@@ -16,7 +16,7 @@ function Input(props) {
         css={{
           border: 'none',
           alignSelf: 'stretch',
-          borderBottom: `1px solid ${colors.tertiary}`,
+          borderBottom: `2px solid ${colors.tertiary}`,
           ...props.css
         }}
         {...props}
@@ -25,7 +25,7 @@ function Input(props) {
   )
 }
 
-function InputAdornment({ children, end = false }) {
+function InputAdornment({ children, end = false, ...props }) {
   const posStyles = end
     ? { right: 0, marginLeft: '4px' }
     : { left: 0, marginRight: '4px' }
@@ -33,17 +33,18 @@ function InputAdornment({ children, end = false }) {
     <div
       css={{
         position: 'absolute',
-        margin: '0.3rem 0',
+        marginBottom: '0.4rem',
         bottom: 0,
         ...posStyles
       }}
+      {...props}
     >
       {children}
     </div>
   )
 }
 
-function FormControl({ children }) {
+function FormControl({ children, ...props }) {
   return (
     <div
       css={{
@@ -53,6 +54,7 @@ function FormControl({ children }) {
         alignItems: 'center',
         position: 'relative'
       }}
+      {...props}
     >
       {children}
     </div>

@@ -16,8 +16,17 @@ function App() {
       <Global
         styles={css`
           ${normalize}
+          :root {
+            --header-height: 82;
+            --grid-base-width: 1500;
+            --grid-margin-width: 120;
+            --grid-container-width: calc(
+              var(--grid-base-width) - 2 * var(--grid-margin-width)
+            );
+            --field-adorn-width: 25;
+          }
           * {
-            font-family: 'Work Sans';
+            font-family: "Work Sans";
             color: ${colors.tertiary};
           }
         `}

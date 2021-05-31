@@ -8,7 +8,10 @@ function RadioInput(props) {
     <div
       css={{
         display: 'flex',
-        width: '100%'
+        width: '100%',
+        '&:hover': {
+          cursor: 'pointer'
+        }
       }}
     >
       <label
@@ -30,6 +33,9 @@ function RadioInput(props) {
             '&:checked ~ span:after': {
               display: 'block'
             },
+            '&:hover': {
+              cursor: 'pointer'
+            },
             ...props.css
           }}
           type='radio'
@@ -43,7 +49,10 @@ function RadioInput(props) {
             border: `2px solid ${colors.lightBlue}`,
             position: 'relative',
             borderRadius: '50%',
-            marginLeft: '10px',
+            marginRight: '10px',
+            '&:hover': {
+              cursor: 'pointer'
+            },
             '&:after': {
               content: '""',
               position: 'absolute',

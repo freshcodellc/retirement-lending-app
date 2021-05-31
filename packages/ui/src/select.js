@@ -30,7 +30,7 @@ function Select({ children, label, name, css, ...props }) {
             width: '100%',
             padding: '0.5rem 0',
             alignSelf: 'stretch',
-            borderBottom: `2px solid ${colors.tertiary}`
+            borderBottom: `2px solid ${colors.text}`
           }}
         />
         <ListboxPopover>

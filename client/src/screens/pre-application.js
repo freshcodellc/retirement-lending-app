@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import { Button, Input, TextLink } from "@solera/ui";
+import { Button, Input, RadioInput, Select, SelectOption, TextLink } from "@solera/ui";
 
 function PreApplicationScreen() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, getValues } = useForm();
   return (
     <div>
       <h1>
@@ -10,7 +10,7 @@ function PreApplicationScreen() {
         accounts!
       </h1>
       <form
-        name="login"
+        name="pre-application"
         onSubmit={handleSubmit((d) => submitForm(d))}
         css={{
           display: "flex",
@@ -22,6 +22,32 @@ function PreApplicationScreen() {
           },
         }}
       >
+        <div>
+          <RadioInput
+            id="ff-yes"
+            name="fix_and_flip"
+            label="Yes"
+            value="yes"
+            {...register("fix_and_flip")}
+          />
+          <RadioInput
+            id="ff-no"
+            name="fix_and_flip"
+            label="No"
+            value="no"
+            {...register("fix_and_flip")}
+          />
+        </div>
+        <Select
+          label="What entity type will the property be titled under?"
+          id="entity-type"
+          name="entity_type"
+          css={{ marginBottom: "3rem" }}
+          {...register("entity_type")}
+        >
+          <SelectOption value="llc">LLC</SelectOption>
+          <SelectOption value="trust">Trust</SelectOption>
+        </Select>
         <Input
           id="entityName"
           label="Name of entity"

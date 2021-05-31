@@ -17,7 +17,7 @@ function Checkbox({
         width: '20px',
         height: '20px',
         borderRadius: '2px',
-        border: `2px solid ${checked ? colors[variant] : colors.tertiary}`,
+        border: `2px solid ${checked ? colors[variant] : colors.text}`,
         background: checked && colors[variant],
         '&:focus-within': {
           boxShadow: 'none'

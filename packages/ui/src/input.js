@@ -17,7 +17,7 @@ function Input(props) {
         css={{
           border: 'none',
           alignSelf: 'stretch',
-          borderBottom: `1px solid ${colors.tertiary}`,
+          borderBottom: `2px solid ${colors.text}`,
           marginTop: `15px`,
           ...props.css
         }}

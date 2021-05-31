@@ -27,7 +27,7 @@ function App() {
           }
           * {
             font-family: "Work Sans";
-            color: ${colors.tertiary};
+            color: ${colors.text};
           }
         `}
       />

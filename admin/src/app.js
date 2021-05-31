@@ -18,7 +18,7 @@ export default function App() {
         styles={css`
           ${normalize}
           body {
-            color: ${colors.tertiary};
+            color: ${colors.text};
           }
         `}
       />

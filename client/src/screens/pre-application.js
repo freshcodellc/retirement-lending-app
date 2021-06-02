@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import * as loanApplicationService from "../services/loan-application-service";
+import { useLoanApplication } from '../hooks/useLoanApplication';
 import { useAsync } from "../utils/hooks";
-import { useLoanApplications } from "../hooks/useLoanApplications";
 import {
   Button,
   Input,
@@ -14,6 +15,8 @@ import {
 } from "@solera/ui";
 
 function PreApplicationScreen() {
+  const { uuid } = useParams();
+  const { data, status } = useLoanApplication(uuid);
   const { isLoading, isError, error, run } = useAsync();
   const { register, handleSubmit, setValue } = useForm();
 

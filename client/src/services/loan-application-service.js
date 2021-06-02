@@ -11,7 +11,7 @@ async function list() {
   return await client("loan-applications", { token }).then((res) => res);
 }
 
-async function get({ uuid }) {
+async function get(uuid) {
   const token = await auth.getToken();
   return await client(`loan-applications/${uuid}`, { token }).then((res) => res);
 }

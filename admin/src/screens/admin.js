@@ -2,6 +2,7 @@
 import * as React from 'react'
 import {FiSearch, FiTrash2} from 'react-icons/fi'
 import {useTable} from 'react-table'
+import {Modal, ModalContents, ModalOpenButton} from 'components'
 import {
   Button,
   IconButton,
@@ -18,7 +19,6 @@ import {
   Select,
   SelectOption,
 } from '@solera/ui'
-import {Modal, ModalContents, ModalOpenButton} from 'components/modal'
 export default function Admin() {
   return (
     <div>
@@ -196,7 +196,7 @@ function AdminTable() {
                     fontSize: '1.2rem',
                     paddingTop: '1.2rem',
                     paddingBottom: '1.2rem',
-                    borderBottom: `3px solid ${colors.gray20}`,
+                    borderBottom: `3px solid ${colors.gray40}`,
                     '&:last-child': {
                       minWidth: '250px',
                     },

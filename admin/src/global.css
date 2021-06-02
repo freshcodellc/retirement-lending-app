@@ -53,3 +53,8 @@ textarea:focus,
 select:focus {
   outline: none;
 }
+
+/* reach-ui */
+[data-reach-dialog-overlay] {
+  z-index: 1000;
+}

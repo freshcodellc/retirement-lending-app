@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import {Routes, Route, Link as RouterLink, useMatch} from 'react-router-dom'
 import {ErrorBoundary} from 'react-error-boundary'
-import ApplicantsScreen from './screens/applicants'
+import ApplicantListScreen from './screens/applicant-list'
+import ApplicantDetailsScreen from './screens/applicant-details'
 import AdminScreen from './screens/admin'
 import NotFoundScreen from './screens/not-found'
 import {FullPageErrorFallback, colors} from '@solera/ui'
@@ -15,6 +16,7 @@ export default function AuthenticatedApp() {
           css={{
             top: 0,
             width: '100%',
+            zIndex: 999,
             position: 'sticky',
             backgroundColor: colors.primary,
           }}
@@ -75,7 +77,7 @@ function Nav(params) {
 }
 
 function NavLink(props) {
-  const matched = useMatch(props.to)
+  const matched = useMatch(`${props.to}/*`)
 
   return (
     <RouterLink
@@ -95,7 +97,11 @@ function NavLink(props) {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/applicants" element={<ApplicantsScreen />} />
+      <Route path="/applicants" element={<ApplicantListScreen />} />
+      <Route
+        path="/applicants/:applicantId"
+        element={<ApplicantDetailsScreen />}
+      />
       <Route path="/admin" element={<AdminScreen />} />
       <Route path="*" element={<NotFoundScreen />} />
     </Routes>

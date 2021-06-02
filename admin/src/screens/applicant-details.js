@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
-import {Link} from 'react-router-dom'
 import {
   Button,
   Select,
@@ -11,27 +10,16 @@ import {
   TabList,
   TabPanel,
   TabPanels,
-  TextLink,
 } from '@solera/ui'
-import {FiArrowLeft} from 'react-icons/fi'
+import {ReturnLink} from 'components'
 
 export default function ApplicantDetails() {
   return (
     <div>
       <h1>Applicant Details</h1>
-      <Link
-        to="/applicants"
-        css={{
-          fontSize: '1.1rem',
-          fontWeight: 500,
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: '2rem',
-        }}
-      >
-        <FiArrowLeft color={colors.secondary} css={{marginRight: '4px'}} />
-        <TextLink variant="secondary">Applicant List</TextLink>
-      </Link>
+      <ReturnLink to="/applicants" variant="secondary">
+        Applicant List
+      </ReturnLink>
       <ActionsPanel />
       <DetailsTabs />
     </div>
@@ -83,19 +71,19 @@ function DetailsTabs() {
   return (
     <Tabs>
       <TabList>
-        <Tab>Applicant Information</Tab>
+        <Tab>Applicant information</Tab>
         <Tab>Notes</Tab>
-        <Tab>Communication History</Tab>
+        <Tab>Communication history</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
-          <p css={{margin: 0}}>Click the tabs or pull the slider around</p>
+          <p css={{margin: 0}}>Applicant Information</p>
         </TabPanel>
         <TabPanel>
-          <p>Yeah yeah. What's up?</p>
+          <p css={{margin: 0}}>Notes</p>
         </TabPanel>
         <TabPanel>
-          <p>Oh, hello there.</p>
+          <p css={{margin: 0}}>Communication History</p>
         </TabPanel>
       </TabPanels>
     </Tabs>

@@ -16,15 +16,16 @@ const TabList = styled(ReachTabList)({
 })
 
 const Tab = styled(ReachTab)({
-  background: colors.gray20,
-  padding: '2rem',
+  background: colors.gray,
+  padding: '1.5rem 2rem',
   paddingBottom: 'calc(2rem - 5px)',
   marginRight: '10px',
   fontWeight: 500,
+  fontSize: '1.1rem',
   color: colors.secondary,
   minWidth: '250px',
   position: 'relative',
-  border: `5px solid ${colors.gray20}`,
+  border: `5px solid ${colors.gray}`,
   borderBottom: 'none',
   '&[aria-selected=true]': {
     color: colors.text,

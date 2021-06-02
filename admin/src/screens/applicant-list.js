@@ -19,7 +19,7 @@ import {
 } from '@solera/ui'
 import {useTable} from 'react-table'
 import {FiSearch, FiCalendar} from 'react-icons/fi'
-import StatusBadge from 'components/status-badge'
+import {StatusBadge} from 'components'
 
 export default function ApplicantList() {
   return (

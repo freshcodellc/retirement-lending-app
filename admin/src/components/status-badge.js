@@ -5,15 +5,15 @@ export default function StatusBadge({status}) {
   const statusColor = {
     Started: colors.yellow,
     Approved: colors.green,
-    Denied: colors.gray40,
+    Denied: colors.gray80,
     'Full Application Requested': colors.yellow,
     'Full Application Received': colors.orange,
     'Loan Committee Review': colors.green80,
     'Term Sheet Sent': colors.green,
     'Term Sheet Accepted': colors.green,
     'Terms Sheet Denied': colors.orange,
-    'Pre-Underwriting': colors.gray40,
-    Underwriting: colors.gray40,
+    'Pre-Underwriting': colors.gray80,
+    Underwriting: colors.gray80,
   }[status]
 
   return (

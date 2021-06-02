@@ -1,8 +1,41 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, RadioInput, Select, SelectOption, TextLink } from "@solera/ui";
+import * as loanApplicationService from "../services/loan-application-service";
+import { useAsync } from "../utils/hooks";
+import { useLoanApplications } from "../hooks/useLoanApplications";
+import {
+  Button,
+  Input,
+  RadioInput,
+  RadioGroup,
+  Select,
+  SelectOption,
+  TextLink,
+} from "@solera/ui";
 
 function PreApplicationScreen() {
-  const { register, handleSubmit, getValues } = useForm();
+  const { isLoading, isError, error, run } = useAsync();
+  const { register, handleSubmit, setValue } = useForm();
+
+  function submitForm(formData) {
+    run(
+      loanApplicationService.create({
+        loan_application: {
+          ...formData,
+          fix_and_flip: formData.fix_and_flip === "yes",
+        }
+      })
+    );
+  }
+
+  useEffect(() => {
+    register("entity_type");
+  }, [register]);
+
+  function handleSelectChange(value) {
+    setValue("entity_type", value)
+  }
+
   return (
     <div>
       <h1>
@@ -23,30 +56,33 @@ function PreApplicationScreen() {
         }}
       >
         <div>
-          <RadioInput
-            id="ff-yes"
-            name="fix_and_flip"
-            label="Yes"
-            value="yes"
-            {...register("fix_and_flip")}
-          />
-          <RadioInput
-            id="ff-no"
-            name="fix_and_flip"
-            label="No"
-            value="no"
-            {...register("fix_and_flip")}
-          />
+          <RadioGroup text='Do you plan to "fix and flip" this property?'>
+            <RadioInput
+              id="ff-yes"
+              name="fix_and_flip"
+              label="Yes"
+              value="yes"
+              {...register("fix_and_flip")}
+            />
+            <RadioInput
+              id="ff-no"
+              name="fix_and_flip"
+              label="No"
+              value="no"
+              {...register("fix_and_flip")}
+            />
+          </RadioGroup>
         </div>
         <Select
           label="What entity type will the property be titled under?"
           id="entity-type"
           name="entity_type"
           css={{ marginBottom: "3rem" }}
-          {...register("entity_type")}
+          onChange={handleSelectChange}
         >
-          <SelectOption value="llc">LLC</SelectOption>
-          <SelectOption value="trust">Trust</SelectOption>
+          <SelectOption value="default">Choose one</SelectOption>
+          <SelectOption value="IRA_LLC">LLC</SelectOption>
+          <SelectOption value="IRA_TRUST">Trust</SelectOption>
         </Select>
         <Input
           id="entityName"
@@ -64,6 +100,7 @@ function PreApplicationScreen() {
           type="text"
           {...register("funding_institution_name")}
         />
+        <Button type="submit">Continue</Button>
       </form>
     </div>
   );

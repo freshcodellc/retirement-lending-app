@@ -2,6 +2,7 @@ import * as React from "react";
 import { queryClient } from ".";
 import * as auth from "../services/auth-service";
 import * as userService from "../services/user-service";
+import * as loanApplicationService from "../services/loan-application-service";
 import { client } from "../utils/api-client";
 import { useAsync } from "../utils/hooks";
 import { FullPageSpinner, FullPageErrorFallback } from "@solera/ui";
@@ -11,8 +12,8 @@ async function bootstrapAppData() {
 
   const token = await auth.getToken();
   if (token) {
-    const data = await client("loan-applications", { token });
-    queryClient.setQueryData("applications", data.loan_applications, {
+    const data = await loanApplicationService.list();
+    queryClient.setQueryData("loan-applications", data.loan_applications, {
       staleTime: 5000,
     });
     user = { token };

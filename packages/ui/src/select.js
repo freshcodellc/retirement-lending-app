@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import { useState } from 'react'
 import { jsx } from '@emotion/react'
 import {
   ListboxList,
@@ -12,17 +13,23 @@ import { FaCaretDown } from 'react-icons/fa'
 
 import '@reach/listbox/styles.css'
 
-function Select({ children, label, name, css, ...props }) {
+function Select({ children, label, name, css, onChange, ...props }) {
   return (
     <div
       css={{
         width: '100%',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        marginTop: '65px'
       }}
     >
-      <label htmlFor={name}>{label}</label>
-      <ListboxInput {...props}>
+      <label
+        htmlFor={name}
+        css={{ fontWeight: '300', fontSize: '20px', lineHeight: '26px' }}
+      >
+        {label}
+      </label>
+      <ListboxInput {...props} onChange={onChange}>
         <ListboxButton
           arrow={<FaCaretDown size='2em' />}
           css={{

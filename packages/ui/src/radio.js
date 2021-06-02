@@ -3,12 +3,11 @@ import { jsx } from '@emotion/react'
 import * as colors from './styles/colors'
 
 function RadioInput(props) {
-  console.log('P', props)
   return (
     <div
       css={{
         display: 'flex',
-        width: '100%',
+        marginRight: '35px',
         '&:hover': {
           cursor: 'pointer'
         }
@@ -71,4 +70,21 @@ function RadioInput(props) {
   )
 }
 
-export { RadioInput }
+function RadioGroup({ text, children }) {
+  return (
+    <div css={{ marginTop: '65px' }}>
+      <p
+        css={{
+          fontWeight: '300',
+          fontSize: '20px',
+          lineHeight: '26px'
+        }}
+      >
+        {text}
+      </p>
+      <div css={{ display: 'flex' }}>{children}</div>
+    </div>
+  )
+}
+
+export { RadioInput, RadioGroup }

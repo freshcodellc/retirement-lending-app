@@ -12,7 +12,12 @@ function Input(props) {
         marginTop: '65px'
       }}
     >
-      <label htmlFor={props.name}>{props.label}</label>
+      <label
+        htmlFor={props.name}
+        css={{ fontWeight: '300', fontSize: '20px', lineHeight: '26px' }}
+      >
+        {props.label}
+      </label>
       <input
         css={{
           border: 'none',

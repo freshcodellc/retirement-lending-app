@@ -16,8 +16,8 @@ const Table = styled.table({
 const Th = styled.th({
   verticalAlign: 'middle',
   textAlign: 'left',
-  paddingLeft: '2.5rem',
-  paddingRight: '2.5rem'
+  paddingLeft: '2rem',
+  paddingRight: '2rem'
 })
 
 const Tr = styled.tr({
@@ -28,7 +28,7 @@ const Tr = styled.tr({
 
 const Td = styled.td({
   verticalAlign: 'middle',
-  padding: '1rem 2.5rem',
+  padding: '1rem 2rem',
   lineHeight: '1.5'
 })
 

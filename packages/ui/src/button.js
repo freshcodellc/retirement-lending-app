@@ -26,6 +26,11 @@ const Button = styled.button(
     width: '100%',
     '&:hover': {
       cursor: 'pointer'
+    },
+    '&:disabled': {
+      background: colors.gray20,
+      color: colors.gray80,
+      cursor: 'not-allowed'
     }
   },
   ({ variant = 'primary' }) => variants[variant]

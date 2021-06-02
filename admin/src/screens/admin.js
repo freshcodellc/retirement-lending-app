@@ -196,7 +196,7 @@ function AdminTable() {
                     fontSize: '1.2rem',
                     paddingTop: '1.2rem',
                     paddingBottom: '1.2rem',
-                    borderBottom: `3px solid ${colors.gray20}`,
+                    borderBottom: `3px solid ${colors.gray40}`,
                     '&:last-child': {
                       minWidth: '250px',
                     },

@@ -7,7 +7,6 @@ function resetPassword({ email}) {
 }
 
 function confirmReset({ reset_token, new_password }) {
-  console.log('C', confirm)
   return client("users/password-reset-confirmation", { data: { reset_token, new_password } }).then(
     res => res
   );

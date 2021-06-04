@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import { useMutation } from 'react-query';
 import * as loanApplicationService from "../services/loan-application-service";
 import { useLoanApplication } from '../hooks/useLoanApplication';
+import { useUpdateLoanApplication } from '../hooks/useUpdateLoanApplication';
 import { useAsync } from "../utils/hooks";
 import {
   Button,
@@ -19,16 +21,10 @@ function PreApplicationScreen() {
   const { data, status } = useLoanApplication(uuid);
   const { isLoading, isError, error, run } = useAsync();
   const { register, handleSubmit, setValue } = useForm();
+  const mutation = useUpdateLoanApplication();
 
   function submitForm(formData) {
-    run(
-      loanApplicationService.create({
-        loan_application: {
-          ...formData,
-          fix_and_flip: formData.fix_and_flip === "yes",
-        }
-      })
-    );
+    mutation.mutate({...formData, uuid});
   }
 
   useEffect(() => {

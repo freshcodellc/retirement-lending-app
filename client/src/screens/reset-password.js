@@ -94,7 +94,6 @@ function ResetPasswordForm({ onSubmit }) {
 
 function ResetPasswordScreen() {
   const { confirmReset } = useAuth();
-  console.log('CRS', confirmReset)
   return (
     <div
       css={{

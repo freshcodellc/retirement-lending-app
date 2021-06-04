@@ -83,7 +83,7 @@ function FiltersPanel() {
       </div>
       <div>
         <label
-          css={{fontSize: '1.1rem', display: 'flex', alignItems: 'center'}}
+          css={{fontSize: '20px', display: 'flex', alignItems: 'center'}}
         >
           <Checkbox
             checked={checked}
@@ -252,7 +252,7 @@ function ApplicantTable() {
                   return (
                     <Td
                       css={{
-                        padding: '1.8rem 2rem',
+                        padding: '1.9rem 2rem',
                         ...currentUserStyle,
                       }}
                       {...cell.getCellProps()}

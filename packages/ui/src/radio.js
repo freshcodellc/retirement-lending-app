@@ -1,8 +1,9 @@
 /** @jsx jsx */
+import React from 'react'
 import { jsx } from '@emotion/react'
 import * as colors from './styles/colors'
 
-function RadioInput(props) {
+const RadioInput = React.forwardRef((props, ref) => {
   return (
     <div
       css={{
@@ -38,6 +39,7 @@ function RadioInput(props) {
             ...props.css
           }}
           type='radio'
+          ref={ref}
           {...props}
         />
         <span
@@ -68,7 +70,7 @@ function RadioInput(props) {
       </label>
     </div>
   )
-}
+})
 
 function RadioGroup({ text, children }) {
   return (

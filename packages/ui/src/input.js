@@ -1,34 +1,34 @@
 /** @jsx jsx */
+import React from 'react'
 import { jsx } from '@emotion/react'
 import * as colors from './styles/colors'
 
-function Input(props) {
-  return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-      }}
+const Input = React.forwardRef((props, ref) => (
+  <div
+    css={{
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%'
+    }}
+  >
+    <label
+      htmlFor={props.name}
+      css={{ fontWeight: '300', fontSize: '20px', lineHeight: '26px' }}
     >
-      <label
-        htmlFor={props.name}
-        css={{ fontWeight: '300', fontSize: '20px', lineHeight: '26px' }}
-      >
-        {props.label}
-      </label>
-      <input
-        css={{
-          border: 'none',
-          alignSelf: 'stretch',
-          borderBottom: `2px solid ${colors.text}`,
-          ...props.css
-        }}
-        {...props}
-      />
-    </div>
-  )
-}
+      {props.label}
+    </label>
+    <input
+      css={{
+        border: 'none',
+        alignSelf: 'stretch',
+        borderBottom: `2px solid ${colors.text}`,
+        ...props.css
+      }}
+      ref={ref}
+      {...props}
+    />
+  </div>
+))
 
 function InputAdornment({ children, end = false, ...props }) {
   const posStyles = end

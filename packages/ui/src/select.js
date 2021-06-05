@@ -19,8 +19,8 @@ function Select({ children, label, name, css, onChange, ...props }) {
       css={{
         width: '100%',
         display: 'flex',
-        flexDirection: 'column',
-        marginTop: '65px'
+        flexDirection: 'column'
+        // marginTop: '65px'
       }}
     >
       <label

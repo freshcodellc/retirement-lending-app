@@ -28,10 +28,10 @@ export default function StatusBadge({status}) {
     >
       <div
         css={{
-          width: '18px',
-          height: '18px',
+          width: '1rem',
+          height: '1rem',
           borderRadius: '100%',
-          margin: '0.5rem',
+          margin: '0.4rem',
           background: statusColor,
         }}
       ></div>

@@ -21,7 +21,7 @@ const Tab = styled(ReachTab)({
   paddingBottom: 'calc(2rem - 5px)',
   marginRight: '10px',
   fontWeight: 500,
-  fontSize: '1.1rem',
+  fontSize: '20px',
   color: colors.secondary,
   minWidth: '250px',
   position: 'relative',

@@ -12,7 +12,7 @@ function useUpdateLoanApplication() {
       return () => queryClient.setQueryData("loan-application", previousData);
     },
     onError: (error, values, rollback) => rollback(),
-    onSuccess: () => queryClient.refetchQueries("loan-applications"),
+    onSuccess: () => queryClient.invalidateQueries("loan-applications"),
   });
 }
 

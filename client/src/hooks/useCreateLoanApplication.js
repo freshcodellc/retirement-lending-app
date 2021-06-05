@@ -1,14 +1,15 @@
 import * as loanApplicationService from "../services/loan-application-service";
-import { useMutation, queryCache } from "react-query";
+import { useMutation } from "react-query";
+import { queryClient } from "../context/index";
 
 function useCreateLoanApplication() {
   return useMutation(
-    (values) => loanApplicationService.create(values),
+    (values) => loanApplicationService.create({ loan_application: { ...values } }),
     {
       onMutate: (values) => {
-        const previousData = queryCache.getQueryData("loan-applications");
+        const previousData = queryClient.getQueryData("loan-applications");
 
-        queryCache.setQueryData("loan-applications", (old) => [
+        queryClient.setQueryData("loan-applications", (old) => [
           ...old,
           {
             uuid: 'temp',
@@ -16,10 +17,10 @@ function useCreateLoanApplication() {
           },
         ])
 
-        return () => queryCache.setQueryData("loan-applications", previousData)
+        return () => queryClient.setQueryData("loan-applications", previousData)
       },
       onError: (error, values, rollback) => rollback(),
-      onSuccess: () => queryCache.refreshQueries("loan-applications"),
+      onSuccess: () => queryClient.invalidateQueries("loan-applications"),
     }
   )
 }

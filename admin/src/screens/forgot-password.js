@@ -1,27 +1,30 @@
 /** @jsxImportSource @emotion/react */
 import {useForm} from 'react-hook-form'
 import {Link, Navigate} from 'react-router-dom'
+
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Button, Input, TextLink, colors} from '@solera/ui'
+import {Button, Input, TextLink} from '@solera/ui'
 
-export default function LoginScreen() {
-  const {login} = useAuth()
+export default function ForgotPasswordScreen() {
+  const {resetPassword} = useAuth()
   const {register, handleSubmit} = useForm()
-  const {isLoading, isSuccess, isError, run} = useAsync()
+  const {isLoading, isError, isSuccess, run} = useAsync()
 
-  const handleLogin = handleSubmit(formData => run(login(formData)))
+  const handleResetPassword = handleSubmit(formData =>
+    run(resetPassword(formData)),
+  )
 
   if (isSuccess) {
-    return <Navigate to="verify" />
+    return <Navigate to="reset-password" />
   }
 
   return (
     <>
-      <h1>Log in</h1>
+      <h1>Forgot Password?</h1>
       <form
-        name="login"
-        onSubmit={handleLogin}
+        name="forgot-password"
+        onSubmit={handleResetPassword}
         css={{
           display: 'flex',
           flexDirection: 'column',
@@ -39,13 +42,6 @@ export default function LoginScreen() {
           type="email"
           {...register('email')}
         />
-        <Input
-          id="password"
-          label="Password"
-          name="password"
-          type="password"
-          {...register('password')}
-        />
         <div
           css={{
             marginTop: '75px',
@@ -55,18 +51,17 @@ export default function LoginScreen() {
           }}
         >
           <Button type="submit" disabled={isLoading}>
-            Login
+            Submit
           </Button>
-          <Link to="forgot-password" css={{marginTop: '40px'}}>
-            <TextLink>Forgot your password?</TextLink>
-          </Link>
-          <p>- OR -</p>
-          <Link to="sign-up" css={{marginTop: '0px'}}>
-            <TextLink>Sign up</TextLink>
+          <Link to="/" css={{marginTop: '40px'}}>
+            <TextLink>Already have an account?</TextLink>
           </Link>
         </div>
-        {isError ? (
-          <div css={{color: colors.red}}>An error happened</div>
+        {isError ? <div>An error happened</div> : null}
+        {isSuccess ? (
+          <div>
+            Success! Please check your email for a link to reset your password.
+          </div>
         ) : null}
       </form>
     </>

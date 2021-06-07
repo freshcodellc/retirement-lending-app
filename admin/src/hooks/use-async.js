@@ -38,10 +38,9 @@ function useAsync(initialState) {
     error => safeSetState({error, status: 'rejected'}),
     [safeSetState],
   )
-  const reset = React.useCallback(
-    () => safeSetState(initialStateRef.current),
-    [safeSetState],
-  )
+  const reset = React.useCallback(() => safeSetState(initialStateRef.current), [
+    safeSetState,
+  ])
 
   const run = React.useCallback(
     promise => {

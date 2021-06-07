@@ -1,18 +1,14 @@
 /** @jsxImportSource @emotion/react */
+import {Link} from 'react-router-dom'
 
+import {TextLink} from '@solera/ui'
 export default function NotFound() {
   return (
-    <div
-      css={{
-        height: '100%',
-        display: 'grid',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <div>
-        Sorry... nothing here.
-      </div>
-    </div>
+    <>
+      <p>Sorry... nothing here!</p>
+      <Link to="/">
+        <TextLink>Return to Login page</TextLink>
+      </Link>
+    </>
   )
 }

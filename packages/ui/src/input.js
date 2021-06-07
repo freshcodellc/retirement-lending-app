@@ -21,8 +21,8 @@ const Input = React.forwardRef((props, ref) => (
       css={{
         border: 'none',
         alignSelf: 'stretch',
+        padding: '0.5rem 0',
         borderBottom: `2px solid ${colors.text}`,
-        ...props.css
       }}
       ref={ref}
       {...props}

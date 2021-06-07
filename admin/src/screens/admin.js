@@ -42,7 +42,7 @@ export default function Admin() {
             type="search"
             name="search-admin"
             placeholder="Search"
-            css={{padding: '0.5rem', paddingLeft: '20px'}}
+            css={{paddingLeft: '20px'}}
           />
         </FormControl>
       </div>
@@ -66,14 +66,14 @@ function InviteModal() {
             id="invite-first-name"
             name="invite-first-name"
             placeholder="First name"
-            css={{padding: '0.5rem 0', marginBottom: '3rem'}}
+            css={{marginBottom: '3rem'}}
           />
           <Input
             label="Last name"
             id="invite-last-name"
             name="invite-last-name"
             placeholder="Last name"
-            css={{padding: '0.5rem 0', marginBottom: '3rem'}}
+            css={{marginBottom: '3rem'}}
           />
           <Input
             type="email"
@@ -81,14 +81,14 @@ function InviteModal() {
             id="invite-email"
             name="invite-email"
             placeholder="Email"
-            css={{padding: '0.5rem 0', marginBottom: '3rem'}}
+            css={{marginBottom: '3rem'}}
           />
           <Input
             label="Phone number"
             id="invite-phone-number"
             name="invite-phone-number"
             placeholder="Phone number"
-            css={{padding: '0.5rem 0', marginBottom: '3rem'}}
+            css={{marginBottom: '3rem'}}
           />
           <Select
             label="Admin role"

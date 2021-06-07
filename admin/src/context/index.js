@@ -1,25 +1,14 @@
 import * as React from 'react'
 import {BrowserRouter as Router} from 'react-router-dom'
-import {QueryClientProvider, QueryClient} from 'react-query'
+import {QueryProvider} from './query-context'
 import {AuthProvider} from './auth-context'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 0,
-      suspense: true,
-    },
-  },
-})
-
-function AppProviders({children}) {
+export default function AppProviders({children}) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryProvider>
       <Router>
         <AuthProvider>{children}</AuthProvider>
       </Router>
-    </QueryClientProvider>
+    </QueryProvider>
   )
 }
-
-export {AppProviders, queryClient}

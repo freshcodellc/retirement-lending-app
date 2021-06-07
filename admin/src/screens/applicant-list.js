@@ -59,7 +59,7 @@ function FiltersPanel() {
             type="search"
             name="apps-search"
             placeholder="Search"
-            css={{padding: '0.5rem', paddingLeft: '20px'}}
+            css={{paddingLeft: '20px'}}
           />
         </FormControl>
         <FormControl>
@@ -68,7 +68,7 @@ function FiltersPanel() {
             name="apps-date"
             placeholder="mm/dd/yy"
             label="Application date"
-            css={{padding: '0.5rem', paddingRight: '20px'}}
+            css={{paddingRight: '20px'}}
           />
           <InputAdornment end>
             <FiCalendar size="1.4em" />

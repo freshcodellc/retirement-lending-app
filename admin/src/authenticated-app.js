@@ -1,28 +1,58 @@
 /** @jsxImportSource @emotion/react */
-import {Routes, Route, Link as RouterLink, useMatch} from 'react-router-dom'
+import {
+  Routes,
+  Route,
+  Link as RouterLink,
+  Navigate,
+  useMatch,
+} from 'react-router-dom'
 import {ErrorBoundary} from 'react-error-boundary'
+
 import ApplicantListScreen from './screens/applicant-list'
 import ApplicantDetailsScreen from './screens/applicant-details'
 import AdminScreen from './screens/admin'
 import NotFoundScreen from './screens/not-found'
 import {FullPageErrorFallback, colors} from '@solera/ui'
-import {ReactComponent as Logo} from 'assets/logo.svg'
+import {Header, ErrorFallback} from './components'
 
 export default function AuthenticatedApp() {
+  const loginVerified = useMatch('verify')
+
+  if (loginVerified) {
+    return <Navigate to="applicants" />
+  }
+
   return (
     <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
       <div>
-        <header
+        <div
           css={{
             top: 0,
-            width: '100%',
             zIndex: 999,
+            width: '100%',
             position: 'sticky',
-            backgroundColor: colors.primary,
           }}
         >
-          <Nav />
-        </header>
+          <Header>
+            <ul
+              css={{
+                margin: 0,
+                padding: 0,
+                gap: '4rem',
+                display: 'grid',
+                listStyle: 'none',
+                gridAutoFlow: 'column',
+              }}
+            >
+              <li>
+                <NavLink to="applicants">Applicants</NavLink>
+              </li>
+              <li>
+                <NavLink to="admin">Admin</NavLink>
+              </li>
+            </ul>
+          </Header>
+        </div>
         <main
           css={{
             margin: '0 auto',
@@ -33,46 +63,19 @@ export default function AuthenticatedApp() {
           }}
         >
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <AppRoutes />
+            <Routes>
+              <Route path="applicants" element={<ApplicantListScreen />} />
+              <Route
+                path="applicants/:applicantId"
+                element={<ApplicantDetailsScreen />}
+              />
+              <Route path="admin" element={<AdminScreen />} />
+              <Route path="*" element={<NotFoundScreen />} />
+            </Routes>
           </ErrorBoundary>
         </main>
       </div>
     </ErrorBoundary>
-  )
-}
-
-function Nav(params) {
-  return (
-    <nav
-      css={{
-        width: '100%',
-        height: 'calc(var(--header-height)*1px)',
-        padding: '1rem calc(var(--grid-margin-width)*1px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        color: colors.base,
-      }}
-    >
-      <div><Logo /></div>
-      <ul
-        css={{
-          margin: 0,
-          padding: 0,
-          listStyle: 'none',
-          display: 'grid',
-          gridAutoFlow: 'column',
-          gap: '4rem',
-        }}
-      >
-        <li>
-          <NavLink to="/applicants">Applicants</NavLink>
-        </li>
-        <li>
-          <NavLink to="/admin">Admin</NavLink>
-        </li>
-      </ul>
-    </nav>
   )
 }
 
@@ -91,35 +94,5 @@ function NavLink(props) {
       ]}
       {...props}
     />
-  )
-}
-
-function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="/applicants" element={<ApplicantListScreen />} />
-      <Route
-        path="/applicants/:applicantId"
-        element={<ApplicantDetailsScreen />}
-      />
-      <Route path="/admin" element={<AdminScreen />} />
-      <Route path="*" element={<NotFoundScreen />} />
-    </Routes>
-  )
-}
-
-function ErrorFallback({error}) {
-  return (
-    <div
-      css={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      {error}
-    </div>
   )
 }

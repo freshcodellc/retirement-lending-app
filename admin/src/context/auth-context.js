@@ -1,82 +1,66 @@
 import * as React from 'react'
-// import {queryCache} from 'react-query'
-import * as auth from 'auth-provider'
-import {client} from 'utils/api-client'
-// import {useAsync} from 'utils/hooks'
-// import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
+import {useQueryClient} from 'react-query'
 
-async function bootstrapAppData() {
-  let user = null
-
-  const token = await auth.getToken()
-
-  if (token) {
-    const data = await client('bootstrap', {token})
-    user = data.user
-  }
-  return user
-}
+import auth from 'services/auth-service'
+import {useAsync} from 'hooks/use-async'
+import applicationService from 'services/application-service'
+import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
 
 const AuthContext = React.createContext()
 AuthContext.displayName = 'AuthContext'
 
 function AuthProvider(props) {
-  // const {
-  //   data: user,
-  //   status,
-  //   error,
-  //   isLoading,
-  //   isIdle,
-  //   isError,
-  //   isSuccess,
-  //   run,
-  //   setData,
-  // } = useAsync()
+  const {
+    data: user,
+    status,
+    error,
+    isLoading,
+    isIdle,
+    isError,
+    isSuccess,
+    run,
+    setData,
+  } = useAsync()
+  const queryClient = useQueryClient()
 
-  // React.useEffect(() => {
-  //   const appDataPromise = bootstrapAppData()
-  //   run(appDataPromise)
-  // }, [run])
+  React.useEffect(() => {
+    const appDataPromise = bootstrapAppData(queryClient)
+    run(appDataPromise)
+  }, [run, queryClient])
 
-  // const login = React.useCallback(
-  //   form => auth.login(form).then(user => setData(user)),
-  //   [setData],
-  // )
-  // const register = React.useCallback(
-  //   form => auth.register(form).then(user => setData(user)),
-  //   [setData],
-  // )
-  // const logout = React.useCallback(() => {
-  //   auth.logout()
-  //   queryCache.clear()
-  //   setData(null)
-  // }, [setData])
+  const login = React.useCallback(form => auth.login(form), [])
+  const verifyLogin = React.useCallback(
+    form => auth.verifyLogin(form).then(user => setData(user)),
+    [setData],
+  )
+  const signup = React.useCallback(
+    form => auth.register(form).then(user => setData(user)),
+    [setData],
+  )
+  const logout = React.useCallback(() => {
+    auth.logout()
+    queryClient.clear()
+    setData(null)
+  }, [setData, queryClient])
 
-  // const value = React.useMemo(
-  //   () => ({user, login, logout, register}),
-  //   [login, logout, register, user],
-  // )
+  const value = React.useMemo(
+    () => ({user, login, verifyLogin, logout, signup}),
+    [login, verifyLogin, logout, signup, user],
+  )
 
-  // if (isLoading || isIdle) {
-  //   return <FullPageSpinner />
-  // }
-
-  // if (isError) {
-  //   return <FullPageErrorFallback error={error} />
-  // }
-
-  // if (isSuccess) {
-  //   return <AuthContext.Provider value={value} {...props} />
-  // }
-
-  // throw new Error(`Unhandled status: ${status}`)
-  // ---- TEMPORARY
-  const value = {
-    user: {
-      name: 'Sione',
-    },
+  if (isLoading || isIdle) {
+    return <FullPageSpinner />
   }
-  return <AuthContext.Provider value={value} {...props} />
+
+  if (isError) {
+    return <FullPageErrorFallback error={error} />
+  }
+
+  if (isSuccess) {
+    return <AuthContext.Provider value={value} {...props} />
+  }
+
+  throw new Error(`Unhandled status: ${status}`)
 }
 
 function useAuth() {
@@ -89,14 +73,20 @@ function useAuth() {
   return context
 }
 
-function useClient() {
-  const {user} = useAuth()
-  const token = user?.token
+async function bootstrapAppData(queryClient) {
+  let user = null
 
-  return React.useCallback(
-    (endpoint, config) => client(endpoint, {...config, token}),
-    [token],
-  )
+  const token = await auth.getToken()
+
+  if (token) {
+    const promises = [applicationService.constants(), applicationService.list()]
+    const [constants, applications] = await Promise.all(promises)
+    queryClient.setQueryData('constants', constants, {staleTime: 5000})
+    queryClient.setQueryData('applications', applications, {staleTime: 5000})
+    user = {token}
+  }
+
+  return user
 }
 
-export {AuthProvider, useAuth, useClient}
+export {AuthProvider, useAuth}

@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './global.css'
 import App from './app'
-import {AppProviders} from './context'
+import AppProviders from './context'
 import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(

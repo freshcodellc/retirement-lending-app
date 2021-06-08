@@ -3,7 +3,7 @@ import React from 'react'
 import { jsx } from '@emotion/react'
 import * as colors from './styles/colors'
 
-const Input = React.forwardRef((props, ref) => (
+const Input = React.forwardRef(({ hasError, helperText, ...props }, ref) => (
   <div
     css={{
       display: 'flex',
@@ -22,7 +22,7 @@ const Input = React.forwardRef((props, ref) => (
         border: 'none',
         alignSelf: 'stretch',
         padding: '0.5rem 0',
-        borderBottom: `2px solid ${colors.text}`,
+        borderBottom: `2px solid ${hasError ? colors.danger : colors.text}`
       }}
       ref={ref}
       {...props}
@@ -49,6 +49,29 @@ function InputAdornment({ children, end = false, ...props }) {
   )
 }
 
+function FormHelperText({ children }) {
+  return (
+    <div
+      css={{
+        minHeight: '2rem',
+        position: 'relative'
+      }}
+    >
+      <div
+        css={{
+          left: 0,
+          right: 0,
+          top: '8px',
+          fontSize: '0.9rem',
+          position: 'absolute'
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function FormControl({ children, ...props }) {
   return (
     <div
@@ -66,4 +89,4 @@ function FormControl({ children, ...props }) {
   )
 }
 
-export { Input, InputAdornment, FormControl }
+export { Input, InputAdornment, FormControl, FormHelperText }

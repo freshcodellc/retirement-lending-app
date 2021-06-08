@@ -1,11 +1,12 @@
 import * as React from 'react'
-import {useQueryClient} from 'react-query'
 
 import auth from 'services/auth-service'
 import {useAsync} from 'hooks/use-async'
+import userService from 'services/user-service'
 import applicationService from 'services/application-service'
 import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
-
+import {queryKeys as constantsQueryKeys} from 'hooks/use-constants'
+import {queryClient} from 'utils/query-client'
 const AuthContext = React.createContext()
 AuthContext.displayName = 'AuthContext'
 
@@ -21,31 +22,45 @@ function AuthProvider(props) {
     run,
     setData,
   } = useAsync()
-  const queryClient = useQueryClient()
 
   React.useEffect(() => {
     const appDataPromise = bootstrapAppData(queryClient)
     run(appDataPromise)
-  }, [run, queryClient])
+  }, [run])
 
   const login = React.useCallback(form => auth.login(form), [])
   const verifyLogin = React.useCallback(
-    form => auth.verifyLogin(form).then(user => setData(user)),
+    form =>
+      auth.verifyLogin(form).then(user => {
+        queryClient.setQueryData('login-user', user, {staleTime: 5000})
+        setData(user)
+      }),
     [setData],
   )
-  const signup = React.useCallback(
-    form => auth.register(form).then(user => setData(user)),
-    [setData],
+  const resetPassword = React.useCallback(
+    form => userService.resetPassword(form),
+    [],
+  )
+  const confirmResetPassword = React.useCallback(
+    form => userService.confirmResetPassword(form),
+    [],
   )
   const logout = React.useCallback(() => {
     auth.logout()
     queryClient.clear()
     setData(null)
-  }, [setData, queryClient])
+  }, [setData])
 
   const value = React.useMemo(
-    () => ({user, login, verifyLogin, logout, signup}),
-    [login, verifyLogin, logout, signup, user],
+    () => ({
+      user,
+      login,
+      verifyLogin,
+      logout,
+      resetPassword,
+      confirmResetPassword,
+    }),
+    [login, verifyLogin, logout, resetPassword, confirmResetPassword, user],
   )
 
   if (isLoading || isIdle) {
@@ -73,17 +88,22 @@ function useAuth() {
   return context
 }
 
-async function bootstrapAppData(queryClient) {
+async function bootstrapAppData() {
   let user = null
 
-  const token = await auth.getToken()
+  const hasTokens = auth.hasAuthTokens()
 
-  if (token) {
-    const promises = [applicationService.constants(), applicationService.list()]
-    const [constants, applications] = await Promise.all(promises)
-    queryClient.setQueryData('constants', constants, {staleTime: 5000})
-    queryClient.setQueryData('applications', applications, {staleTime: 5000})
-    user = {token}
+  if (hasTokens) {
+    const promises = [
+      userService.getLoginUser(),
+      applicationService.constants(),
+    ]
+    const [loginUser, constants] = await Promise.all(promises)
+    queryClient.setQueryData(constantsQueryKeys.constants(), constants, {
+      staleTime: 5000,
+    })
+    queryClient.setQueryData('login-user', loginUser, {staleTime: 5000})
+    user = loginUser
   }
 
   return user

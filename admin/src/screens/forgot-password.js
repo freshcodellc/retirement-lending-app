@@ -1,69 +1,125 @@
 /** @jsxImportSource @emotion/react */
+import {Fragment} from 'react'
 import {useForm} from 'react-hook-form'
-import {Link, Navigate} from 'react-router-dom'
+import {Link, Navigate, useSearchParams} from 'react-router-dom'
 
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
 import {Button, Input, TextLink} from '@solera/ui'
+import {AuthForm, FormMessage} from 'components'
 
 export default function ForgotPasswordScreen() {
-  const {resetPassword} = useAuth()
-  const {register, handleSubmit} = useForm()
-  const {isLoading, isError, isSuccess, run} = useAsync()
+  const [searchParams] = useSearchParams()
+  const routedFromResetEmail = searchParams.has('token')
+  const resetToken = searchParams.get('token')
 
-  const handleResetPassword = handleSubmit(formData =>
-    run(resetPassword(formData)),
+  return routedFromResetEmail ? (
+    <NewPasswordForm resetToken={resetToken} />
+  ) : (
+    <ResetPasswordForm />
   )
+}
 
-  if (isSuccess) {
-    return <Navigate to="reset-password" />
-  }
+function ResetPasswordForm() {
+  const {resetPassword} = useAuth()
+  const {isLoading, isError, isSuccess, run} = useAsync()
+  const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
+  const isFormInvalid = !formState.isValid
+
+  const handleResetPassword = handleSubmit(form => run(resetPassword(form)))
 
   return (
-    <>
+    <Fragment>
       <h1>Forgot Password?</h1>
-      <form
-        name="forgot-password"
-        onSubmit={handleResetPassword}
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          width: '100%',
-          '& div': {
-            marginTop: '65px',
-          },
-        }}
-      >
+      {isError ? (
+        <FormMessage variant="error">Failed to reset password!</FormMessage>
+      ) : null}
+      {isSuccess ? (
+        <FormMessage variant="success">
+          Success! Please check your email for a link to reset your password.
+        </FormMessage>
+      ) : null}
+      <AuthForm name="forgot-password" onSubmit={handleResetPassword}>
         <Input
           id="email"
-          label="Email"
           name="email"
           type="email"
-          {...register('email')}
+          hasError={isError}
+          label="Email address"
+          placeholder="Email address"
+          {...register('email', {required: true, pattern: /^\S+@\S+$/i})}
         />
         <div
           css={{
-            marginTop: '75px',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
+            flexDirection: 'column',
           }}
         >
-          <Button type="submit" disabled={isLoading}>
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            disabled={isLoading || isFormInvalid}
+          >
             Submit
           </Button>
           <Link to="/" css={{marginTop: '40px'}}>
             <TextLink>Already have an account?</TextLink>
           </Link>
         </div>
-        {isError ? <div>An error happened</div> : null}
-        {isSuccess ? (
-          <div>
-            Success! Please check your email for a link to reset your password.
-          </div>
-        ) : null}
-      </form>
-    </>
+      </AuthForm>
+    </Fragment>
+  )
+}
+
+function NewPasswordForm({resetToken}) {
+  const {confirmResetPassword} = useAuth()
+  const {isLoading, isError, isSuccess, run} = useAsync()
+  const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
+  const isFormInvalid = !formState.isValid
+
+  const handleConfirmResetPassword = handleSubmit(({new_password}) =>
+    run(confirmResetPassword({reset_token: resetToken, new_password})),
+  )
+
+  if (isSuccess) {
+    return <Navigate to="/" />
+  }
+
+  return (
+    <Fragment>
+      <h1>Create New Password</h1>
+      {isError ? (
+        <FormMessage variant="error">
+          Failed to create new password!
+        </FormMessage>
+      ) : null}
+      <AuthForm name="confirm-reset" onSubmit={handleConfirmResetPassword}>
+        <Input
+          type="password"
+          id="new-password"
+          label="New password"
+          name="new-password"
+          hasError={isError}
+          placeholder="New password"
+          {...register('new_password', {required: true})}
+        />
+        <div
+          css={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            disabled={isLoading || isFormInvalid}
+          >
+            Submit
+          </Button>
+        </div>
+      </AuthForm>
+    </Fragment>
   )
 }

@@ -1,3 +1,27 @@
+import styled from '@emotion/styled/macro'
+import {colors} from '@solera/ui'
+
+export const FormMessage = styled.div(
+  {
+    fontWeight: 500,
+    fontSize: '1rem',
+  },
+  ({variant = 'normal'}) => ({
+    color: {normal: colors.text, error: colors.danger, success: colors.green}[
+      variant
+    ],
+  }),
+)
+
+export const AuthForm = styled.form({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'stretch',
+  flexDirection: 'column',
+  '& > div': {
+    marginTop: '60px',
+  },
+})
 
 export * from './modal'
 export {default as ReturnLink} from './return-link'

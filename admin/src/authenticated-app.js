@@ -16,9 +16,10 @@ import {FullPageErrorFallback, colors} from '@solera/ui'
 import {Header, ErrorFallback} from './components'
 
 export default function AuthenticatedApp() {
-  const loginVerified = useMatch('verify')
+  const rootRoute = useMatch('/')
+  const loginVerified = useMatch('login-verify')
 
-  if (loginVerified) {
+  if (rootRoute || loginVerified) {
     return <Navigate to="applicants" />
   }
 

@@ -210,8 +210,8 @@ function ApplicantTable() {
   } = useTable({columns, data})
 
   return (
-    <TableWrapper>
-      <Table css={{border: `5px solid ${colors.gray40}`}} {...getTableProps()}>
+    <TableWrapper css={{border: `5px solid ${colors.gray40}`}}>
+      <Table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>

@@ -1,19 +1,13 @@
 import * as React from 'react'
-import {QueryClientProvider, QueryClient, ReactQueryDevtools} from 'react-query'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 2,
-      suspense: true,
-    },
-  },
-})
+import {QueryClientProvider} from 'react-query'
+import {ReactQueryDevtools} from 'react-query/devtools'
+import {queryClient} from 'utils/query-client'
 
 function QueryProvider({children}) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

@@ -1,19 +1,55 @@
-import {apiPublicClient} from 'utils/api-client'
+import {queryClient} from 'utils/query-client'
+import {apiClient, apiBaseUrl} from 'utils/api-client'
 
-const localStorageKey = 'SOLERA_ADMIN/__JWT__'
+const accessTokenKey = 'SOLERA_ADMIN/access_token'
+const refreshTokenKey = 'SOLERA_ADMIN/refresh_token'
 
-async function getToken() {
-  return window.localStorage.getItem(localStorageKey)
+function hasAuthTokens() {
+  return !!getAccessToken() && !!getRefreshToken()
+}
+
+function getAccessToken() {
+  return window.localStorage.getItem(accessTokenKey)
+}
+
+function getRefreshToken() {
+  return window.localStorage.getItem(refreshTokenKey)
+}
+
+async function refreshAccessToken() {
+  try {
+    const refreshToken = getRefreshToken()
+    if (!refreshToken) {
+      onTokensExpired()
+    }
+    const response = await window.fetch(`${apiBaseUrl}/auth/tokens`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        refresh_token: refreshToken,
+      }),
+    })
+
+    const result = await response.json()
+
+    if (response.ok) {
+      window.localStorage.setItem(accessTokenKey, result.token)
+    } else {
+      onTokensExpired()
+    }
+  } catch (error) {
+    console.error(error)
+    onTokensExpired()
+  }
 }
 
 function register(applicantData) {
-  return apiPublicClient('users/register-applicant', {
+  return apiClient('users/register-applicant', {
     data: {user: {...applicantData}},
   })
 }
 
 function login({email, password}) {
-  return apiPublicClient('auth/login', {data: {email, password}}).then(
+  return apiClient('auth/login', {data: {email, password}}).then(
     ({message}) => {
       console.log(message)
     },
@@ -21,16 +57,33 @@ function login({email, password}) {
 }
 
 function verifyLogin({code}) {
-  return apiPublicClient('auth/login-verify', {data: {code}}).then(({user}) => {
+  return apiClient('auth/login-verify', {data: {code}}).then(({user}) => {
     console.log('auth user:', user)
-    window.localStorage.setItem(localStorageKey, user.token)
+    window.localStorage.setItem(accessTokenKey, user.token)
+    window.localStorage.setItem(refreshTokenKey, user.refresh_token)
     return user
   })
 }
 
-async function logout() {
-  window.localStorage.removeItem(localStorageKey)
+function logout() {
+  window.localStorage.removeItem(accessTokenKey)
+  window.localStorage.removeItem(refreshTokenKey)
 }
 
-const auth = {getToken, register, login, verifyLogin, logout, localStorageKey}
+function onTokensExpired() {
+  logout()
+  queryClient.clear()
+  window.location.replace('/')
+}
+
+const auth = {
+  hasAuthTokens,
+  getAccessToken,
+  getRefreshToken,
+  refreshAccessToken,
+  register,
+  login,
+  verifyLogin,
+  logout,
+}
 export default auth

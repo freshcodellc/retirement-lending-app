@@ -1,7 +1,6 @@
-import {queryCache} from 'react-query'
 import auth from 'services/auth-service'
 
-const apiURL = process.env.REACT_APP_API_URL
+export const apiBaseUrl = process.env.REACT_APP_API_BASE_URL
 
 function makeClient(authRequired) {
   return async (
@@ -10,7 +9,10 @@ function makeClient(authRequired) {
   ) => {
     let token
     if (authRequired) {
-      token = await auth.getToken()
+      token = auth.getAccessToken()
+      if (!token) {
+        await auth.refreshAccessToken()
+      }
     }
 
     const config = {
@@ -24,25 +26,21 @@ function makeClient(authRequired) {
       ...customConfig,
     }
 
-    return window
-      .fetch(`${apiURL}/${endpoint}`, config)
-      .then(async response => {
-        if (response.status === 401) {
-          queryCache.clear()
-          await auth.logout()
-          // refresh the page for them
-          window.location.assign(window.location)
-          return Promise.reject({message: 'Please re-authenticate.'})
-        }
-        const data = await response.json()
-        if (response.ok) {
-          return data
-        } else {
-          return Promise.reject(data)
-        }
-      })
+    const response = await window.fetch(`${apiBaseUrl}/${endpoint}`, config)
+
+    if (authRequired && response.status === 401) {
+      await auth.refreshAccessToken()
+    }
+
+    const result = await response.json()
+
+    if (response.ok) {
+      return result
+    } else {
+      return Promise.reject(result)
+    }
   }
 }
 
+export const apiClient = makeClient(false)
 export const apiSecureClient = makeClient(true)
-export const apiPublicClient = makeClient(false)

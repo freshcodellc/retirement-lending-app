@@ -33,7 +33,10 @@ const Button = styled.button(
       cursor: 'not-allowed'
     }
   },
-  ({ variant = 'primary' }) => variants[variant]
+  ({ variant = 'primary', isLoading = false }) => ({
+    ...variants[variant],
+    ...(isLoading ? { '&:disabled': { cursor: 'progress' } } : {})
+  })
 )
 
 const IconButton = styled.button({
@@ -42,6 +45,11 @@ const IconButton = styled.button({
   background: 'none',
   '&:hover': {
     cursor: 'pointer'
+  },
+  '&:disabled': {
+    background: colors.gray20,
+    color: colors.gray80,
+    cursor: 'not-allowed'
   }
 })
 

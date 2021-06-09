@@ -10,6 +10,10 @@ function getAdmins() {
   })
 }
 
+function sendInvite({email}) {
+  return apiSecureClient('user-invites', {data: {email}})
+}
+
 function resetPassword({email}) {
   return apiClient('users/password-reset', {data: {email}}).then(
     ({message}) => {
@@ -24,5 +28,11 @@ function confirmResetPassword({reset_token, new_password}) {
   })
 }
 
-const userService = {getLoginUser, getAdmins, resetPassword, confirmResetPassword}
+const userService = {
+  getLoginUser,
+  getAdmins,
+  sendInvite,
+  resetPassword,
+  confirmResetPassword,
+}
 export default userService

@@ -2,8 +2,15 @@
 import * as React from 'react'
 import {FiSearch, FiTrash2} from 'react-icons/fi'
 import {useTable, useGlobalFilter, useAsyncDebounce} from 'react-table'
+import {useForm} from 'react-hook-form'
 
-import {Modal, ModalContents, ModalOpenButton} from 'components'
+import {
+  useModal,
+  ModalProvider,
+  ModalContents,
+  ModalOpenButton,
+  FormMessage,
+} from 'components'
 import {
   Button,
   IconButton,
@@ -17,11 +24,10 @@ import {
   Td,
   TextLink,
   colors,
-  Select,
-  SelectOption,
 } from '@solera/ui'
 import {useAdminsTable} from 'hooks/use-admins'
 import {useTableFilters} from 'hooks/use-table-filters'
+import {useSendInvite} from 'hooks/use-send-invite'
 export default function Admin() {
   const columns = React.useMemo(
     () => [
@@ -58,7 +64,9 @@ export default function Admin() {
     <div>
       <div css={{textAlign: 'center'}}>
         <h1>Admin</h1>
-        <InviteModal />
+        <ModalProvider>
+          <InviteModal />
+        </ModalProvider>
       </div>
       <div
         css={{
@@ -88,28 +96,62 @@ export default function Admin() {
 }
 
 function InviteModal() {
+  const [, openModal] = useModal()
+  const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
+  //TODO: optimistic update invite row
+  const {mutate, isLoading, isError, isSuccess, error} = useSendInvite({
+    onSuccess() {
+      setTimeout(() => {
+        openModal(false)
+      }, 2000)
+    },
+  })
+  const isFormInvalid = !formState.isValid
+
+  const handleSendInvite = handleSubmit(mutate)
+
   return (
-    <Modal>
+    <React.Fragment>
       <ModalOpenButton>
         <Button variant="secondary" css={{width: '100%', maxWidth: '300px'}}>
           Invite new admin
         </Button>
       </ModalOpenButton>
       <ModalContents id="invite-modal" title="Invite">
-        <form css={{padding: '1rem', margin: '0 auto', width: '60%'}}>
+        <div css={{textAlign: 'center'}}>
+          {isError ? (
+            <FormMessage variant="error">{error.message}</FormMessage>
+          ) : null}
+          {isSuccess ? (
+            <FormMessage variant="success">
+              Your invite is on its way!
+            </FormMessage>
+          ) : null}
+        </div>
+        <form
+          name="send-invite"
+          onSubmit={handleSendInvite}
+          css={{
+            margin: '0 auto',
+            width: '60%',
+            '& > *': {
+              marginTop: '3rem',
+            },
+          }}
+        >
           <Input
             label="First name"
             id="invite-first-name"
             name="invite-first-name"
             placeholder="First name"
-            css={{marginBottom: '3rem'}}
+            {...register('first_name', {required: true})}
           />
           <Input
             label="Last name"
             id="invite-last-name"
             name="invite-last-name"
             placeholder="Last name"
-            css={{marginBottom: '3rem'}}
+            {...register('last_name', {required: true})}
           />
           <Input
             type="email"
@@ -117,30 +159,20 @@ function InviteModal() {
             id="invite-email"
             name="invite-email"
             placeholder="Email"
-            css={{marginBottom: '3rem'}}
+            {...register('email', {required: true, pattern: /^\S+@\S+$/i})}
           />
-          <Input
-            label="Phone number"
-            id="invite-phone-number"
-            name="invite-phone-number"
-            placeholder="Phone number"
-            css={{marginBottom: '3rem'}}
-          />
-          <Select
-            label="Admin role"
-            id="invite-admin-role"
-            name="invite-admin-role"
-            css={{marginBottom: '3rem'}}
-          >
-            <SelectOption value="role1">role 1</SelectOption>
-            <SelectOption value="role2">role 2</SelectOption>
-          </Select>
-          <div css={{textAlign: 'center', margin: '1rem 0'}}>
-            <Button type="submit">Submit</Button>
+          <div css={{textAlign: 'center', padding: '1rem 0'}}>
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              disabled={isLoading || isFormInvalid}
+            >
+              Submit
+            </Button>
           </div>
         </form>
       </ModalContents>
-    </Modal>
+    </React.Fragment>
   )
 }
 
@@ -193,10 +225,11 @@ function AdminTable({
 }
 
 function ActionsCell({value: invitePending}) {
+  const {mutate, isLoading, isError, isSuccess, error} = useSendInvite()
   if (!invitePending) return ''
 
   const resendInvite = () => {
-    //TODO: mutation resend invite
+    mutate()
   }
 
   const cancelInvite = () => {

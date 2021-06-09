@@ -10,7 +10,7 @@ const callAll =
 
 const ModalContext = React.createContext()
 
-function Modal(props) {
+function ModalProvider(props) {
   const [isOpen, setIsOpen] = React.useState(false)
 
   return <ModalContext.Provider value={[isOpen, setIsOpen]} {...props} />
@@ -73,4 +73,20 @@ function ModalContents({title, children, ...props}) {
   )
 }
 
-export {Modal, ModalDismissButton, ModalOpenButton, ModalContents}
+function useModal() {
+  const context = React.useContext(ModalContext)
+
+  if (context === undefined) {
+    throw new Error(`useModal must be used within a ModalProvider`)
+  }
+
+  return context
+}
+
+export {
+  ModalProvider,
+  ModalDismissButton,
+  ModalOpenButton,
+  ModalContents,
+  useModal,
+}

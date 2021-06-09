@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
 import {FiSearch, FiTrash2} from 'react-icons/fi'
-import {useTable} from 'react-table'
+import {useTable, useGlobalFilter, useAsyncDebounce} from 'react-table'
+
 import {Modal, ModalContents, ModalOpenButton} from 'components'
 import {
   Button,
@@ -19,7 +20,40 @@ import {
   Select,
   SelectOption,
 } from '@solera/ui'
+import {useAdminsTable} from 'hooks/use-admins'
+import {useTableFilters} from 'hooks/use-table-filters'
 export default function Admin() {
+  const columns = React.useMemo(
+    () => [
+      {Header: 'Admin name', accessor: 'name'},
+      {Header: 'Joined', accessor: 'joinedDate'},
+      {Header: 'Invite date', accessor: 'invitedDate'},
+      {Header: 'Actions', accessor: 'invitePending', Cell: ActionsCell},
+    ],
+    [],
+  )
+  const {filterTypes} = useTableFilters()
+  const {data, status, error} = useAdminsTable()
+  const {setGlobalFilter, ...restTableProps} = useTable(
+    {columns, data, filterTypes},
+    useGlobalFilter,
+  )
+  const [searchEntry, setSearchEntry] = React.useState('')
+  const setTableFilter = useAsyncDebounce(value => {
+    setGlobalFilter(value || undefined)
+  }, 200)
+
+  const handleSearch = e => {
+    setSearchEntry(e.target.value)
+    setTableFilter(e.target.value)
+  }
+
+  if (status === 'loading') {
+    return 'loading...'
+  } else if (status === 'error') {
+    return error.message
+  }
+
   return (
     <div>
       <div css={{textAlign: 'center'}}>
@@ -42,11 +76,13 @@ export default function Admin() {
             type="search"
             name="search-admin"
             placeholder="Search"
+            value={searchEntry}
+            onChange={handleSearch}
             css={{paddingLeft: '20px'}}
           />
         </FormControl>
       </div>
-      <AdminTable />
+      <AdminTable {...restTableProps} />
     </div>
   )
 }
@@ -108,98 +144,28 @@ function InviteModal() {
   )
 }
 
-function AdminTable() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Admin name',
-        accessor: 'adminName',
-      },
-      {
-        Header: 'Joined',
-        accessor: 'joined',
-      },
-      {
-        Header: 'Invite date',
-        accessor: 'inviteDate',
-      },
-      {
-        Header: 'Actions',
-        accessor: 'actions',
-        Cell({value: initialValue, row: {index}, column: {id}, updateMyData}) {
-          const invitePending = true
-
-          return (
-            <div
-              css={{
-                display: 'flex',
-                alignItems: 'center',
-                flexWrap: 'nowrap',
-                justifyContent: 'space-between',
-              }}
-            >
-              {invitePending ? (
-                <TextLink variant="secondary">Resend invite</TextLink>
-              ) : null}
-              <IconButton>
-                <FiTrash2 size="1.5em" color={colors.danger} />
-              </IconButton>
-            </div>
-          )
-        },
-      },
-    ],
-    [],
-  )
-  const data = React.useMemo(
-    () => [
-      {
-        adminName: 'John',
-        joined: '12.10.20',
-        inviteDate: '12.10.20',
-        actions: '',
-      },
-      {
-        adminName: 'Mary',
-        joined: '12.10.20',
-        inviteDate: '12.10.20',
-        actions: '',
-      },
-      {
-        adminName: 'Joe',
-        joined: '12.10.20',
-        inviteDate: '12.10.20',
-        actions: '',
-      },
-      {
-        adminName: 'Joe',
-        joined: '12.10.20',
-        inviteDate: '12.10.20',
-        actions: '',
-      },
-    ],
-    [],
-  )
-  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
-    useTable({columns, data})
-
+function AdminTable({
+  rows,
+  state,
+  prepareRow,
+  headerGroups,
+  getTableProps,
+  setGlobalFilter,
+  getTableBodyProps,
+}) {
   return (
     <TableWrapper>
       <Table {...getTableProps()}>
         <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+          {headerGroups.map(group => (
+            <tr {...group.getHeaderGroupProps()}>
+              {group.headers.map(column => (
                 <Th
                   css={{
-                    fontWeight: 500,
-                    fontSize: '1.2rem',
                     paddingTop: '1.2rem',
                     paddingBottom: '1.2rem',
                     borderBottom: `3px solid ${colors.gray40}`,
-                    '&:last-child': {
-                      minWidth: '250px',
-                    },
+                    '&:last-child': {minWidth: '250px'},
                   }}
                   {...column.getHeaderProps()}
                 >
@@ -210,18 +176,48 @@ function AdminTable() {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
+          {rows.map(row => {
             prepareRow(row)
             return (
-              <Tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
-                })}
+              <Tr css={{fontSize: '20px'}} {...row.getRowProps()}>
+                {row.cells.map(cell => (
+                  <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                ))}
               </Tr>
             )
           })}
         </tbody>
       </Table>
     </TableWrapper>
+  )
+}
+
+function ActionsCell({value: invitePending}) {
+  if (!invitePending) return ''
+
+  const resendInvite = () => {
+    //TODO: mutation resend invite
+  }
+
+  const cancelInvite = () => {
+    //TODO: mutation cancel invite
+  }
+
+  return (
+    <div
+      css={{
+        display: 'flex',
+        flexWrap: 'nowrap',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <TextLink variant="secondary" onClick={resendInvite}>
+        Resend invite
+      </TextLink>
+      <IconButton onClick={cancelInvite}>
+        <FiTrash2 size="1.5em" color={colors.danger} />
+      </IconButton>
+    </div>
   )
 }

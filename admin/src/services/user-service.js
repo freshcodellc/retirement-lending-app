@@ -4,6 +4,12 @@ function getLoginUser() {
   return apiSecureClient('users/me')
 }
 
+function getAdmins() {
+  return apiSecureClient('users').then(users => {
+    return users.filter(user => user.role === 'admin')
+  })
+}
+
 function resetPassword({email}) {
   return apiClient('users/password-reset', {data: {email}}).then(
     ({message}) => {
@@ -18,5 +24,5 @@ function confirmResetPassword({reset_token, new_password}) {
   })
 }
 
-const userService = {getLoginUser, resetPassword, confirmResetPassword}
+const userService = {getLoginUser, getAdmins, resetPassword, confirmResetPassword}
 export default userService

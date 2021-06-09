@@ -218,8 +218,6 @@ function ApplicantTable() {
               {headerGroup.headers.map(column => (
                 <Th
                   css={{
-                    fontWeight: 500,
-                    fontSize: '1.2rem',
                     height: '5rem',
                     verticalAlign: 'bottom',
                     paddingBottom: '1.2rem',

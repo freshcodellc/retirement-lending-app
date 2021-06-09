@@ -10,14 +10,17 @@ const TableWrapper = styled.div({
 
 const Table = styled.table({
   width: '100%',
-  borderSpacing: 0
+  maxWidth: '100%',
+  borderCollapse: 'collapse'
 })
 
 const Th = styled.th({
   verticalAlign: 'middle',
   textAlign: 'left',
   paddingLeft: '2rem',
-  paddingRight: '2rem'
+  paddingRight: '2rem',
+  fontWeight: 500,
+  fontSize: '20px'
 })
 
 const Tr = styled.tr({

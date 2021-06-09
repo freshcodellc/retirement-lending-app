@@ -99,10 +99,8 @@ async function bootstrapAppData() {
       applicationService.constants(),
     ]
     const [loginUser, constants] = await Promise.all(promises)
-    queryClient.setQueryData(constantsQueryKeys.constants(), constants, {
-      staleTime: 5000,
-    })
-    queryClient.setQueryData('login-user', loginUser, {staleTime: 5000})
+    queryClient.setQueryData('constants', constants)
+    queryClient.setQueryData('login-user', loginUser)
     user = loginUser
   }
 

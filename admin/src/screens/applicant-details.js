@@ -337,8 +337,6 @@ function CommHistoryTab() {
               {headerGroup.headers.map(column => (
                 <Th
                   css={{
-                    fontWeight: 500,
-                    fontSize: '1.2rem',
                     paddingTop: '1.2rem',
                     paddingBottom: '1.2rem',
                     borderBottom: `3px solid ${colors.gray40}`,

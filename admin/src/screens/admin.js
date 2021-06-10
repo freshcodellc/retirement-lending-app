@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
-import {FiSearch, FiTrash2} from 'react-icons/fi'
+import {FiTrash2} from 'react-icons/fi'
 import {useTable, useGlobalFilter, useAsyncDebounce} from 'react-table'
 import {useForm} from 'react-hook-form'
 
@@ -10,13 +10,12 @@ import {
   ModalContents,
   ModalOpenButton,
   FormMessage,
+  SearchInput,
 } from 'components'
 import {
   Button,
   IconButton,
   Input,
-  InputAdornment,
-  FormControl,
   TableWrapper,
   Table,
   Th,
@@ -26,8 +25,8 @@ import {
   colors,
 } from '@solera/ui'
 import {useAdminsTable} from 'hooks/use-admins'
-import {useTableFilters} from 'hooks/use-table-filters'
 import {useSendInvite} from 'hooks/use-send-invite'
+import {useTableFilters} from 'hooks/use-table-filters'
 export default function Admin() {
   const columns = React.useMemo(
     () => [
@@ -39,7 +38,7 @@ export default function Admin() {
     [],
   )
   const {filterTypes} = useTableFilters()
-  const {data, status, error} = useAdminsTable()
+  const {data, isLoading} = useAdminsTable()
   const {setGlobalFilter, ...restTableProps} = useTable(
     {columns, data, filterTypes},
     useGlobalFilter,
@@ -54,10 +53,8 @@ export default function Admin() {
     setTableFilter(e.target.value)
   }
 
-  if (status === 'loading') {
-    return 'loading...'
-  } else if (status === 'error') {
-    return error.message
+  if (isLoading) {
+    return 'Loading...'
   }
 
   return (
@@ -76,19 +73,12 @@ export default function Admin() {
           justifyContent: 'flex-end',
         }}
       >
-        <FormControl>
-          <InputAdornment>
-            <FiSearch />
-          </InputAdornment>
-          <Input
-            type="search"
-            name="search-admin"
-            placeholder="Search"
-            value={searchEntry}
-            onChange={handleSearch}
-            css={{paddingLeft: '20px'}}
-          />
-        </FormControl>
+        <SearchInput
+          name="search-admin"
+          placeholder="Search"
+          value={searchEntry}
+          onChange={handleSearch}
+        />
       </div>
       <AdminTable {...restTableProps} />
     </div>
@@ -106,7 +96,6 @@ function InviteModal() {
       }, 2000)
     },
   })
-  const isFormInvalid = !formState.isValid
 
   const handleSendInvite = handleSubmit(mutate)
 
@@ -165,7 +154,7 @@ function InviteModal() {
             <Button
               type="submit"
               isLoading={isLoading}
-              disabled={isLoading || isFormInvalid}
+              disabled={isLoading || !formState.isValid}
             >
               Submit
             </Button>
@@ -196,8 +185,8 @@ function AdminTable({
                   css={{
                     paddingTop: '1.2rem',
                     paddingBottom: '1.2rem',
-                    borderBottom: `3px solid ${colors.gray40}`,
                     '&:last-child': {minWidth: '250px'},
+                    borderBottom: `3px solid ${colors.gray40}`,
                   }}
                   {...column.getHeaderProps()}
                 >

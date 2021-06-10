@@ -10,7 +10,6 @@ export default function LoginVerifyScreen() {
   const {verifyLogin} = useAuth()
   const {isLoading, isError, run} = useAsync()
   const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
-  const isFormInvalid = !formState.isValid
 
   const handleVerifyLogin = handleSubmit(form => run(verifyLogin(form)))
 
@@ -45,7 +44,7 @@ export default function LoginVerifyScreen() {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || isFormInvalid}
+            disabled={isLoading || !formState.isValid}
           >
             Submit
           </Button>

@@ -1,94 +1,122 @@
 /** @jsxImportSource @emotion/react */
-import {useForm} from 'react-hook-form'
-import {Link} from 'react-router-dom'
+import * as React from 'react'
+import {Link, Navigate} from 'react-router-dom'
+import {useForm, Controller} from 'react-hook-form'
 
-import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Button, Input, TextLink, colors} from '@solera/ui'
-
+import {useAuth} from 'context/auth-context'
+import {Button, Input, TextLink} from '@solera/ui'
+import {useConfirmInvite} from 'hooks/use-confirm-invite'
+import {AuthForm, FormMessage, MaskedInput, PasswordInput} from 'components'
 export default function SignUpScreen() {
   const {signup} = useAuth()
-  const {register, handleSubmit} = useForm()
-  const {isLoading, isError, isSuccess, run} = useAsync()
+  const {isLoading, isSuccess, isError, error, run} = useAsync()
+  const {register, handleSubmit, formState, control, setValue} = useForm({
+    mode: 'onChange',
+  })
+  const confirmed = useConfirmInvite({
+    onSuccess(result) {
+      setValue('email', result.email)
+    },
+  })
 
-  const handleSignup = handleSubmit(formData => run(signup(formData)))
+  const handleSignup = handleSubmit(form => run(signup(form)))
+
+  if (!confirmed) {
+    return (
+      <React.Fragment>
+        <FormMessage variant="error">
+          Invite expired! Please request new invite
+        </FormMessage>
+        <Link to="/">Return to Login page</Link>
+      </React.Fragment>
+    )
+  }
+
+  if (isSuccess) {
+    return <Navigate to="/" />
+  }
 
   return (
-    <>
-      <h1>Sign up</h1>
-      <form
-        name="sign-up"
-        onSubmit={handleSignup}
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          width: '100%',
-          '& div': {
-            marginTop: '65px',
-          },
-        }}
-      >
+    <React.Fragment>
+      <h1>Set up your account</h1>
+      {isError ? (
+        <FormMessage variant="error">{error.message}</FormMessage>
+      ) : null}
+      <AuthForm name="sign-up" onSubmit={handleSignup}>
         <Input
+          type="text"
           id="firstName"
-          label="First Name"
           name="first_name"
-          type="text"
-          {...register('first_name')}
+          hasError={isError}
+          label="First name"
+          placeholder="First name"
+          {...register('first_name', {required: true})}
         />
         <Input
-          id="lastName"
-          label="Last Name"
+          type="text"
+          id="last_name"
           name="last_name"
-          type="text"
-          {...register('last_name')}
-        />
-        <Input
-          id="phone"
-          label="Phone Number"
-          name="phone_number"
-          type="text"
-          {...register('phone_number')}
+          hasError={isError}
+          label="Last name"
+          placeholder="Last name"
+          {...register('last_name', {required: true})}
         />
         <Input
           id="email"
-          label="Email"
           name="email"
           type="email"
-          {...register('email')}
+          hasError={isError}
+          label="Email address"
+          placeholder="Email address"
+          {...register('email', {required: true, pattern: /^\S+@\S+$/i})}
         />
-        <Input
+        <Controller
+          control={control}
+          name="phone_number"
+          rules={{required: true}}
+          render={({field: {onChange, value, name}}) => (
+            <MaskedInput
+              unmask
+              type="tel"
+              id={name}
+              name={name}
+              value={value}
+              hasError={isError}
+              onAccept={onChange}
+              mask="000-000-0000"
+              label="Phone number"
+              placeholder="Phone number"
+            />
+          )}
+        />
+        <PasswordInput
           id="password"
-          label="Password"
           name="password"
-          type="password"
-          {...register('password')}
+          hasError={isError}
+          label="Password"
+          placeholder="Password"
+          {...register('password', {required: true})}
         />
         <div
           css={{
-            marginTop: '75px',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
+            flexDirection: 'column',
           }}
         >
-          <Button type="submit" disabled={isLoading}>
-            Sign up
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            disabled={isLoading || !formState.isValid}
+          >
+            Submit
           </Button>
           <Link to="/" css={{marginTop: '40px'}}>
             <TextLink>Already have an account?</TextLink>
           </Link>
         </div>
-        {isError ? (
-          <div css={{color: colors.red}}>An error happened</div>
-        ) : null}
-        {isSuccess ? (
-          <div>
-            Success! Please check your email and click the confirmation link
-            before logging in.
-          </div>
-        ) : null}
-      </form>
-    </>
+      </AuthForm>
+    </React.Fragment>
   )
 }

@@ -78,7 +78,6 @@ function FormControl({ children, ...props }) {
       css={{
         width: '100%',
         display: 'flex',
-        maxWidth: '300px',
         alignItems: 'center',
         position: 'relative'
       }}

@@ -10,8 +10,8 @@ import {AuthForm, FormMessage} from 'components'
 
 export default function ForgotPasswordScreen() {
   const [searchParams] = useSearchParams()
-  const routedFromResetEmail = searchParams.has('token')
   const resetToken = searchParams.get('token')
+  const routedFromResetEmail = searchParams.has('token')
 
   return routedFromResetEmail ? (
     <NewPasswordForm resetToken={resetToken} />
@@ -24,7 +24,6 @@ function ResetPasswordForm() {
   const {resetPassword} = useAuth()
   const {isLoading, isError, isSuccess, run} = useAsync()
   const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
-  const isFormInvalid = !formState.isValid
 
   const handleResetPassword = handleSubmit(form => run(resetPassword(form)))
 
@@ -59,7 +58,7 @@ function ResetPasswordForm() {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || isFormInvalid}
+            disabled={isLoading || !formState.isValid}
           >
             Submit
           </Button>
@@ -76,7 +75,6 @@ function NewPasswordForm({resetToken}) {
   const {confirmResetPassword} = useAuth()
   const {isLoading, isError, isSuccess, run} = useAsync()
   const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
-  const isFormInvalid = !formState.isValid
 
   const handleConfirmResetPassword = handleSubmit(({new_password}) =>
     run(confirmResetPassword({reset_token: resetToken, new_password})),
@@ -114,7 +112,7 @@ function NewPasswordForm({resetToken}) {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || isFormInvalid}
+            disabled={isLoading || !formState.isValid}
           >
             Submit
           </Button>

@@ -1,6 +1,6 @@
 import {apiClient, apiSecureClient} from 'utils/api-client'
 
-function getLoginUser() {
+function getMe() {
   return apiSecureClient('users/me')
 }
 
@@ -12,6 +12,10 @@ function getAdmins() {
 
 function sendInvite({email}) {
   return apiSecureClient('user-invites', {data: {email}})
+}
+
+function confirmInvite(token) {
+  return apiClient('user-invites/confirm', {data: {token}})
 }
 
 function resetPassword({email}) {
@@ -29,9 +33,10 @@ function confirmResetPassword({reset_token, new_password}) {
 }
 
 const userService = {
-  getLoginUser,
+  getMe,
   getAdmins,
   sendInvite,
+  confirmInvite,
   resetPassword,
   confirmResetPassword,
 }

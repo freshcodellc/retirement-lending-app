@@ -5,8 +5,7 @@ import {useAsync} from 'hooks/use-async'
 import userService from 'services/user-service'
 import applicationService from 'services/application-service'
 import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
-import {queryKeys as constantsQueryKeys} from 'hooks/use-constants'
-import {queryClient} from 'utils/query-client'
+import {queryClient, queryKeys} from 'utils/query-client'
 const AuthContext = React.createContext()
 AuthContext.displayName = 'AuthContext'
 
@@ -32,7 +31,7 @@ function AuthProvider(props) {
   const verifyLogin = React.useCallback(
     form =>
       auth.verifyLogin(form).then(user => {
-        queryClient.setQueryData('login-user', user, {staleTime: 5000})
+        queryClient.setQueryData(queryKeys.me, user)
         setData(user)
       }),
     [setData],
@@ -45,6 +44,7 @@ function AuthProvider(props) {
     form => userService.confirmResetPassword(form),
     [],
   )
+  const signup = React.useCallback(form => auth.signup(form), [])
   const logout = React.useCallback(() => {
     auth.logout()
     queryClient.clear()
@@ -55,12 +55,21 @@ function AuthProvider(props) {
     () => ({
       user,
       login,
-      verifyLogin,
       logout,
+      signup,
+      verifyLogin,
       resetPassword,
       confirmResetPassword,
     }),
-    [login, verifyLogin, logout, resetPassword, confirmResetPassword, user],
+    [
+      user,
+      login,
+      logout,
+      signup,
+      verifyLogin,
+      resetPassword,
+      confirmResetPassword,
+    ],
   )
 
   if (isLoading || isIdle) {
@@ -94,14 +103,11 @@ async function bootstrapAppData() {
   const hasTokens = auth.hasAuthTokens()
 
   if (hasTokens) {
-    const promises = [
-      userService.getLoginUser(),
-      applicationService.constants(),
-    ]
-    const [loginUser, constants] = await Promise.all(promises)
-    queryClient.setQueryData('constants', constants)
-    queryClient.setQueryData('login-user', loginUser)
-    user = loginUser
+    const promises = [userService.getMe(), applicationService.constants()]
+    const [me, constants] = await Promise.all(promises)
+    queryClient.setQueryData(queryKeys.me, me)
+    queryClient.setQueryData(queryKeys.constants, constants)
+    user = me
   }
 
   return user

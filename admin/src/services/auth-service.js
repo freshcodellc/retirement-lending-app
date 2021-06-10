@@ -42,10 +42,8 @@ async function refreshAccessToken() {
   }
 }
 
-function register(applicantData) {
-  return apiClient('users/register-applicant', {
-    data: {user: {...applicantData}},
-  })
+function signup(user) {
+  return apiClient('users', {data: {user}})
 }
 
 function login({email, password}) {
@@ -81,9 +79,9 @@ const auth = {
   getAccessToken,
   getRefreshToken,
   refreshAccessToken,
-  register,
   login,
   verifyLogin,
+  signup,
   logout,
 }
 export default auth

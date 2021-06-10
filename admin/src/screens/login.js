@@ -11,7 +11,6 @@ export default function LoginScreen() {
   const {login} = useAuth()
   const {isLoading, isSuccess, isError, error, run} = useAsync()
   const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
-  const isFormInvalid = !formState.isValid
   const formError = error?.error ?? 'Failed to login!'
 
   if (isSuccess) {
@@ -55,7 +54,7 @@ export default function LoginScreen() {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || isFormInvalid}
+            disabled={isLoading || !formState.isValid}
           >
             Submit
           </Button>

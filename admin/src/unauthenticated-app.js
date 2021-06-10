@@ -4,6 +4,7 @@ import ForgotPasswordScreen from './screens/forgot-password'
 import LoginScreen from './screens/login'
 import LoginVerifyScreen from './screens/login-verify'
 import NotFoundScreen from './screens/not-found'
+import SignupScreen from './screens/sign-up'
 import {Header} from 'components'
 
 export default function UnauthenticatedApp() {
@@ -27,6 +28,7 @@ export default function UnauthenticatedApp() {
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/login-verify" element={<LoginVerifyScreen />} />
           <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
+          <Route path="/admin-register" element={<SignupScreen />} />
           <Route path="*" element={<NotFoundScreen />} />
         </Routes>
       </div>

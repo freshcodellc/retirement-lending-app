@@ -18,8 +18,8 @@ import {
   TextLink,
 } from '@solera/ui'
 import {useTable} from 'react-table'
-import {FiSearch, FiCalendar} from 'react-icons/fi'
-import {StatusBadge} from 'components'
+import {FiCalendar} from 'react-icons/fi'
+import {StatusBadge, SearchInput} from 'components'
 
 export default function ApplicantList() {
   return (
@@ -51,17 +51,7 @@ function FiltersPanel() {
       }}
     >
       <div>
-        <FormControl css={{marginBottom: '2rem'}}>
-          <InputAdornment>
-            <FiSearch />
-          </InputAdornment>
-          <Input
-            type="search"
-            name="apps-search"
-            placeholder="Search"
-            css={{paddingLeft: '20px'}}
-          />
-        </FormControl>
+        <SearchInput id="apps-search" name="apps-search" placeholder="Search" />
         <FormControl>
           <Input
             type="search"
@@ -82,9 +72,7 @@ function FiltersPanel() {
         </Select>
       </div>
       <div>
-        <label
-          css={{fontSize: '20px', display: 'flex', alignItems: 'center'}}
-        >
+        <label css={{fontSize: '20px', display: 'flex', alignItems: 'center'}}>
           <Checkbox
             checked={checked}
             name="assigned-to-me"

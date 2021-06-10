@@ -1,7 +1,8 @@
 import styled from '@emotion/styled/macro'
+
 import {colors} from '@solera/ui'
 
-export const FormMessage = styled.div(
+export const FormMessage = styled.p(
   {
     fontWeight: 500,
     fontSize: '1rem',
@@ -23,6 +24,7 @@ export const AuthForm = styled.form({
   },
 })
 
+export * from './input'
 export * from './modal'
 export {default as ReturnLink} from './return-link'
 export {default as StatusBadge} from './status-badge'

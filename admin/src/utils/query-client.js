@@ -3,11 +3,11 @@ import {QueryClient} from 'react-query'
 const queryClient = new QueryClient()
 
 const queryKeys = {
-  me: 'me',
   users: 'users',
   constants: 'constants',
-  application: id => ['applications', id],
-  applications: ({page = 1, ...filters}) => ['applications', page, filters],
+  login_user: 'login_user',
+  application: uuid => ['applications', uuid],
+  applications: (page, filters) => ['applications', filters, page],
 }
 
 export {queryClient, queryKeys}

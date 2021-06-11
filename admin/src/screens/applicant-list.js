@@ -5,22 +5,21 @@ import {useTable} from 'react-table'
 import {useForm, Controller} from 'react-hook-form'
 
 import {
-  Button,
-  colors,
-  Checkbox,
-  TableWrapper,
-  Table,
   Th,
   Tr,
   Td,
+  Table,
+  colors,
+  Button,
   TextLink,
+  Checkbox,
+  TableWrapper,
 } from '@solera/ui'
 import {useAuth} from 'context/auth-context'
-import {useConstants} from 'hooks/use-constants'
 import {joinNames, initialName} from 'utils/user'
 import {useApplications} from 'hooks/use-applications'
 import {StatusBadge, StatusSelect, SearchInput, DateInput} from 'components'
-
+import {formatPhone} from 'utils/number'
 export default function ApplicantList() {
   const [filters, setFilters] = React.useState()
 
@@ -34,7 +33,6 @@ export default function ApplicantList() {
 }
 
 function FiltersPanel({setFilters}) {
-  const {statuses} = useConstants()
   const {register, handleSubmit, reset, formState, control} = useForm()
 
   const handleFilter = handleSubmit(setFilters)
@@ -66,10 +64,10 @@ function FiltersPanel({setFilters}) {
       >
         <div>
           <SearchInput
-            id="search_query"
-            name="search_query"
+            id="query"
+            name="query"
             placeholder="Search"
-            {...register('search')}
+            {...register('query')}
           />
           <DateInput
             id="date_start"
@@ -85,7 +83,6 @@ function FiltersPanel({setFilters}) {
             id="status"
             name="status"
             control={control}
-            options={statuses}
             label="Application status"
           />
         </div>
@@ -128,26 +125,23 @@ function ApplicantTable({filters}) {
     total,
     error,
     isError,
+    setPage,
     endCount,
     isLoading,
     startCount,
     totalPages,
     applications,
+    setApplicationData,
   } = useApplications(filters)
 
   const columns = React.useMemo(
     () => [
-      {
-        Header: 'Applicant name',
-        accessor: 'first_name',
-      },
-      {
-        Header: 'Email',
-        accessor: 'email',
-      },
+      {Header: 'Applicant name', accessor: 'first_name'},
+      {Header: 'Email', accessor: 'email'},
       {
         Header: 'Phone number',
         accessor: 'phone_number',
+        Cell: ({value}) => formatPhone(value),
       },
       {
         Header: 'Status',
@@ -169,26 +163,32 @@ function ApplicantTable({filters}) {
       {
         Header: '',
         accessor: 'uuid',
-        Cell: ({value: uuid}) => (
-          <Link to={`/applicants/${uuid}`}>
-            <TextLink variant="secondary">View</TextLink>
-          </Link>
-        ),
+        Cell: ({value: uuid, row}) => {
+          const routingToApp = () => setApplicationData(row.original)
+          return (
+            <Link onMouseEnter={routingToApp} to={`/applicants/${uuid}`}>
+              <TextLink variant="secondary">View</TextLink>
+            </Link>
+          )
+        },
       },
     ],
     [user.id],
   )
   const data = React.useMemo(() => applications, [applications])
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({columns, data})
+  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
+    useTable({columns, data})
+
+  const toNextPage = () => setPage(prev => prev + 1)
+
+  const toPrevPage = () => setPage(prev => prev - 1)
 
   if (isLoading) {
     return 'Loading...'
+  }
+
+  if (isError) {
+    return error.message
   }
 
   return (
@@ -252,20 +252,28 @@ function ApplicantTable({filters}) {
         <div
           css={{
             display: 'flex',
-            marginTop: '1.5rem',
-            fontSize: '1.1rem',
+            marginTop: '2rem',
+            fontSize: '1.2rem',
+            alignItems: 'center',
             color: colors.secondary,
           }}
         >
-          {`${startCount}-${endCount} of ${total}`}
-          <TextLink disabled={page === 1} css={{marginLeft: '12px'}}>
-            Prev
+          <span
+            css={{fontSize: '1rem'}}
+          >{`${startCount}-${endCount} of ${total}`}</span>
+          <TextLink
+            onClick={toPrevPage}
+            disabled={page === 1}
+            css={{marginLeft: '1rem'}}
+          >
+            Prev Page
           </TextLink>
           <TextLink
+            onClick={toNextPage}
             css={{marginLeft: '10px'}}
             disabled={page === totalPages}
           >
-            Next
+            Next Page
           </TextLink>
         </div>
       ) : null}

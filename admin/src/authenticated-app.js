@@ -67,7 +67,7 @@ export default function AuthenticatedApp() {
             <Routes>
               <Route path="applicants" element={<ApplicantListScreen />} />
               <Route
-                path="applicants/:applicantId"
+                path="applicants/:uuid"
                 element={<ApplicantDetailsScreen />}
               />
               <Route path="admin" element={<AdminScreen />} />

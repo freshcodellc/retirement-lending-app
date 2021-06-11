@@ -1,12 +1,12 @@
 import * as React from 'react'
 
+import {Header} from 'components'
 import auth from 'services/auth-service'
 import {useAsync} from 'hooks/use-async'
 import userService from 'services/user-service'
+import {queryClient, queryKeys} from 'utils/query-client'
 import applicationService from 'services/application-service'
 import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
-import {queryClient, queryKeys} from 'utils/query-client'
-import {Header} from 'components'
 
 const AuthContext = React.createContext()
 AuthContext.displayName = 'AuthContext'
@@ -110,11 +110,12 @@ async function bootstrapAppData() {
   const hasTokens = auth.hasAuthTokens()
 
   if (hasTokens) {
-    const promises = [userService.getMe(), applicationService.constants()]
-    const [me, constants] = await Promise.all(promises)
-    queryClient.setQueryData(queryKeys.me, me)
-    queryClient.setQueryData(queryKeys.constants, constants)
-    user = me
+    user = await userService.getLoginUser()
+    queryClient.prefetchQuery(
+      queryKeys.constants,
+      applicationService.constants,
+      {staleTime: Infinity},
+    )
   }
 
   return user

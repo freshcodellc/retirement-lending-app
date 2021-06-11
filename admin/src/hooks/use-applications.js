@@ -1,28 +1,25 @@
-import {useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import {useQuery, useQueryClient} from 'react-query'
 
 import applicationService from 'services/application-service'
 import {queryKeys} from 'utils/query-client'
 
 function useApplications(filters = {}) {
+  const [page, setPage] = useState(1)
   const queryClient = useQueryClient()
   const {data = {}, ...result} = useQuery(
-    queryKeys.applications(filters),
-    () => applicationService.list(filters),
-    {
-      staleTime: 10000,
-      keepPreviousData: true,
-    },
+    queryKeys.applications(page, filters),
+    () => applicationService.list({...filters, page}),
+    {staleTime: 30000, keepPreviousData: true},
   )
   const {
-    page_number: page = 1,
     total_entries: total = 0,
     total_pages: totalPages = 1,
     loan_applications: applications = [],
   } = data
   const perPage = 50
-  const prevPage = page - 1
-  const nextPage = page + 1
+  const prevPage = Math.max(page - 1, 0)
+  const nextPage = Math.max(page + 1, totalPages)
   const endCount = prevPage * perPage + applications.length
   const startCount = endCount - (applications.length - 1)
 
@@ -35,15 +32,21 @@ function useApplications(filters = {}) {
     }
   }, [nextPage, totalPages, filters, queryClient])
 
+  const setApplicationData = app =>
+    queryClient.setQueryData(queryKeys.application(app.uuid), app)
+
   return {
     page,
     total,
+    setPage,
     prevPage,
     nextPage,
     endCount,
     startCount,
     totalPages,
+    queryClient,
     applications,
+    setApplicationData,
     ...result,
   }
 }

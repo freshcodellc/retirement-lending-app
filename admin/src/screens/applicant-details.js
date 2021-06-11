@@ -18,12 +18,13 @@ import {
   Th,
   Td,
 } from '@solera/ui'
-import {ReturnLink} from 'components'
+import {ReturnLink, StatusSelect} from 'components'
 import {FiPhone, FiSend} from 'react-icons/fi'
-
+import {useApplication} from 'hooks/use-application'
 export default function ApplicantDetails() {
+  const {data} = useApplication()
   const [activeTab, setActiveTab] = React.useState(0)
-
+  console.log(data)
   const onTabsChange = index => {
     setActiveTab(index)
   }
@@ -143,7 +144,7 @@ function ApplicationInfo() {
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '1rem',
         '&>div': {
-          height: '100%'
+          height: '100%',
         },
       }}
     >
@@ -320,13 +321,8 @@ function CommHistoryTab() {
     ],
     [],
   )
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({columns, data})
+  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
+    useTable({columns, data})
 
   return (
     <TableWrapper>

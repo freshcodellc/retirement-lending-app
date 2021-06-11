@@ -2,6 +2,8 @@
 import * as React from 'react'
 import styled from '@emotion/styled/macro'
 import {useController} from 'react-hook-form'
+
+import {useConstants} from 'hooks/use-constants'
 import {colors, Select, SelectOption, SelctEmptyOption} from '@solera/ui'
 
 const statusColors = {
@@ -68,11 +70,11 @@ const StatusAdornment = ({value}) => (
 function StatusSelect({
   name,
   rules,
-  options,
   control,
   defaultValue = 'empty',
   ...props
 }) {
+  const {statuses} = useConstants()
   const {
     field: {onChange, value = defaultValue},
   } = useController({
@@ -91,7 +93,7 @@ function StatusSelect({
       {...props}
     >
       <SelctEmptyOption value="empty">Select one</SelctEmptyOption>
-      {options.map(status => (
+      {statuses.map(status => (
         <SelectOption key={status.name} value={status.name}>
           <span css={{display: 'flex', alignItems: 'center'}}>
             <StatusColor color={status.color} />

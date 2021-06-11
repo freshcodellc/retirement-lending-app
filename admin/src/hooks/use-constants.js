@@ -8,6 +8,7 @@ function useConstants() {
   const {data = {}, ...result} = useQuery(
     queryKeys.constants,
     applicationService.constants,
+    {staleTime: Infinity},
   )
   const statuses = (data.statuses || []).map(status => ({
     color: statusColors[status.name],

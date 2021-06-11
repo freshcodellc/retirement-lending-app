@@ -6,13 +6,13 @@ async function create(data) {
 
 async function list({
   page = 1,
-  search_query = '',
+  query = '',
   date_start = '',
   date_end = '',
 }) {
   const params = new URLSearchParams()
   params.append('page', page)
-  params.append('search_query', search_query)
+  params.append('query', query)
   params.append('date_start', date_start)
   params.append('date_end', date_end)
   return apiSecureClient(`loan-applications?${params}`)

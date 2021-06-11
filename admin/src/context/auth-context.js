@@ -6,6 +6,8 @@ import userService from 'services/user-service'
 import applicationService from 'services/application-service'
 import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
 import {queryClient, queryKeys} from 'utils/query-client'
+import {Header} from 'components'
+
 const AuthContext = React.createContext()
 AuthContext.displayName = 'AuthContext'
 
@@ -73,7 +75,12 @@ function AuthProvider(props) {
   )
 
   if (isLoading || isIdle) {
-    return <FullPageSpinner />
+    return (
+      <React.Fragment>
+        <Header />
+        <FullPageSpinner />
+      </React.Fragment>
+    )
   }
 
   if (isError) {

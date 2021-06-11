@@ -1,6 +1,7 @@
 /** @jsx jsx */
-import { useState } from 'react'
+import * as React from 'react'
 import { jsx } from '@emotion/react'
+import styled from '@emotion/styled/macro'
 import {
   ListboxList,
   ListboxInput,
@@ -9,18 +10,30 @@ import {
   ListboxOption as SelectOption
 } from '@reach/listbox'
 import * as colors from './styles/colors'
-import { FaCaretDown } from 'react-icons/fa'
+import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
 
 import '@reach/listbox/styles.css'
 
-function Select({ children, label, name, css, onChange, ...props }) {
+const SelctEmptyOption = styled(SelectOption)({
+  color: colors.gray80,
+  backgroundColor: colors.gray
+})
+
+function Select({
+  children,
+  label,
+  name,
+  css,
+  onChange,
+  StartAdornment,
+  ...props
+}) {
   return (
     <div
       css={{
         width: '100%',
         display: 'flex',
         flexDirection: 'column'
-        // marginTop: '65px'
       }}
     >
       <label
@@ -30,22 +43,48 @@ function Select({ children, label, name, css, onChange, ...props }) {
         {label}
       </label>
       <ListboxInput {...props} onChange={onChange}>
-        <ListboxButton
-          arrow={<FaCaretDown size='2em' />}
-          css={{
-            border: 'none',
-            width: '100%',
-            padding: '0.5rem 0',
-            alignSelf: 'stretch',
-            borderBottom: `2px solid ${colors.text}`
-          }}
-        />
-        <ListboxPopover>
-          <ListboxList>{children}</ListboxList>
-        </ListboxPopover>
+        {({ value, valueLabel, isExpanded }) => (
+          <React.Fragment>
+            <ListboxButton
+              arrow={
+                isExpanded ? (
+                  <FaCaretUp size='2em' />
+                ) : (
+                  <FaCaretDown size='2em' />
+                )
+              }
+              css={{
+                border: 'none',
+                width: '100%',
+                padding: '0.5rem 0',
+                alignSelf: 'stretch',
+                borderBottom: `2px solid ${colors.text}`
+              }}
+            >
+              <span
+                data-value={value}
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: value === 'empty' && colors.gray80
+                }}
+              >
+                {StartAdornment && value !== 'empty' && (
+                  <StartAdornment value={value} />
+                )}{' '}
+                {valueLabel}
+              </span>
+            </ListboxButton>
+            <ListboxPopover>
+              <ListboxList css={{ maxHeight: '300px', overflowY: 'auto' }}>
+                {children}
+              </ListboxList>
+            </ListboxPopover>
+          </React.Fragment>
+        )}
       </ListboxInput>
     </div>
   )
 }
 
-export { Select, SelectOption }
+export { Select, SelectOption, SelctEmptyOption }

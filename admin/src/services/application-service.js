@@ -4,8 +4,18 @@ async function create(data) {
   return await apiSecureClient('loan-applications', {data})
 }
 
-async function list() {
-  return apiSecureClient('loan-applications')
+async function list({
+  page = 1,
+  search_query = '',
+  date_start = '',
+  date_end = '',
+}) {
+  const params = new URLSearchParams()
+  params.append('page', page)
+  params.append('search_query', search_query)
+  params.append('date_start', date_start)
+  params.append('date_end', date_end)
+  return apiSecureClient(`loan-applications?${params}`)
 }
 
 async function get(uuid) {

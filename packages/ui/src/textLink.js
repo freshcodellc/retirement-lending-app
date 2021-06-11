@@ -18,7 +18,16 @@ const TextLink = styled.span(
       cursor: 'pointer'
     }
   },
-  ({ variant = 'primary' }) => variants[variant]
+  ({ variant = 'primary', disabled = false }) => ({
+    ...variants[variant],
+    ...(disabled
+      ? {
+          color: colors.gray80,
+          pointerEvents: 'none',
+          '&:hover': { cursor: 'not-allowed' }
+        }
+      : {})
+  })
 )
 
 export { TextLink }

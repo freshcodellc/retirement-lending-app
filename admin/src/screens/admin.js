@@ -214,10 +214,11 @@ function AdminTable({
 }
 
 function ActionsCell({value: invitePending}) {
-  const {mutate, isLoading, isError, isSuccess, error} = useSendInvite()
+  const {mutate} = useSendInvite()
   if (!invitePending) return ''
 
   const resendInvite = () => {
+    //TODO: get email and send invite
     mutate()
   }
 

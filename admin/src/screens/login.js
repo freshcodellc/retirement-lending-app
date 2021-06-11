@@ -14,7 +14,7 @@ export default function LoginScreen() {
   const formError = error?.error ?? 'Failed to login!'
 
   if (isSuccess) {
-    return <Navigate to="login-verify" />
+    return <Navigate replace to="login-verify" />
   }
   console.log(error)
   const handleLogin = handleSubmit(form => run(login(form)))

@@ -1,13 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
+import {useForm} from 'react-hook-form'
 import {Link, Navigate} from 'react-router-dom'
-import {useForm, Controller} from 'react-hook-form'
 
 import {useAsync} from 'hooks/use-async'
 import {useAuth} from 'context/auth-context'
 import {Button, Input, TextLink} from '@solera/ui'
 import {useConfirmInvite} from 'hooks/use-confirm-invite'
-import {AuthForm, FormMessage, MaskedInput, PasswordInput} from 'components'
+import {AuthForm, FormMessage, PhoneInput, PasswordInput} from 'components'
 export default function SignUpScreen() {
   const {signup} = useAuth()
   const {isLoading, isSuccess, isError, error, run} = useAsync()
@@ -34,7 +34,7 @@ export default function SignUpScreen() {
   }
 
   if (isSuccess) {
-    return <Navigate to="/" />
+    return <Navigate replace to="/" />
   }
 
   return (
@@ -71,24 +71,13 @@ export default function SignUpScreen() {
           placeholder="Email address"
           {...register('email', {required: true, pattern: /^\S+@\S+$/i})}
         />
-        <Controller
+        <PhoneInput
+          hasError={isError}
           control={control}
           name="phone_number"
+          label="Phone number"
           rules={{required: true}}
-          render={({field: {onChange, value, name}}) => (
-            <MaskedInput
-              unmask
-              type="tel"
-              id={name}
-              name={name}
-              value={value}
-              hasError={isError}
-              onAccept={onChange}
-              mask="000-000-0000"
-              label="Phone number"
-              placeholder="Phone number"
-            />
-          )}
+          placeholder="Phone number"
         />
         <PasswordInput
           id="password"

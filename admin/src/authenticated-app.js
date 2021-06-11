@@ -57,7 +57,7 @@ export default function AuthenticatedApp() {
         <main
           css={{
             margin: '0 auto',
-            padding: '5rem 1rem',
+            padding: '4rem 1rem',
             width:
               'calc(var(--grid-container-width)/var(--grid-base-width)*100%)',
             maxWidth: 'calc(var(--grid-container-width)*1px)',

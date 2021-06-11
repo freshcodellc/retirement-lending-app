@@ -19,14 +19,17 @@ export const AuthForm = styled.form({
   display: 'flex',
   alignItems: 'stretch',
   flexDirection: 'column',
-  '& > div': {
+  '& > div:not(:first-child)': {
     marginTop: '60px',
+  },
+  '& > div:first-child': {
+    marginTop: '40px',
   },
 })
 
 export * from './input'
 export * from './modal'
+export * from './status'
 export {default as ReturnLink} from './return-link'
-export {default as StatusBadge} from './status-badge'
 export {default as Header} from './header'
 export {default as ErrorFallback} from './error-fallback'

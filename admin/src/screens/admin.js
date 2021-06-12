@@ -5,6 +5,7 @@ import {useTable, useGlobalFilter, useAsyncDebounce} from 'react-table'
 import {useForm} from 'react-hook-form'
 
 import {
+  Button,
   useModal,
   ModalProvider,
   ModalContents,
@@ -13,7 +14,6 @@ import {
   SearchInput,
 } from 'components'
 import {
-  Button,
   IconButton,
   Input,
   TableWrapper,
@@ -30,7 +30,7 @@ import {useTableFilters} from 'hooks/use-table-filters'
 export default function Admin() {
   const columns = React.useMemo(
     () => [
-      {Header: 'Admin name', accessor: 'name'},
+      {Header: 'Email address', accessor: 'email'},
       {Header: 'Joined', accessor: 'joinedDate'},
       {Header: 'Invite date', accessor: 'invitedDate'},
       {Header: 'Actions', accessor: 'invitePending', Cell: ActionsCell},
@@ -129,20 +129,6 @@ function InviteModal() {
           }}
         >
           <Input
-            label="First name"
-            id="invite-first-name"
-            name="invite-first-name"
-            placeholder="First name"
-            {...register('first_name', {required: true})}
-          />
-          <Input
-            label="Last name"
-            id="invite-last-name"
-            name="invite-last-name"
-            placeholder="Last name"
-            {...register('last_name', {required: true})}
-          />
-          <Input
             type="email"
             label="Email"
             id="invite-email"
@@ -154,7 +140,7 @@ function InviteModal() {
             <Button
               type="submit"
               isLoading={isLoading}
-              disabled={isLoading || !formState.isValid}
+              disabled={!formState.isValid}
             >
               Submit
             </Button>

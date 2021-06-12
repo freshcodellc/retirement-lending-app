@@ -1,32 +1,37 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
 import {useForm} from 'react-hook-form'
-import {Link, Navigate} from 'react-router-dom'
+import {Link, Navigate, useSearchParams} from 'react-router-dom'
 
 import {useAsync} from 'hooks/use-async'
 import {useAuth} from 'context/auth-context'
-import {Button, Input, TextLink} from '@solera/ui'
-import {useConfirmInvite} from 'hooks/use-confirm-invite'
-import {AuthForm, FormMessage, PhoneInput, PasswordInput} from 'components'
+import {Input, TextLink} from '@solera/ui'
+import {
+  Button,
+  AuthForm,
+  FormMessage,
+  PhoneInput,
+  PasswordInput,
+} from 'components'
 export default function SignUpScreen() {
   const {signup} = useAuth()
+  const [searchParams] = useSearchParams()
   const {isLoading, isSuccess, isError, error, run} = useAsync()
-  const {register, handleSubmit, formState, control, setValue} = useForm({
+  const {register, handleSubmit, formState, control} = useForm({
     mode: 'onChange',
   })
-  const confirmed = useConfirmInvite({
-    onSuccess(result) {
-      setValue('email', result.email)
-    },
-  })
+  const inviteToken = searchParams.get('token')
+  const hasNoInviteToken = !searchParams.has('token')
 
-  const handleSignup = handleSubmit(form => run(signup(form)))
+  const handleSignup = handleSubmit(form =>
+    run(signup({invite_token: inviteToken, user: form})),
+  )
 
-  if (!confirmed) {
+  if (hasNoInviteToken) {
     return (
       <React.Fragment>
         <FormMessage variant="error">
-          Invite expired! Please request new invite
+          Invalid invite! Please request new invite
         </FormMessage>
         <Link to="/">Return to Login page</Link>
       </React.Fragment>
@@ -97,7 +102,7 @@ export default function SignUpScreen() {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || !formState.isValid}
+            disabled={!formState.isValid}
           >
             Submit
           </Button>

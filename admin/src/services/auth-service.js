@@ -42,8 +42,8 @@ async function refreshAccessToken() {
   }
 }
 
-function signup(user) {
-  return apiClient('users', {data: {user}})
+function signup({invite_token, user}) {
+  return apiClient('admins/register', {data: {invite_token, user}})
 }
 
 function login({email, password}) {

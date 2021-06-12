@@ -9,7 +9,7 @@ function getAdmins() {
 }
 
 function sendInvite({email}) {
-  return apiSecureClient('user-invites', {data: {email}})
+  return apiSecureClient('admin-invites', {data: {email}})
 }
 
 function confirmInvite(token) {

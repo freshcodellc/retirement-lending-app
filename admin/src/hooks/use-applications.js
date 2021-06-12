@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import {useQuery, useQueryClient} from 'react-query'
 
 import applicationService from 'services/application-service'
@@ -32,8 +32,10 @@ function useApplications(filters = {}) {
     }
   }, [nextPage, totalPages, filters, queryClient])
 
-  const setApplicationData = app =>
-    queryClient.setQueryData(queryKeys.application(app.uuid), app)
+  const setApplicationData = useCallback(
+    app => queryClient.setQueryData(queryKeys.application(app.uuid), app),
+    [queryClient],
+  )
 
   return {
     page,

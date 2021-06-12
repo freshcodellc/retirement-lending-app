@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
 import styled from '@emotion/styled/macro'
-import {useController} from 'react-hook-form'
 
+import {colors} from '@solera/ui'
 import {useConstants} from 'hooks/use-constants'
-import {colors, Select, SelectOption, SelctEmptyOption} from '@solera/ui'
+import {Select, SelectOption, SelctEmptyOption} from './select'
 
 const statusColors = {
   STARTED: colors.yellow,
@@ -67,36 +67,18 @@ const StatusAdornment = ({value}) => (
   />
 )
 
-function StatusSelect({
-  name,
-  rules,
-  control,
-  defaultValue = 'empty',
-  ...props
-}) {
+function StatusSelect(props) {
   const {statuses} = useConstants()
-  const {
-    field: {onChange, value = defaultValue},
-  } = useController({
-    name,
-    control,
-    rules,
-    defaultValue,
-  })
 
   return (
-    <Select
-      value={value}
-      onChange={onChange}
-      defaultValue={defaultValue}
-      StartAdornment={StatusAdornment}
-      {...props}
-    >
-      <SelctEmptyOption value="empty">Select one</SelctEmptyOption>
+    <Select StartAdornment={StatusAdornment} {...props}>
+      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
+        Select one
+      </SelctEmptyOption>
       {statuses.map(status => (
         <SelectOption key={status.name} value={status.name}>
           <span css={{display: 'flex', alignItems: 'center'}}>
-            <StatusColor color={status.color} />
+            <StatusColor color={statusColors[status.name]} />
             {status.humanized}
           </span>
         </SelectOption>

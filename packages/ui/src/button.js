@@ -35,7 +35,15 @@ const Button = styled.button(
   },
   ({ variant = 'primary', isLoading = false }) => ({
     ...variants[variant],
-    ...(isLoading ? { '&:disabled': { cursor: 'progress' } } : {})
+    ...(isLoading
+      ? {
+          '&:disabled': {
+            cursor: 'progress',
+            color: variants[variant].color,
+            background: variants[variant].background
+          }
+        }
+      : {})
   })
 )
 

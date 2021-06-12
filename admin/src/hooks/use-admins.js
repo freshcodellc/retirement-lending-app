@@ -9,11 +9,20 @@ import {queryKeys} from 'utils/query-client'
 const formatDate = date => format(date, 'MM.dd.yy')
 
 function useAdmins() {
-  return useQuery(queryKeys.users, userService.getAdmins)
+  const {data: admins = [], ...restResult} = useQuery(
+    queryKeys.users,
+    userService.getAdmins,
+    {staleTime: 30000},
+  )
+
+  return {
+    admins,
+    ...restResult,
+  }
 }
 
 function useAdminsTable() {
-  const {data: admins = [], ...restResult} = useAdmins()
+  const {admins, ...restResult} = useAdmins()
 
   const data = useMemo(() => admins.map(mapAdmin), [admins])
 

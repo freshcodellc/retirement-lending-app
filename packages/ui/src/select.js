@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import * as React from 'react'
 import { jsx } from '@emotion/react'
-import styled from '@emotion/styled/macro'
 import {
   ListboxList,
   ListboxInput,
@@ -14,10 +13,16 @@ import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
 
 import '@reach/listbox/styles.css'
 
-const SelctEmptyOption = styled(SelectOption)({
-  color: colors.gray80,
-  backgroundColor: colors.gray
-})
+const SelctEmptyOption = (props) => (
+  <SelectOption
+    css={{
+      color: colors.gray80,
+      backgroundColor: colors.gray
+    }}
+    value='empty'
+    {...props}
+  />
+)
 
 function Select({
   children,

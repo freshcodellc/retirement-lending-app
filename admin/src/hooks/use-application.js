@@ -6,14 +6,14 @@ import {queryKeys} from 'utils/query-client'
 
 function useApplication() {
   const {uuid} = useParams()
-  const {data = {}, ...result} = useQuery(
+  const {data: application = {}, ...result} = useQuery(
     queryKeys.application(uuid),
     () => applicationService.get(uuid),
     {staleTime: 30000},
   )
 
   return {
-    data,
+    application,
     ...result,
   }
 }

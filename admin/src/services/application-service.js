@@ -4,17 +4,29 @@ async function create(data) {
   return await apiSecureClient('loan-applications', {data})
 }
 
-async function list({
-  page = 1,
-  query = '',
-  date_start = '',
-  date_end = '',
-}) {
+async function list(filters) {
   const params = new URLSearchParams()
-  params.append('page', page)
-  params.append('query', query)
-  params.append('date_start', date_start)
-  params.append('date_end', date_end)
+  const fields = [
+    'page',
+    'search_query',
+    'status',
+    'date_start',
+    'date_end',
+    'sort_by',
+    'sort_direction',
+    'only_assigned_to_me',
+  ]
+  for (const field of fields) {
+    let value = filters[field]
+    if (!value) {
+      if (field === 'date_end' && filters.date_start) {
+        value = filters.date_start
+      } else {
+        continue
+      }
+    }
+    params.append(field, value)
+  }
   return apiSecureClient(`loan-applications?${params}`)
 }
 

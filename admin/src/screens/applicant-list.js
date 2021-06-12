@@ -35,7 +35,10 @@ export default function ApplicantList() {
 function FiltersPanel({setFilters}) {
   const {register, handleSubmit, reset, formState, control} = useForm()
 
-  const handleFilter = handleSubmit(setFilters)
+  const handleFilter = handleSubmit(form => {
+    const status = form.status !== 'empty' ? form.status : undefined
+    setFilters({...form, status})
+  })
 
   const clearFilters = e => {
     e.preventDefault()
@@ -64,10 +67,10 @@ function FiltersPanel({setFilters}) {
       >
         <div>
           <SearchInput
-            id="query"
-            name="query"
+            id="search_query"
+            name="search_query"
             placeholder="Search"
-            {...register('query')}
+            {...register('search_query')}
           />
           <DateInput
             id="date_start"
@@ -88,15 +91,15 @@ function FiltersPanel({setFilters}) {
         </div>
         <div>
           <Controller
-            name="mine"
             control={control}
+            name="only_assigned_to_me"
             render={({field: {value, onChange}}) => (
               <Checkbox
-                id="mine"
-                name="mine"
                 checked={value}
                 onChange={onChange}
                 label="Assinged to me"
+                id="only_assigned_to_me"
+                name="only_assigned_to_me"
               />
             )}
           />
@@ -150,10 +153,13 @@ function ApplicantTable({filters}) {
       },
       {
         Header: 'Assigned to',
-        accessor: 'user',
-        Cell({value = {}}) {
-          const {id, first_name, last_name} = value
-          return user.id === id ? (
+        accessor: 'assigned_admin',
+        Cell({value}) {
+          if (!value) {
+            return <span>Unassigned</span>
+          }
+          const {uuid, first_name, last_name} = value
+          return user.uuid === uuid ? (
             <TextLink variant="secondary">Me</TextLink>
           ) : (
             <span>{joinNames(first_name, initialName(last_name))}</span>
@@ -173,7 +179,7 @@ function ApplicantTable({filters}) {
         },
       },
     ],
-    [user.id],
+    [user.uuid, setApplicationData],
   )
   const data = React.useMemo(() => applications, [applications])
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
@@ -224,7 +230,7 @@ function ApplicantTable({filters}) {
                 <Tr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     const mineStyle =
-                      user.id === cell.row.original.user_id
+                      user.uuid === cell.row.original.assigned_admin?.uuid
                         ? {
                             color: colors.secondary,
                             fontWeight: 500,

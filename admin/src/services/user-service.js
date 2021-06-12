@@ -5,9 +5,7 @@ function getLoginUser() {
 }
 
 function getAdmins() {
-  return apiSecureClient('users').then(users => {
-    return users.filter(user => user.role === 'admin')
-  })
+  return apiSecureClient('admins')
 }
 
 function sendInvite({email}) {

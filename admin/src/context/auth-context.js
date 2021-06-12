@@ -110,12 +110,13 @@ async function bootstrapAppData() {
   const hasTokens = auth.hasAuthTokens()
 
   if (hasTokens) {
-    user = await userService.getLoginUser()
+    const res = await userService.getLoginUser()
     queryClient.prefetchQuery(
       queryKeys.constants,
       applicationService.constants,
       {staleTime: Infinity},
     )
+    user = res.user
   }
 
   return user

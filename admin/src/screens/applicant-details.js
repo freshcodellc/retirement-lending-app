@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
 import {useTable} from 'react-table'
+import {useForm} from 'react-hook-form'
+import {FiPhone, FiSend} from 'react-icons/fi'
+
 import {
-  Button,
-  Select,
-  SelectOption,
   colors,
   Tabs,
   Tab,
@@ -18,15 +18,21 @@ import {
   Th,
   Td,
 } from '@solera/ui'
-import {ReturnLink, StatusSelect} from 'components'
-import {FiPhone, FiSend} from 'react-icons/fi'
 import {useApplication} from 'hooks/use-application'
+import {useSendTermsSheet} from 'hooks/use-send-terms-sheet'
+import {ReturnLink, StatusSelect, AdminSelect, Button} from 'components'
 export default function ApplicantDetails() {
-  const {data} = useApplication()
+  const {application, isLoading, isError, error} = useApplication()
   const [activeTab, setActiveTab] = React.useState(0)
-  console.log(data)
-  const onTabsChange = index => {
-    setActiveTab(index)
+  console.log(application)
+  const onTabsChange = index => setActiveTab(index)
+
+  if (isLoading) {
+    return 'Loading...'
+  }
+
+  if (isError) {
+    return `ERROR: ${error.message}`
   }
 
   return (
@@ -35,7 +41,7 @@ export default function ApplicantDetails() {
       <ReturnLink to="/applicants" variant="secondary">
         Applicant List
       </ReturnLink>
-      <ActionsPanel activeTab={activeTab} />
+      <ActionsPanel activeTab={activeTab} application={application} />
       <Tabs index={activeTab} onChange={onTabsChange}>
         <TabList>
           <Tab>Applicant information</Tab>
@@ -58,11 +64,26 @@ export default function ApplicantDetails() {
   )
 }
 
-function ActionsPanel({activeTab}) {
-  const panelHidden = activeTab !== 0
+function ActionsPanel({activeTab, application}) {
+  const {mutate: sendTermsSheet, isLoading} = useSendTermsSheet()
+  const {handleSubmit, control, formState} = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      status: application.status,
+      admin: application.assigned_admin?.uuid,
+    },
+  })
+
+  const handleTermSheet = handleSubmit(form => {
+    // TODO: send term sheet
+    console.log(form)
+    sendTermsSheet(form)
+  })
 
   return (
-    <div
+    <form
+      name="term-sheet"
+      onSubmit={handleTermSheet}
       css={{
         gap: '2rem',
         flexWrap: 'wrap',
@@ -70,7 +91,7 @@ function ActionsPanel({activeTab}) {
         marginBottom: '2rem',
         justifyContent: 'space-between',
         border: `5px solid ${colors.gray40}`,
-        display: panelHidden ? 'none' : 'flex',
+        display: activeTab !== 0 ? 'none' : 'flex',
         '&>div': {
           width: '100%',
           maxWidth: '300px',
@@ -79,24 +100,33 @@ function ActionsPanel({activeTab}) {
       }}
     >
       <div>
-        <Select
-          label="Status"
+        <StatusSelect
           id="status"
           name="status"
-          css={{marginBottom: '2rem'}}
-        >
-          <SelectOption value="status1">status 1</SelectOption>
-          <SelectOption value="status2">status 2</SelectOption>
-        </Select>
-        <Select label="Assigned to" id="assigned-to" name="assigned-to">
-          <SelectOption value="1">Tom S.</SelectOption>
-          <SelectOption value="2">John D.</SelectOption>
-        </Select>
+          label="Status"
+          control={control}
+          rules={{required: true}}
+        />
+        <AdminSelect
+          id="admin"
+          name="admin"
+          control={control}
+          label="Assigned to"
+          rules={{required: true}}
+          css={{marginTop: '2rem'}}
+        />
       </div>
       <div>
-        <Button variant="secondary">Send terms sheet</Button>
+        <Button
+          type="submit"
+          variant="secondary"
+          isLoading={isLoading}
+          disabled={!formState.isValid}
+        >
+          Send terms sheet
+        </Button>
       </div>
-    </div>
+    </form>
   )
 }
 

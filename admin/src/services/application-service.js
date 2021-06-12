@@ -1,33 +1,35 @@
 import {apiSecureClient} from 'utils/api-client'
 
-async function create(data) {
-  return await apiSecureClient('loan-applications', {data})
-}
+const listFields = [
+  'page',
+  'search_query',
+  'status',
+  'date_start',
+  'date_end',
+  'sort_by',
+  'sort_direction',
+  'only_assigned_to_me',
+]
 
 async function list(filters) {
   const params = new URLSearchParams()
-  const fields = [
-    'page',
-    'search_query',
-    'status',
-    'date_start',
-    'date_end',
-    'sort_by',
-    'sort_direction',
-    'only_assigned_to_me',
-  ]
-  for (const field of fields) {
+  for (const field of listFields) {
     let value = filters[field]
-    if (!value) {
-      if (field === 'date_end' && filters.date_start) {
-        value = filters.date_start
-      } else {
-        continue
-      }
+    if (!value) continue
+    switch (field) {
+      case 'date_start':
+      case 'date_end':
+        value = value.toISOString()
+        break
+      default:
     }
     params.append(field, value)
   }
   return apiSecureClient(`loan-applications?${params}`)
+}
+
+async function create(data) {
+  return await apiSecureClient('loan-applications', {data})
 }
 
 async function get(uuid) {

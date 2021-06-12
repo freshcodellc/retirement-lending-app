@@ -18,7 +18,12 @@ import {
 import {useAuth} from 'context/auth-context'
 import {joinNames, initialName} from 'utils/user'
 import {useApplications} from 'hooks/use-applications'
-import {StatusBadge, StatusSelect, SearchInput, DateInput} from 'components'
+import {
+  StatusBadge,
+  StatusSelect,
+  SearchInput,
+  DateRangePicker,
+} from 'components'
 import {formatPhone} from 'utils/number'
 export default function ApplicantList() {
   const [filters, setFilters] = React.useState()
@@ -72,9 +77,9 @@ function FiltersPanel({setFilters}) {
             placeholder="Search"
             {...register('search_query')}
           />
-          <DateInput
-            id="date_start"
-            name="date_start"
+          <DateRangePicker
+            start_name="date_start"
+            end_name="date_end"
             control={control}
             placeholder="mm/dd/yy"
             label="Application date"
@@ -262,6 +267,7 @@ function ApplicantTable({filters}) {
             fontSize: '1.2rem',
             alignItems: 'center',
             color: colors.secondary,
+            justifyContent: 'flex-end'
           }}
         >
           <span

@@ -20,6 +20,17 @@ export default function App() {
           body {
             color: ${colors.text};
           }
+          :root {
+            --primary: ${colors.primary};
+            --secondary: ${colors.secondary};
+            --header-height: 82;
+            --grid-base-width: 1500;
+            --grid-margin-width: 120;
+            --grid-container-width: calc(
+              var(--grid-base-width) - 2 * var(--grid-margin-width)
+            );
+            --field-adorn-width: 25;
+          }
         `}
       />
       {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}

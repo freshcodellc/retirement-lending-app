@@ -1,74 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import {useState, forwardRef} from 'react'
 import {IMaskMixin} from 'react-imask'
-import {FiEye, FiEyeOff, FiSearch, FiCalendar} from 'react-icons/fi'
-import {format, parse} from 'date-fns'
 import {useController} from 'react-hook-form'
+import {FiEye, FiEyeOff, FiSearch} from 'react-icons/fi'
 
 import {Input, IconButton, FormControl, InputAdornment} from '@solera/ui'
 
 const MaskedInput = IMaskMixin(({inputRef, ...props}) => (
   <Input {...props} ref={inputRef} />
 ))
-
-const configDateInputMask = ({
-  pattern = 'MM/dd/yy',
-  min = new Date(1970, 0, 1),
-}) => ({
-  pattern,
-  mask: Date,
-  autofix: true,
-  format: date => format(date, pattern),
-  parse: str => parse(str, pattern, new Date()),
-  blocks: {
-    MM: {
-      mask: window.IMask.MaskedRange,
-      from: 1,
-      to: 12,
-    },
-    yy: {
-      mask: window.IMask.MaskedRange,
-      from: 0,
-      to: 99,
-    },
-    dd: {
-      mask: window.IMask.MaskedRange,
-      from: 1,
-      to: 31,
-    },
-  },
-})
-const DateInput = forwardRef(
-  ({control, name, format, rules, className, ...props}, ref) => {
-    const maskProps = configDateInputMask({pattern: format})
-    const {
-      field: {onChange, value},
-    } = useController({
-      name,
-      control,
-      rules,
-    })
-
-    return (
-      <FormControl className={className}>
-        <MaskedInput
-          ref={ref}
-          type="text"
-          id={name}
-          name={name}
-          value={value}
-          onAccept={onChange}
-          css={{paddingRight: '20px'}}
-          {...maskProps}
-          {...props}
-        />
-        <InputAdornment end>
-          <FiCalendar size="1.4em" />
-        </InputAdornment>
-      </FormControl>
-    )
-  },
-)
 
 const PhoneInput = forwardRef(
   ({control, name, rules, format = '000-000-0000', ...props}, ref) => {
@@ -130,4 +70,4 @@ const SearchInput = forwardRef((props, ref) => {
   )
 })
 
-export {MaskedInput, PasswordInput, SearchInput, DateInput, PhoneInput}
+export {MaskedInput, PasswordInput, SearchInput, PhoneInput}

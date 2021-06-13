@@ -18,8 +18,8 @@ Spinner.defaultProps = {
   'aria-label': 'loading',
 }
 
-const Button = ({isLoading, children, ...props}) => (
-  <UiButton isLoading={isLoading} disabled={isLoading} {...props}>
+const Button = ({isLoading = false, disabled = false, children, ...props}) => (
+  <UiButton {...props} isLoading={isLoading} disabled={disabled || isLoading}>
     <span
       css={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
     >

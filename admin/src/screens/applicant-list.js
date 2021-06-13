@@ -16,7 +16,7 @@ import {
   TableWrapper,
 } from '@solera/ui'
 import {useAuth} from 'context/auth-context'
-import {joinNames, initialName} from 'utils/user'
+import {join, initial, phone} from 'utils/format'
 import {useApplications} from 'hooks/use-applications'
 import {
   StatusBadge,
@@ -24,7 +24,6 @@ import {
   SearchInput,
   DateRangePicker,
 } from 'components'
-import {formatPhone} from 'utils/number'
 export default function ApplicantList() {
   const [filters, setFilters] = React.useState()
 
@@ -149,7 +148,7 @@ function ApplicantTable({filters}) {
       {
         Header: 'Phone number',
         accessor: 'phone_number',
-        Cell: ({value}) => formatPhone(value),
+        Cell: ({value}) => phone(value),
       },
       {
         Header: 'Status',
@@ -167,7 +166,7 @@ function ApplicantTable({filters}) {
           return user.uuid === uuid ? (
             <TextLink variant="secondary">Me</TextLink>
           ) : (
-            <span>{joinNames(first_name, initialName(last_name))}</span>
+            <span>{join(first_name, initial(last_name))}</span>
           )
         },
       },
@@ -199,7 +198,7 @@ function ApplicantTable({filters}) {
   }
 
   if (isError) {
-    return error.message
+    return `ERROR: ${error.message}`
   }
 
   return (
@@ -267,7 +266,7 @@ function ApplicantTable({filters}) {
             fontSize: '1.2rem',
             alignItems: 'center',
             color: colors.secondary,
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
           }}
         >
           <span

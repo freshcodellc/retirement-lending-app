@@ -2,7 +2,7 @@
 import {useController} from 'react-hook-form'
 
 import {useAdmins} from 'hooks/use-admins'
-import {joinNames, initialName} from 'utils/user'
+import {join, initial} from 'utils/format'
 import {
   FormControl,
   Select as UiSelect,
@@ -37,7 +37,7 @@ function AdminSelect({className, ...props}) {
             value={admin.uuid}
             css={{padding: '0.5rem'}}
           >
-            {joinNames(admin.first_name, initialName(admin.last_name))}
+            {join(admin.first_name, initial(admin.last_name))}
           </SelectOption>
         ))}
       </Select>

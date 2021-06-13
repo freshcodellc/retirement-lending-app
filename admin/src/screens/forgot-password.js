@@ -5,8 +5,8 @@ import {Link, Navigate, useSearchParams} from 'react-router-dom'
 
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Button, Input, TextLink} from '@solera/ui'
-import {AuthForm, FormMessage} from 'components'
+import {Input, TextLink} from '@solera/ui'
+import {Button, AuthForm, FormMessage} from 'components'
 
 export default function ForgotPasswordScreen() {
   const [searchParams] = useSearchParams()
@@ -58,7 +58,7 @@ function ResetPasswordForm() {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || !formState.isValid}
+            disabled={!formState.isValid}
           >
             Submit
           </Button>
@@ -112,7 +112,7 @@ function NewPasswordForm({resetToken}) {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || !formState.isValid}
+            disabled={!formState.isValid}
           >
             Submit
           </Button>

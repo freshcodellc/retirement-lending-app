@@ -3,8 +3,8 @@ import {useForm} from 'react-hook-form'
 
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Button, Input, TextLink} from '@solera/ui'
-import {AuthForm, FormMessage} from 'components'
+import {Input, TextLink} from '@solera/ui'
+import {Button, AuthForm, FormMessage} from 'components'
 
 export default function LoginVerifyScreen() {
   const {verifyLogin} = useAuth()
@@ -44,7 +44,7 @@ export default function LoginVerifyScreen() {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || !formState.isValid}
+            disabled={!formState.isValid}
           >
             Submit
           </Button>

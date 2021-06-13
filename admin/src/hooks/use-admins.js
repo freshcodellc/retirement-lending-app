@@ -1,12 +1,9 @@
 import {useMemo} from 'react'
 import {useQuery} from 'react-query'
-import {format, parseJSON} from 'date-fns'
 
 import userService from 'services/user-service'
-import {joinNames} from 'utils/user'
 import {queryKeys} from 'utils/query-client'
-
-const formatDate = date => format(date, 'MM.dd.yy')
+import * as format from 'utils/format'
 
 function useAdmins() {
   const {data: admins = [], ...restResult} = useQuery(
@@ -35,9 +32,11 @@ function useAdminsTable() {
 function mapAdmin({email, status, first_name, last_name, inserted_at}) {
   //TODO: determine invite pending state
   const invitePending = status !== 'active'
-  const invitedDate = invitePending ? formatDate(new Date()) : null
-  const joinedDate = invitePending ? null : formatDate(parseJSON(inserted_at))
-  const name = joinNames(first_name, last_name)
+  const invitedDate = invitePending ? format.date(new Date(), 'MM.dd.yy') : null
+  const joinedDate = invitePending
+    ? null
+    : format.isoDate(inserted_at, 'MM.dd.yy')
+  const name = format.join(first_name, last_name)
 
   return {
     name,

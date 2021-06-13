@@ -4,8 +4,8 @@ import {Link, Navigate} from 'react-router-dom'
 
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Button, Input, TextLink} from '@solera/ui'
-import {AuthForm, FormMessage} from 'components'
+import {Input, TextLink} from '@solera/ui'
+import {Button, AuthForm, FormMessage} from 'components'
 
 export default function LoginScreen() {
   const {login} = useAuth()
@@ -16,15 +16,13 @@ export default function LoginScreen() {
   if (isSuccess) {
     return <Navigate replace to="login-verify" />
   }
-  console.log(error)
+
   const handleLogin = handleSubmit(form => run(login(form)))
 
   return (
     <>
       <h1>Log in</h1>
-      {isError ? (
-        <FormMessage variant="error">{formError}</FormMessage>
-      ) : null}
+      {isError ? <FormMessage variant="error">{formError}</FormMessage> : null}
       <AuthForm name="login" onSubmit={handleLogin}>
         <Input
           id="email"
@@ -54,7 +52,7 @@ export default function LoginScreen() {
           <Button
             type="submit"
             isLoading={isLoading}
-            disabled={isLoading || !formState.isValid}
+            disabled={!formState.isValid}
           >
             Submit
           </Button>

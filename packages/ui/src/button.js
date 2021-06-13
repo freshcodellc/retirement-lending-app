@@ -39,6 +39,7 @@ const Button = styled.button(
       ? {
           '&:disabled': {
             cursor: 'progress',
+            filter: 'brightness(110%)',
             color: variants[variant].color,
             background: variants[variant].background
           }

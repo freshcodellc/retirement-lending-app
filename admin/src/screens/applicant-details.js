@@ -17,15 +17,15 @@ import {
   Tr,
   Th,
   Td,
+  TextLink,
 } from '@solera/ui'
-import {useApplication} from 'hooks/use-application'
+import {useSaveNote} from 'hooks/use-save-note'
 import {useSendTermsSheet} from 'hooks/use-send-terms-sheet'
+import {useApplication, infoSections} from 'hooks/use-application'
 import {ReturnLink, StatusSelect, AdminSelect, Button} from 'components'
 export default function ApplicantDetails() {
   const {application, isLoading, isError, error} = useApplication()
   const [activeTab, setActiveTab] = React.useState(0)
-  console.log(application)
-  const onTabsChange = index => setActiveTab(index)
 
   if (isLoading) {
     return 'Loading...'
@@ -42,7 +42,7 @@ export default function ApplicantDetails() {
         Applicant List
       </ReturnLink>
       <ActionsPanel activeTab={activeTab} application={application} />
-      <Tabs index={activeTab} onChange={onTabsChange}>
+      <Tabs index={activeTab} onChange={setActiveTab}>
         <TabList>
           <Tab>Applicant information</Tab>
           <Tab>Notes</Tab>
@@ -50,13 +50,13 @@ export default function ApplicantDetails() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <ApplicationInfo />
+            <ApplicationInfo application={application} />
           </TabPanel>
           <TabPanel>
-            <NotesTab />
+            <NotesTab application={application} />
           </TabPanel>
           <TabPanel>
-            <CommHistoryTab />
+            <CommHistoryTab application={application} />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -130,43 +130,18 @@ function ActionsPanel({activeTab, application}) {
   )
 }
 
-function ApplicationInfo() {
-  const sections = [
+function ApplicationInfo({application}) {
+  application.addresses = [
     {
-      id: 0,
-      heading: 'Applicant Information',
-      fields: [
-        {
-          label: 'Name',
-          value: 'Jane Doe',
-        },
-      ],
-    },
-    {
-      id: 1,
-      heading: 'Property Information',
-    },
-    {
-      id: 2,
-      heading: 'Financing Information',
-    },
-    {
-      id: 3,
-      heading: 'Eligibility & Retirement Account Information',
-    },
-    {
-      id: 4,
-      heading: 'Custodian and IRA Information',
-    },
-    {
-      id: 5,
-      heading: 'Sign and Certify',
-    },
-    {
-      id: 6,
-      heading: 'Applicant files',
+      type: 'physical',
+      address: '12 Main St',
+      address_2: null,
+      city: 'Lehi',
+      state: 'UT',
+      postal_code: '84043',
     },
   ]
+
   return (
     <div
       css={{
@@ -178,25 +153,41 @@ function ApplicationInfo() {
         },
       }}
     >
-      {sections.map(section => (
+      {infoSections.map(section => (
         <div key={section.id} css={{border: `1px solid ${colors.gray}`}}>
           <div
             css={{
-              background: colors.gray,
-              padding: '1rem',
               fontWeight: 500,
               fontSize: '20px',
+              padding: '1.1rem',
+              background: colors.gray,
             }}
           >
             {section.heading}
           </div>
-          <div css={{padding: '1rem'}}>
-            {(section.fields || []).map(field => (
+          <div
+            css={{
+              padding: '1rem',
+              position: 'relative',
+              '& > :not(:last-child)': {marginBottom: '1.1rem'},
+            }}
+          >
+            <TextLink
+              css={{
+                right: '1.2rem',
+                fontWeight: 500,
+                fontSize: '1.1rem',
+                position: 'absolute',
+              }}
+            >
+              Edit
+            </TextLink>
+            {section.fields.map(field => (
               <div key={field.label}>
-                <div css={{fontWeight: 600, marginBottom: '0.5rem'}}>
+                <div css={{fontWeight: 600, marginBottom: '0.4rem'}}>
                   {field.label}
                 </div>
-                <div>{field.value}</div>
+                <div>{field.format(...field.value(application))}</div>
               </div>
             ))}
           </div>
@@ -207,6 +198,17 @@ function ApplicationInfo() {
 }
 
 function NotesTab() {
+  const {mutate: saveNote, isLoading} = useSaveNote()
+  const {handleSubmit, register, formState} = useForm({
+    mode: 'onChange',
+  })
+
+  const handleTakeNote = handleSubmit(form => {
+    //TODO: save note
+    console.log(form)
+    saveNote(form)
+  })
+
   return (
     <div
       css={{
@@ -222,6 +224,8 @@ function NotesTab() {
     >
       <div css={{border: `1px solid ${colors.gray}`}}>
         <form
+          name="notes"
+          onSubmit={handleTakeNote}
           css={{
             margin: 0,
             height: '100%',
@@ -236,8 +240,14 @@ function NotesTab() {
             id="app-note"
             name="app-note"
             placeholder="Start typing your note here..."
+            {...register('note', {required: true})}
           />
-          <Button type="submit" disabled css={{margin: '1rem auto'}}>
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            css={{margin: '1rem auto'}}
+            disabled={!formState.isValid}
+          >
             Save
           </Button>
         </form>

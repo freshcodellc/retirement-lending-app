@@ -8,14 +8,16 @@ import {
 } from 'react-router-dom'
 import {ErrorBoundary} from 'react-error-boundary'
 
-import ApplicantListScreen from './screens/applicant-list'
-import ApplicantDetailsScreen from './screens/applicant-details'
 import AdminScreen from './screens/admin'
+import {useAuth} from './context/auth-context'
 import NotFoundScreen from './screens/not-found'
-import {FullPageErrorFallback, colors} from '@solera/ui'
+import ApplicantListScreen from './screens/applicant-list'
 import {Header, ErrorFallback} from './components'
+import ApplicantDetailsScreen from './screens/applicant-details'
+import {FullPageErrorFallback, TextLink, colors} from '@solera/ui'
 
 export default function AuthenticatedApp() {
+  const {logout} = useAuth()
   const rootRoute = useMatch('/')
   const loginVerified = useMatch('login-verify')
 
@@ -43,6 +45,7 @@ export default function AuthenticatedApp() {
                 display: 'grid',
                 listStyle: 'none',
                 gridAutoFlow: 'column',
+                position: 'relative',
               }}
             >
               <li>
@@ -51,13 +54,18 @@ export default function AuthenticatedApp() {
               <li>
                 <NavLink to="admin">Admin</NavLink>
               </li>
+              <li>
+                <TextLink onClick={logout} css={{color: colors.base}}>
+                  Log out
+                </TextLink>
+              </li>
             </ul>
           </Header>
         </div>
         <main
           css={{
             margin: '0 auto',
-            padding: '4rem 1rem',
+            padding: '4rem 0',
             width:
               'calc(var(--grid-container-width)/var(--grid-base-width)*100%)',
             maxWidth: 'calc(var(--grid-container-width)*1px)',

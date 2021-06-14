@@ -56,7 +56,6 @@ function login({email, password}) {
 
 function verifyLogin({code}) {
   return apiClient('auth/login-verify', {data: {code}}).then(({user}) => {
-    console.log('auth user:', user)
     window.localStorage.setItem(accessTokenKey, user.token)
     window.localStorage.setItem(refreshTokenKey, user.refresh_token)
     return user

@@ -33,7 +33,7 @@ export default function SignUpScreen() {
         <FormMessage variant="error">
           Invalid invite! Please request new invite
         </FormMessage>
-        <Link to="/">Return to Login page</Link>
+        <Link replace to="/">Return to Login page</Link>
       </React.Fragment>
     )
   }
@@ -46,7 +46,7 @@ export default function SignUpScreen() {
     <React.Fragment>
       <h1>Set up your account</h1>
       {isError ? (
-        <FormMessage variant="error">{error.message}</FormMessage>
+        <FormMessage variant="error">Failed to create account</FormMessage>
       ) : null}
       <AuthForm name="sign-up" onSubmit={handleSignup}>
         <Input

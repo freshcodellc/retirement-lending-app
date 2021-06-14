@@ -26,6 +26,7 @@ export default function LoginVerifyScreen() {
       ) : null}
       <AuthForm name="login-verify" onSubmit={handleVerifyLogin}>
         <Input
+          autoFocus
           id="code"
           label="Code"
           name="code"

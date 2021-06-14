@@ -11,7 +11,7 @@ const MaskedInput = IMaskMixin(({inputRef, ...props}) => (
 ))
 
 const PhoneInput = forwardRef(
-  ({control, name, rules, format = '000-000-0000', ...props}, ref) => {
+  ({control, name, rules, format = '{+1}000-000-0000', ...props}, ref) => {
     const {
       field: {onChange, value},
     } = useController({
@@ -47,7 +47,7 @@ const PasswordInput = forwardRef((props, ref) => {
     <FormControl>
       <Input ref={ref} type={type} css={{paddingRight: '20px'}} {...props} />
       <InputAdornment end>
-        <IconButton onClick={toggleType} css={{padding: '0'}}>
+        <IconButton type="button" onClick={toggleType} css={{padding: '0'}}>
           {type === 'password' ? (
             <FiEye fontSize="1.2rem" />
           ) : (

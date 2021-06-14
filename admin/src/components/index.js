@@ -22,10 +22,10 @@ export const AuthForm = styled.form({
   display: 'flex',
   alignItems: 'stretch',
   flexDirection: 'column',
-  '& > div:not(:first-child)': {
+  '& > div:not(:first-of-type)': {
     marginTop: '60px',
   },
-  '& > div:first-child': {
+  '& > div:first-of-type': {
     marginTop: '40px',
   },
 })
@@ -44,7 +44,7 @@ export const Header = ({children}) => (
     }}
   >
     <div>
-      <Link to="/">
+      <Link replace to="/">
         <Logo />
       </Link>
     </div>

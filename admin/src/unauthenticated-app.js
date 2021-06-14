@@ -3,7 +3,6 @@ import {Routes, Route} from 'react-router-dom'
 import ForgotPasswordScreen from './screens/forgot-password'
 import LoginScreen from './screens/login'
 import LoginVerifyScreen from './screens/login-verify'
-import NotFoundScreen from './screens/not-found'
 import SignupScreen from './screens/sign-up'
 import {Header} from 'components'
 
@@ -13,14 +12,14 @@ export default function UnauthenticatedApp() {
       <Header />
       <div
         css={{
+          width: '100%',
           display: 'flex',
+          margin: '0 auto',
+          maxWidth: '600px',
           alignItems: 'center',
+          flexDirection: 'column',
           justifyContent: 'center',
           padding: '2rem 2rem 4rem',
-          flexDirection: 'column',
-          maxWidth: '600px',
-          width: '100%',
-          margin: '0 auto',
         }}
       >
         <Routes>
@@ -29,7 +28,7 @@ export default function UnauthenticatedApp() {
           <Route path="/login-verify" element={<LoginVerifyScreen />} />
           <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
           <Route path="/admin-register" element={<SignupScreen />} />
-          <Route path="*" element={<NotFoundScreen />} />
+          <Route path="*" element={<LoginScreen />} />
         </Routes>
       </div>
     </>

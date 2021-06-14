@@ -21,7 +21,7 @@ import {
 } from '@solera/ui'
 import {useSaveNote} from 'hooks/use-save-note'
 import {useSendTermsSheet} from 'hooks/use-send-terms-sheet'
-import {useApplication, infoSections} from 'hooks/use-application'
+import {useApplication, useInfoSections} from 'hooks/use-application'
 import {ReturnLink, StatusSelect, AdminSelect, Button} from 'components'
 export default function ApplicantDetails() {
   const {application, isLoading, isError, error} = useApplication()
@@ -141,25 +141,26 @@ function ApplicationInfo({application}) {
       postal_code: '84043',
     },
   ]
+  const sections = useInfoSections(application)
 
   return (
     <div
       css={{
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: '1rem',
+        gap: '1.2rem',
         '&>div': {
           height: '100%',
         },
       }}
     >
-      {infoSections.map(section => (
-        <div key={section.id} css={{border: `1px solid ${colors.gray}`}}>
+      {sections.map(section => (
+        <div key={section.heading} css={{border: `1px solid ${colors.gray}`}}>
           <div
             css={{
               fontWeight: 500,
               fontSize: '20px',
-              padding: '1.1rem',
+              padding: '1.2rem',
               background: colors.gray,
             }}
           >
@@ -167,9 +168,9 @@ function ApplicationInfo({application}) {
           </div>
           <div
             css={{
-              padding: '1rem',
+              padding: '1.2rem',
               position: 'relative',
-              '& > :not(:last-child)': {marginBottom: '1.1rem'},
+              '& > *:not(:last-child)': {marginBottom: '1.2rem'},
             }}
           >
             <TextLink
@@ -187,7 +188,7 @@ function ApplicationInfo({application}) {
                 <div css={{fontWeight: 600, marginBottom: '0.4rem'}}>
                   {field.label}
                 </div>
-                <div>{field.format(...field.value(application))}</div>
+                <div>{field.value}</div>
               </div>
             ))}
           </div>

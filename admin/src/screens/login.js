@@ -5,7 +5,7 @@ import {Link, Navigate} from 'react-router-dom'
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
 import {Input, TextLink} from '@solera/ui'
-import {Button, AuthForm, FormMessage} from 'components'
+import {Button, AuthForm, FormMessage, PasswordInput} from 'components'
 
 export default function LoginScreen() {
   const {login} = useAuth()
@@ -25,6 +25,7 @@ export default function LoginScreen() {
       {isError ? <FormMessage variant="error">{formError}</FormMessage> : null}
       <AuthForm name="login" onSubmit={handleLogin}>
         <Input
+          autoFocus
           id="email"
           name="email"
           type="email"
@@ -33,12 +34,11 @@ export default function LoginScreen() {
           placeholder="Email address"
           {...register('email', {required: true, pattern: /^\S+@\S+$/i})}
         />
-        <Input
+        <PasswordInput
           id="password"
-          label="Password"
           name="password"
-          type="password"
           hasError={isError}
+          label="Password"
           placeholder="Password"
           {...register('password', {required: true})}
         />

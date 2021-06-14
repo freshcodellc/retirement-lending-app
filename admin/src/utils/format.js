@@ -1,6 +1,13 @@
 import {format, parseISO} from 'date-fns'
 
-const emptyState =
+const uSCurrency = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+})
+
+const currency = (str) => uSCurrency.format(str)
+
+const empty =
   (fn, state = '-') =>
   value =>
     (Array.isArray(value) && value.length) ||
@@ -30,20 +37,8 @@ const address = ({address, address_2, city, state, postal_code}) => {
   ${postal_code}`
 }
 
-const networth = range => {
-  const type = {
-    T: 'thousand',
-    M: 'million',
-    B: 'billion',
-  }
-  const [start, end] = range.split('_')
-  const startAmount = start.slice(0, -1)
-  const endAmount = end.slice(0, -1)
-  const startType = type[start.slice(-1)]
-  const endType = type[end.slice(-1)]
+const yesNo = val => (val ? 'Yes' : 'No')
 
-  return `$${startAmount} ${startType}  - $${endAmount} ${endType}`
-}
 
 export {
   phone,
@@ -52,6 +47,7 @@ export {
   address,
   isoDate,
   format as date,
-  emptyState,
-  networth,
+  empty,
+  currency,
+  yesNo,
 }

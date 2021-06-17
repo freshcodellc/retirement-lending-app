@@ -2,6 +2,7 @@
 import * as React from 'react'
 import {useTable} from 'react-table'
 import {useForm} from 'react-hook-form'
+import {Link} from 'react-router-dom'
 import {FiPhone, FiSend} from 'react-icons/fi'
 
 import {
@@ -173,16 +174,20 @@ function ApplicationInfo({application}) {
               '& > *:not(:last-child)': {marginBottom: '1.2rem'},
             }}
           >
-            <TextLink
-              css={{
-                right: '1.2rem',
-                fontWeight: 500,
-                fontSize: '1.1rem',
-                position: 'absolute',
-              }}
-            >
-              Edit
-            </TextLink>
+            {section.route ? (
+              <Link to={`/applicants/${application.uuid}/${section.route}`}>
+                <TextLink
+                  css={{
+                    right: '1.2rem',
+                    fontWeight: 500,
+                    fontSize: '1.1rem',
+                    position: 'absolute',
+                  }}
+                >
+                  Edit
+                </TextLink>
+              </Link>
+            ) : null}
             {section.fields.map(field => (
               <div key={field.label}>
                 <div css={{fontWeight: 600, marginBottom: '0.4rem'}}>

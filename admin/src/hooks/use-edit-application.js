@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {useQuery} from 'react-query'
+import {useMutation} from 'react-query'
 import {useParams} from 'react-router-dom'
 
 import {queryKeys} from 'utils/query-client'
@@ -14,28 +14,12 @@ import {
   address,
   currency,
 } from 'utils/format'
+import {useApplication, sectionRoutes} from './use-application'
 
-function useApplication() {
+function useEditApplication() {
+  const {application} = useApplication()
   const {uuid} = useParams()
-  const {data: application = {}, ...result} = useQuery(
-    queryKeys.application(uuid),
-    () => applicationService.get(uuid),
-    {staleTime: 30000},
-  )
-
-  return {
-    application,
-    ...result,
-  }
-}
-
-const sectionRoutes = {
-  applicant: 'applicant',
-  property: 'property',
-  financing: 'financing',
-  retirement: 'eligibility-retirement-account',
-  custodian: 'custodian-ira',
-  sign: 'sign-certify',
+  return useMutation(() => new Promise(res => setTimeout(res, 1000)), config)
 }
 
 function useInfoSections(app) {
@@ -316,69 +300,3 @@ function filesFields(app) {
 }
 
 export {useApplication, useInfoSections, sectionRoutes}
-
-const app = {
-  custodian: {},
-  ein: 12345,
-  estimated_improvement_costs: 232.2,
-  monthly_current_rent: 1234.56,
-  fix_and_flip: true,
-  interest_rate_spread_high: 0.0,
-  number_rental_properties: 12345,
-  referrer: 'The Rock',
-  signature_title: 'A Signature',
-  monthly_estimated_rent: 1234.67,
-  well_or_septic: true,
-  date_of_birth: '1955-01-01',
-  phone_number: '+18014636973',
-  signature: 'TOM HANK HI',
-  assigned_admin_user_id: 1,
-  inserted_at: '2021-06-12T04:35:57Z',
-  assigned_admin: {},
-  is_homeowner: true,
-  annual_taxes: 35.5,
-  purchase_price: 555555.55,
-  uuid: 'a8ff5d86-3b62-40c8-8b34-a05f61639c12',
-  piti_reserve_months: 6, //?
-  is_purchase: true,
-  interest_rate_range_low: 0.0, //?
-  applicant: {},
-  entity_name: "John's Vacuums",
-  current_debt_balance: 232.2,
-  monthly_mgmt_fee: 100.45,
-  property_type: 'SINGLE_FAMILY_HOME',
-  plan_type: 'IRA',
-  years_owned: 15,
-  status: 'DENIED',
-  built_after_1950: true,
-  applicant_user_id: 4,
-  middle_name: 'Smith',
-  is_rented: true,
-  updated_at: '2021-06-12T04:35:57Z',
-  funding_institution_name: 'Lizard Shoppe',
-  first_name: 'Bob',
-  entity_type: 'IRA_LLC',
-  year_roof_replaced: 2011,
-  estimated_value: 123456.78,
-  entity_state_of_formation: 'Utah',
-  requested_loan_amount: 1.0e7,
-  interest_rate_range_high: 0.0,
-  email: 'wow@nice.gov',
-  signature_date: '2021-04-17',
-  minimum_chargeable_interest_rate: 0.0,
-  last_name: 'Vacuum Guy',
-  year_last_remodel: 2010,
-  years_at_address: 20,
-  ssn: '444-44-4444',
-  addresses: [],
-  application_submitted_at: '1970-01-01T00:00:00Z',
-  token: '1234123412', //?
-  monthly_hoa_dues: 10.99,
-  preapplication_submitted_at: '2021-06-12T04:35:57Z',
-  funding_account_balance: 12345.67,
-  signature_entity_name: 'Tom Hank',
-  estimated_net_worth: '1M_3M',
-  interest_rate_spread_low: 0.0,
-  annual_insurance_premium: 1.0e3,
-  lot_over_2_acres: true,
-}

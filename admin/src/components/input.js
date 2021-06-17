@@ -11,7 +11,7 @@ const MaskedInput = IMaskMixin(({inputRef, ...props}) => (
 ))
 
 const PhoneInput = forwardRef(
-  ({control, name, rules, format = '{+1}000-000-0000', ...props}, ref) => {
+  ({control, name, rules, format = '{+1}000.000.0000', ...props}, ref) => {
     const {
       field: {onChange, value},
     } = useController({

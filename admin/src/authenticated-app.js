@@ -14,6 +14,7 @@ import NotFoundScreen from './screens/not-found'
 import ApplicantListScreen from './screens/applicant-list'
 import {Header, ErrorFallback} from './components'
 import ApplicantDetailsScreen from './screens/applicant-details'
+import EditApplicantDetails from './screens/edit-applicant-details'
 import {FullPageErrorFallback, TextLink, colors} from '@solera/ui'
 
 export default function AuthenticatedApp() {
@@ -77,6 +78,10 @@ export default function AuthenticatedApp() {
               <Route
                 path="applicants/:uuid"
                 element={<ApplicantDetailsScreen />}
+              />
+              <Route
+                path="applicants/:uuid/:section"
+                element={<EditApplicantDetails />}
               />
               <Route path="admin" element={<AdminScreen />} />
               <Route path="*" element={<NotFoundScreen />} />

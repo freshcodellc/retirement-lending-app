@@ -38,7 +38,7 @@ export default function Admin() {
     [],
   )
   const {filterTypes} = useTableFilters()
-  const {data, isLoading} = useAdminsTable()
+  const {data, isLoading, isError, error} = useAdminsTable()
   const {setGlobalFilter, ...restTableProps} = useTable(
     {columns, data, filterTypes},
     useGlobalFilter,
@@ -55,6 +55,10 @@ export default function Admin() {
 
   if (isLoading) {
     return 'Loading...'
+  }
+
+  if (isError) {
+    return `ERROR: ${error.message}`
   }
 
   return (

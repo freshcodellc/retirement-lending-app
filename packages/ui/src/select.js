@@ -31,6 +31,7 @@ function Select({
   css,
   onChange,
   StartAdornment,
+  hasError,
   ...props
 }) {
   return (
@@ -63,7 +64,9 @@ function Select({
                 width: '100%',
                 padding: '0.5rem 0',
                 alignSelf: 'stretch',
-                borderBottom: `2px solid ${colors.text}`
+                borderBottom: `2px solid ${
+                  hasError ? colors.danger : colors.text
+                }`
               }}
             >
               <span

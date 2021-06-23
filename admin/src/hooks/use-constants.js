@@ -13,10 +13,14 @@ function useConstants() {
     {staleTime: Infinity},
   )
   const statuses = data.statuses || []
-  const planTypes = mapTypes(data.plan_types)
-  const entityTypes = mapTypes(data.entity_types)
-  const propertyTypes = mapTypes(data.property_types)
-  const netWorths = mapTypes(data.estimated_net_worths)
+  const planTypes = data.plan_types || []
+  const entityTypes = data.entity_types || []
+  const propertyTypes = data.property_types || []
+  const netWorths = data.estimated_net_worths || []
+  const planTypesMap = mapTypes(data.plan_types)
+  const entityTypesMap = mapTypes(data.entity_types)
+  const propertyTypesMap = mapTypes(data.property_types)
+  const netWorthsMap = mapTypes(data.estimated_net_worths)
 
   return {
     statuses,
@@ -24,6 +28,10 @@ function useConstants() {
     netWorths,
     entityTypes,
     propertyTypes,
+    planTypesMap,
+    entityTypesMap,
+    propertyTypesMap,
+    netWorthsMap,
     ...result,
   }
 }

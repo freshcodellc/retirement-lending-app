@@ -29,56 +29,72 @@ function useApplication() {
   }
 }
 
-const sectionRoutes = {
-  applicant: 'applicant',
-  property: 'property',
-  financing: 'financing',
-  retirement: 'eligibility-retirement-account',
-  custodian: 'custodian-ira',
-  sign: 'sign-certify',
+const sections = {
+  applicant: {
+    route: 'applicant',
+    heading: 'applicant information',
+  },
+  property: {
+    route: 'property',
+    heading: 'property information',
+  },
+  financing: {
+    route: 'financing',
+    heading: 'financing information',
+  },
+  retirement: {
+    route: 'eligibility-retirement-account',
+    heading: 'eligibility & retirement account information',
+  },
+  custodian: {
+    route: 'custodian-ira',
+    heading: 'custodian and IRA information',
+  },
+  sign: {
+    route: 'sign-certify',
+    heading: 'sign and certify',
+  },
+  files: {
+    heading: 'applicant files',
+  },
 }
 
 function useInfoSections(app) {
-  const {planTypes, entityTypes, propertyTypes, netWorths} = useConstants()
+  const {planTypesMap, entityTypesMap, propertyTypesMap, netWorthsMap} =
+    useConstants()
 
   return useMemo(
     () => [
       {
-        heading: 'Applicant Information',
-        route: sectionRoutes.applicant,
-        fields: applicantFields(app, netWorths),
+        ...sections.applicant,
+        fields: applicantFields(app, netWorthsMap),
       },
       {
-        heading: 'Property Information',
-        route: sectionRoutes.property,
-        fields: propertyFields(app, propertyTypes),
+        ...sections.property,
+        fields: propertyFields(app, propertyTypesMap),
       },
       {
-        heading: 'Financing Information',
-        route: sectionRoutes.financing,
+        ...sections.financing,
         fields: financingFields(app),
       },
       {
-        heading: 'Eligibility & Retirement Account Information',
-        route: sectionRoutes.retirement,
-        fields: eraFields(app, planTypes, entityTypes),
+        ...sections.retirement,
+        fields: eraFields(app, planTypesMap, entityTypesMap),
       },
       {
-        heading: 'Custodian and IRA Information',
-        route: sectionRoutes.custodian,
+        ...sections.custodian,
         fields: custodianFields(app),
       },
       {
-        heading: 'Sign and Certify',
-        route: sectionRoutes.sign,
+        ...sections.sign,
         fields: signCertifyFields(app),
       },
       {
-        heading: 'Applicant files',
+        ...sections.files,
         fields: filesFields(app),
       },
     ],
-    [app, planTypes, entityTypes, propertyTypes, netWorths],
+    [app, planTypesMap, entityTypesMap, propertyTypesMap, netWorthsMap],
   )
 }
 
@@ -87,7 +103,7 @@ const findAddress = (type, addresses) =>
 
 const formatDate = str => isoDate(str, 'MM/dd/yy')
 
-function applicantFields(app, netWorths) {
+function applicantFields(app, netWorthsMap) {
   return [
     {
       label: 'Name',
@@ -131,7 +147,7 @@ function applicantFields(app, netWorths) {
     },
     {
       label: 'Estimated net worth',
-      value: empty(name => netWorths[name])(app.estimated_net_worth),
+      value: empty(name => netWorthsMap[name])(app.estimated_net_worth),
     },
     {
       label: 'Referral source',
@@ -140,7 +156,7 @@ function applicantFields(app, netWorths) {
   ]
 }
 
-function propertyFields(app, propertyTypes) {
+function propertyFields(app, propertyTypesMap) {
   return [
     {
       label: 'Property address',
@@ -148,7 +164,7 @@ function propertyFields(app, propertyTypes) {
     },
     {
       label: 'Property type',
-      value: empty(name => propertyTypes[name])(app.property_type),
+      value: empty(name => propertyTypesMap[name])(app.property_type),
     },
     {
       label: 'Is the lot more than 2 acres?',
@@ -226,7 +242,7 @@ function financingFields(app) {
   ]
 }
 
-function eraFields(app, planTypes, entityTypes) {
+function eraFields(app, planTypesMap, entityTypesMap) {
   return [
     {
       label: 'Do you plan to "fix & flip" this property',
@@ -234,11 +250,11 @@ function eraFields(app, planTypes, entityTypes) {
     },
     {
       label: 'What type of retirement plan do you have?',
-      value: empty(name => planTypes[name])(app.plan_type),
+      value: empty(name => planTypesMap[name])(app.plan_type),
     },
     {
       label: 'What entity type will the property be titled under?',
-      value: empty(name => entityTypes[name])(app.entity_type),
+      value: empty(name => entityTypesMap[name])(app.entity_type),
     },
     {
       label: 'Name of entity',
@@ -315,7 +331,7 @@ function filesFields(app) {
   ]
 }
 
-export {useApplication, useInfoSections, sectionRoutes}
+export {useApplication, useInfoSections, sections}
 
 const app = {
   custodian: {},

@@ -9,6 +9,7 @@ import {
   SelectOption,
   SelctEmptyOption,
 } from '@solera/ui'
+import {useConstants} from 'hooks/use-constants'
 
 function Select({name, rules, control, defaultValue = 'empty', ...props}) {
   if (rules?.required) {
@@ -45,4 +46,23 @@ function AdminSelect({className, ...props}) {
   )
 }
 
-export {Select, SelectOption, SelctEmptyOption, AdminSelect}
+function NetWorthsSelect(props) {
+  const {netWorths} = useConstants()
+
+  return (
+    <Select {...props}>
+      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
+        Select one
+      </SelctEmptyOption>
+      {netWorths.map(status => (
+        <SelectOption key={status.name} value={status.name}>
+          <span css={{display: 'flex', alignItems: 'center'}}>
+            {status.humanized}
+          </span>
+        </SelectOption>
+      ))}
+    </Select>
+  )
+}
+
+export {Select, SelectOption, SelctEmptyOption, AdminSelect, NetWorthsSelect}

@@ -1,29 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
-import {useParams} from 'react-router-dom'
-import {useTable} from 'react-table'
+import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
-import {FiPhone, FiSend} from 'react-icons/fi'
 
-import {
-  colors,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Textarea,
-  TableWrapper,
-  Table,
-  Tr,
-  Th,
-  Td,
-  TextLink,
-  Input,
-} from '@solera/ui'
-import {useSaveNote} from 'hooks/use-save-note'
-import {useSendTermsSheet} from 'hooks/use-send-terms-sheet'
-import {useApplication, sectionRoutes} from 'hooks/use-application'
+import {colors, Input, RadioGroup, RadioInput} from '@solera/ui'
+import {useEditApplication, useEditFields} from 'hooks/use-edit-application'
 import {
   ReturnLink,
   StatusSelect,
@@ -31,18 +12,42 @@ import {
   Button,
   PhoneInput,
   MaskedInput,
+  SsnInput,
+  DatePicker,
+  NetWorthsSelect,
 } from 'components'
 
 export default function EditApplicantInfo() {
-  const {uuid, section} = useParams()
-  const {application, isLoading, isError, error} = useApplication()
-  const {handleSubmit, register, control, formState} = useForm({
+  const {mutate: saveEdit} = useEditApplication()
+  const {
+    uuid,
+    heading,
+    fields,
+    defaultValues,
+    isSuccess,
+    isLoading,
+    isError,
+    error,
+  } = useEditFields()
+  const {handleSubmit, register, reset, control, formState} = useForm({
     mode: 'onChange',
+    defaultValues,
   })
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      reset(defaultValues)
+    }
+  }, [isSuccess, reset, defaultValues])
 
   const handleEdit = handleSubmit(form => {
     console.log(form)
+    saveEdit(form)
   })
+
+  if (!heading) {
+    return <Navigate replace to="/" />
+  }
 
   if (isLoading) {
     return 'Loading...'
@@ -54,7 +59,7 @@ export default function EditApplicantInfo() {
 
   return (
     <div>
-      <h1>Edit applicant Information</h1>
+      <h1>Edit {heading}</h1>
       <ReturnLink to={`/applicants/${uuid}`}>Applicant details</ReturnLink>
       <form
         name="edit-applicant-info"
@@ -73,113 +78,61 @@ export default function EditApplicantInfo() {
           },
         }}
       >
-        <Input
-          id="first_name"
-          name="first_name"
-          label="First name"
-          placeholder="First name"
-          hasError={isError}
-          {...register('first_name')}
-        />
-        <Input
-          id="middle_name"
-          name="middle_name"
-          hasError={isError}
-          label="Middle name (optional)"
-          placeholder="Middle name (optional)"
-          {...register('middle_name')}
-        />
-        <Input
-          id="last_name"
-          name="last_name"
-          label="Last name"
-          placeholder="Middle name (optional)"
-          hasError={isError}
-          {...register('last_name')}
-        />
-        <PhoneInput
-          hasError={isError}
-          control={control}
-          name="phone_number"
-          label="Phone number"
-          placeholder="Phone number"
-          rules={{required: true}}
-        />
-        <Input
-          id="address"
-          name="address"
-          label="What is your physical address?"
-          placeholder="Enter street address, No PO Box"
-          hasError={isError}
-          {...register('address')}
-        />
-        <Input
-          id="address_2"
-          name="address_2"
-          hasError={isError}
-          label="Address line 2"
-          placeholder="Apt, ste, unit, etc. optional"
-          {...register('address_2')}
-        />
-        <div
-          css={{
-            display: 'flex',
-            gap: '1rem',
-            '& > *': {width: 'calc((100% - 2rem)/3)'},
-          }}
-        >
-          <Input
-            id="city"
-            name="city"
-            label="City"
-            placeholder="City"
-            hasError={isError}
-            {...register('city')}
-          />
-          <Input
-            id="state"
-            name="state"
-            label="State"
-            placeholder="State"
-            hasError={isError}
-            {...register('state')}
-          />
-          <Input
-            id="postal_code"
-            name="postal_code"
-            label="ZIP code"
-            placeholder="ZIP code"
-            hasError={isError}
-            {...register('postal_code')}
-          />
-        </div>
-        <Input
-          type="number"
-          id="years_at_address"
-          name="years_at_address"
-          label="How long have you lived at this address?"
-          placeholder="Number of years lived at address"
-          hasError={isError}
-          {...register('years_at_address')}
-        />
-        <MaskedInput
-          unmask
-          id="ssn"
-          name="ssn"
-          mask="000-00-0000"
-          label="Social Security Number"
-          placeholder="Social Security Number"
-          hasError={isError}
-          {...register('ssn')}
-        />
-        <Input
-          id="referrer"
-          name="referrer"
-          placeholder="Referrer"
-          label="Who referred you to Solera National Bank?"
-          hasError={isError}
-          {...register('referrer')}
-        />
+        {fields.map(field => {
+          const props = {
+            key: field.name,
+            hasError: isError,
+            ...field,
+          }
+          switch (field.type) {
+            case 'text':
+            case 'number':
+              return <Input {...props} {...register(field.name)} />
+            case 'phone':
+              return <PhoneInput control={control} {...props} />
+            case 'email':
+              return (
+                <Input
+                  {...props}
+                  {...register(field.name, {
+                    required: true,
+                    pattern: /^\S+@\S+$/i,
+                  })}
+                />
+              )
+            case 'date':
+              return <DatePicker control={control} {...props} />
+            case 'physical':
+              return (
+                <AddressFields
+                  key={field.type}
+                  hasError={isError}
+                  register={register}
+                  {...field.fields}
+                />
+              )
+            case 'mailing':
+              return (
+                <AddressFields
+                  key={field.type}
+                  hasError={isError}
+                  register={register}
+                  {...field.fields}
+                />
+              )
+            case 'ssn':
+              return <SsnInput {...props} />
+            case 'select':
+              switch (field.name) {
+                case 'estimated_net_worth':
+                  return <NetWorthsSelect control={control} {...props} />
+                default:
+              }
+              break
+            default:
+              return 'invalid type'
+          }
+        })}
         <div css={{textAlign: 'center'}}>
           <Button
             type="submit"
@@ -195,14 +148,37 @@ export default function EditApplicantInfo() {
   )
 }
 
-const fields = [
-  {
-    label: '',
-    placeholder: '',
-    name: '',
-    type: ''
-  }
-]
+function AddressFields({
+  hasError,
+  register,
+  address,
+  address_2,
+  city,
+  state,
+  postal_code,
+}) {
+  return (
+    <React.Fragment>
+      <Input hasError={hasError} {...address} {...register(address.name)} />
+      <Input hasError={hasError} {...address_2} {...register(address_2.name)} />
+      <div
+        css={{
+          display: 'flex',
+          gap: '1rem',
+          '& > *': {width: 'calc((100% - 2rem)/3)'},
+        }}
+      >
+        <Input hasError={hasError} {...city} {...register(city.name)} />
+        <Input hasError={hasError} {...state} {...register(state.name)} />
+        <Input
+          hasError={hasError}
+          {...postal_code}
+          {...register(postal_code.name)}
+        />
+      </div>
+    </React.Fragment>
+  )
+}
 
 /**
  * TODO:

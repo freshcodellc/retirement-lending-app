@@ -163,6 +163,7 @@ function ApplicationInfo({application}) {
               fontSize: '20px',
               padding: '1.2rem',
               background: colors.gray,
+              textTransform: 'capitalize',
             }}
           >
             {section.heading}

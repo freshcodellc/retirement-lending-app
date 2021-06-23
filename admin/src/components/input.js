@@ -59,15 +59,17 @@ const PasswordInput = forwardRef((props, ref) => {
   )
 })
 
-const SearchInput = forwardRef((props, ref) => {
-  return (
-    <FormControl css={{maxWidth: '300px'}}>
-      <InputAdornment>
-        <FiSearch />
-      </InputAdornment>
-      <Input ref={ref} type="search" css={{paddingLeft: '20px'}} {...props} />
-    </FormControl>
-  )
-})
+const SearchInput = forwardRef((props, ref) => (
+  <FormControl css={{maxWidth: '300px'}}>
+    <InputAdornment>
+      <FiSearch />
+    </InputAdornment>
+    <Input ref={ref} type="search" css={{paddingLeft: '20px'}} {...props} />
+  </FormControl>
+))
 
-export {MaskedInput, PasswordInput, SearchInput, PhoneInput}
+const SsnInput = forwardRef((props, ref) => (
+  <MaskedInput unmask mask="000-00-0000" {...props} />
+))
+
+export {MaskedInput, PasswordInput, SearchInput, PhoneInput, SsnInput}

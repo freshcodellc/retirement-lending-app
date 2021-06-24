@@ -15,6 +15,7 @@ const variants = {
 
 const Button = styled.button(
   {
+    fontSize: '14px',
     border: 0,
     borderRadius: '4px',
     textTransform: 'uppercase',

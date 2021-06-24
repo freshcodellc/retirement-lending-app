@@ -1,24 +1,20 @@
-import { client } from "../utils/api-client";
+import { apiSecureClient } from "../utils/api-client";
 import * as auth from "./auth-service";
 
 async function create(applicationData) {
-  const token = await auth.getToken();
-  return await client("loan-applications", { data: { ...applicationData }, token }).then((res) => res);
+  return await apiSecureClient("loan-applications", { data: { ...applicationData } }).then((res) => res);
 }
 
 async function list() {
-  const token = await auth.getToken();
-  return await client("loan-applications", { token }).then((res) => res);
+  return await apiSecureClient("loan-applications").then((res) => res);
 }
 
 async function get(uuid) {
-  const token = await auth.getToken();
-  return await client(`loan-applications/${uuid}`, { token }).then((res) => res);
+  return await apiSecureClient(`loan-applications/${uuid}`).then((res) => res);
 }
 
 async function update({ data, uuid }) {
-  const token = await auth.getToken();
-  return await client(`loan-applications/${uuid}`, { data, token, method: "PUT" }).then((res) => res);
+  return await apiSecureClient(`loan-applications/${uuid}`, { data, method: "PUT" }).then((res) => res);
 }
 
 export { create, get, list, update };

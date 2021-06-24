@@ -27,7 +27,17 @@ function App() {
           }
           * {
             font-family: "Work Sans";
+            font-size: 1.6rem;
             color: ${colors.text};
+          }
+          html {
+            font-size: 10px;
+          }
+          h1 {
+            font-size: 3rem;
+          }
+          h2 {
+            font-size: 2.6rem;
           }
         `}
       />

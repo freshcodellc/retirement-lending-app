@@ -1,39 +1,46 @@
-import * as auth from '../services/auth-service';
-import {queryClient} from '../context';
-const apiURL = process.env.REACT_APP_API_URL;
+import * as auth from "../services/auth-service";
 
-async function client(
-  endpoint,
-  { data, token, headers: customHeaders, ...customConfig } = {}
-) {
-  const config = {
-    method: data ? "POST" : "GET",
-    body: data ? JSON.stringify(data) : undefined,
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-      "Content-Type": data ? "application/json" : undefined,
-      ...customHeaders,
-    },
-    ...customConfig,
+export const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
+function makeClient(authRequired) {
+  return async (
+    endpoint,
+    { data, headers: customHeaders, ...customConfig } = {}
+  ) => {
+    let token;
+    if (authRequired) {
+      token = auth.getToken();
+      if (!token) {
+        await auth.refreshAccessToken();
+      }
+    }
+
+    const config = {
+      method: data ? "POST" : "GET",
+      body: data ? JSON.stringify(data) : undefined,
+      headers: {
+        Authorization: token ? `Bearer ${token}` : undefined,
+        "Content-Type": data ? "application/json" : undefined,
+        ...customHeaders,
+      },
+      ...customConfig,
+    };
+
+    const response = await window.fetch(`${apiBaseUrl}/${endpoint}`, config);
+
+    if (authRequired && response.status === 401) {
+      await auth.refreshAccessToken();
+    }
+
+    const result = await response.json();
+
+    if (response.ok) {
+      return result;
+    } else {
+      return Promise.reject(result);
+    }
   };
-
-  return window
-    .fetch(`${apiURL}/${endpoint}`, config)
-    .then(async (response) => {
-      if (response.status === 401) {
-        queryClient.clear();
-        await auth.logout();
-        // refresh the page for them
-        window.location.assign(window.location);
-        return Promise.reject({ message: "Please re-authenticate." });
-      }
-      const data = await response.json();
-      if (response.ok) {
-        return data;
-      } else {
-        return Promise.reject(data);
-      }
-    });
 }
 
-export { client };
+export const apiClient = makeClient(false);
+export const apiSecureClient = makeClient(true);

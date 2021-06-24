@@ -3,7 +3,7 @@ import { queryClient } from ".";
 import * as auth from "../services/auth-service";
 import * as userService from "../services/user-service";
 import * as loanApplicationService from "../services/loan-application-service";
-import { client } from "../utils/api-client";
+import { apiSecureClient } from "../utils/api-client";
 import { useAsync } from "../utils/hooks";
 import { FullPageSpinner, FullPageErrorFallback } from "@solera/ui";
 
@@ -96,7 +96,7 @@ function useClient() {
   const { user } = useAuth();
   const token = user?.token;
   return React.useCallback(
-    (endpoint, config) => client(endpoint, { ...config, token }),
+    (endpoint, config) => apiSecureClient(endpoint),
     [token]
   );
 }

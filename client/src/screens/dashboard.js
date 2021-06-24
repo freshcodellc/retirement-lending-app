@@ -1,26 +1,29 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCreateLoanApplication } from "../hooks/useCreateLoanApplication";
 import { useLoanApplications } from "../hooks/useLoanApplications";
+import { useUser } from "../hooks/useUser";
+import { ApplicationBox } from "../components/applicationBox";
 import { Button } from '@solera/ui';
 
 function DashboardScreen() {
   const navigate = useNavigate();
   const { data } = useLoanApplications();
+  const { data: { user } } = useUser();
   const create = useCreateLoanApplication();
 
   const handleCreateClick = async () => {
-    // TODO: Fill with user data for first_name, last_name, etc.
     create.mutateAsync({ first_name: 'Stephen'}).then(data => navigate(`/pre-application/${data.uuid}`))
   }
-  console.log('CD', create.data)
+
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1>Welcome, {user.first_name}</h1>
+      <Button variant="secondary" onClick={handleCreateClick}>Start New Application</Button>
+      <h2>Current Applications</h2>
       {data.map((app) => (
-        <div key={app.uuid}><Link to={`/pre-application/${app.uuid}`}>{app.inserted_at}</Link></div>
+        <ApplicationBox key={app.uuid} data={app} />
       ))}
-      <Button onClick={handleCreateClick}>Start New Application</Button>
     </div>
   );
 }

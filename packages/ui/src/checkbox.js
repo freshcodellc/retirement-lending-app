@@ -9,6 +9,7 @@ function Checkbox({
   variant = 'primary',
   checked = false,
   onChange,
+  hasError,
   label,
   ...props
 }) {

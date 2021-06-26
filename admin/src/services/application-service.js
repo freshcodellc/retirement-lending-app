@@ -15,14 +15,17 @@ async function list(filters) {
   const params = new URLSearchParams()
   for (const field of listFields) {
     let value = filters[field]
-    if (!value) continue
     switch (field) {
       case 'date_start':
       case 'date_end':
-        value = value.toISOString()
+        value = value ? value.toISOString() : undefined
+        break
+      case 'status':
+        value = value === 'empty' ? undefined : value
         break
       default:
     }
+    if (!value) continue
     params.append(field, value)
   }
   return apiSecureClient(`loan-applications?${params}`)
@@ -36,8 +39,20 @@ async function get(uuid) {
   return apiSecureClient(`loan-applications/${uuid}`)
 }
 
-async function update({data, uuid}) {
-  return apiSecureClient(`loan-applications/${uuid}`, {data, method: 'PUT'})
+async function update(data) {
+  const app = {}
+  for (const key in data) {
+    let value = data[key]
+    if ([null, undefined, 'empty'].includes(value)) continue
+    if (['mailing_equal_physical'].includes(key)) continue
+    if (['physical', 'mailing', 'property'].includes(key)) {
+      //TODO: handle updating addresses
+    }
+    app[key] = value
+  }
+  console.log(app)
+  return Promise.resolve()
+  // return apiSecureClient(`loan-applications/${uuid}`, {data, method: 'PUT'})
 }
 
 async function constants() {

@@ -3,36 +3,39 @@ import * as React from 'react'
 import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
 
-import {colors, Input, RadioGroup, RadioInput} from '@solera/ui'
+import {Input} from '@solera/ui'
 import {useEditApplication, useEditFields} from 'hooks/use-edit-application'
 import {
-  ReturnLink,
-  StatusSelect,
-  AdminSelect,
   Button,
-  PhoneInput,
-  MaskedInput,
+  Checkbox,
   SsnInput,
+  ReturnLink,
+  PhoneInput,
   DatePicker,
-  NetWorthsSelect,
+  EntitySelect,
+  UsStateSelect,
+  CurrencyInput,
+  NetWorthSelect,
+  PropertySelect,
 } from 'components'
 
 export default function EditApplicantInfo() {
   const {mutate: saveEdit} = useEditApplication()
   const {
     uuid,
-    heading,
     fields,
-    defaultValues,
+    error,
+    heading,
+    isError,
     isSuccess,
     isLoading,
-    isError,
-    error,
+    defaultValues,
   } = useEditFields()
-  const {handleSubmit, register, reset, control, formState} = useForm({
+  const {handleSubmit, register, reset, control, watch, formState} = useForm({
     mode: 'onChange',
     defaultValues,
   })
+  const mailingEqualPhysical = watch('mailing_equal_physical', false)
 
   React.useEffect(() => {
     if (isSuccess) {
@@ -40,10 +43,7 @@ export default function EditApplicantInfo() {
     }
   }, [isSuccess, reset, defaultValues])
 
-  const handleEdit = handleSubmit(form => {
-    console.log(form)
-    saveEdit(form)
-  })
+  const handleEdit = handleSubmit(saveEdit)
 
   if (!heading) {
     return <Navigate replace to="/" />
@@ -70,10 +70,10 @@ export default function EditApplicantInfo() {
           margin: '0 auto',
           width: '100%',
           maxWidth: '600px',
-          '& > div:not(:first-of-type)': {
+          '& > *': {
             marginTop: '60px',
           },
-          '& > div:first-of-type': {
+          '& > div:first-of-type, > p:first-of-type': {
             marginTop: '30px',
           },
         }}
@@ -85,11 +85,31 @@ export default function EditApplicantInfo() {
             ...field,
           }
           switch (field.type) {
+            case 'heading':
+              return (
+                <h1 css={{margin: '100px 0 0'}} key={field.text}>
+                  {field.text}
+                </h1>
+              )
+            case 'p':
+              return (
+                <p css={{fontWeight: 500}} key={field.type}>
+                  {field.text}
+                </p>
+              )
             case 'text':
             case 'number':
               return <Input {...props} {...register(field.name)} />
             case 'phone':
               return <PhoneInput control={control} {...props} />
+            case 'currency':
+              return <CurrencyInput control={control} {...props} />
+            case 'date':
+              return <DatePicker control={control} {...props} />
+            case 'ssn':
+              return <SsnInput control={control} {...props} />
+            case 'checkbox':
+              return <Checkbox control={control} {...props} />
             case 'email':
               return (
                 <Input
@@ -100,38 +120,35 @@ export default function EditApplicantInfo() {
                   })}
                 />
               )
-            case 'date':
-              return <DatePicker control={control} {...props} />
             case 'physical':
-              return (
-                <AddressFields
-                  key={field.type}
-                  hasError={isError}
-                  register={register}
-                  {...field.fields}
-                />
-              )
             case 'mailing':
+            case 'property':
+              if (field.type === 'mailing' && mailingEqualPhysical) break
               return (
                 <AddressFields
                   key={field.type}
+                  control={control}
                   hasError={isError}
                   register={register}
                   {...field.fields}
                 />
               )
-            case 'ssn':
-              return <SsnInput {...props} />
             case 'select':
               switch (field.name) {
                 case 'estimated_net_worth':
-                  return <NetWorthsSelect control={control} {...props} />
+                  return <NetWorthSelect control={control} {...props} />
+                case 'property_type':
+                  return <PropertySelect control={control} {...props} />
+                case 'entity_type':
+                  return <EntitySelect control={control} {...props} />
+                case 'entity_state_of_formation':
+                  return <UsStateSelect control={control} {...props} />
                 default:
               }
               break
             default:
-              return 'invalid type'
           }
+          return ''
         })}
         <div css={{textAlign: 'center'}}>
           <Button
@@ -149,6 +166,7 @@ export default function EditApplicantInfo() {
 }
 
 function AddressFields({
+  control,
   hasError,
   register,
   address,
@@ -169,7 +187,7 @@ function AddressFields({
         }}
       >
         <Input hasError={hasError} {...city} {...register(city.name)} />
-        <Input hasError={hasError} {...state} {...register(state.name)} />
+        <UsStateSelect control={control} hasError={hasError} {...state} />
         <Input
           hasError={hasError}
           {...postal_code}
@@ -179,11 +197,3 @@ function AddressFields({
     </React.Fragment>
   )
 }
-
-/**
- * TODO:
- * - dynamic select form by param :section
- * - Abstract address form into its own comp
- * - sharable controlled comp for checkbox in componnents
- * -
- *  */

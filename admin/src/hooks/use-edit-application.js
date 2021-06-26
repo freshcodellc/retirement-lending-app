@@ -6,29 +6,59 @@ import applicationService from 'services/application-service'
 import {useApplication, sections} from './use-application'
 
 function useEditApplication(config) {
-  return useMutation(() => new Promise(res => setTimeout(res, 1000)), config)
+  return useMutation(applicationService.update, config)
 }
 
 function useEditFields() {
   const {application, isSuccess, isLoading, isError, error} = useApplication()
   const {uuid, section} = useParams()
-
-  const editSection =
-    {
-      [sections.applicant.route]: {
-        ...sections.applicant,
-        fields: applicantfields,
-      },
-    }[section] || {}
+  // check if mailing equals physical and set default value for "mailing_equal_physical"
+  const editSection = useMemo(
+    () =>
+      ({
+        [sections.applicant.route]: {
+          ...sections.applicant,
+          fields: applicantfields,
+        },
+        [sections.property.route]: {
+          ...sections.property,
+          fields: propertyFields,
+        },
+        [sections.retirement.route]: {
+          ...sections.property,
+          fields: eraFields,
+        },
+        [sections.sign.route]: {
+          ...sections.sign,
+          fields: signCertifyFields,
+        },
+      }[section] || {}),
+    [section],
+  )
+  const defaultValues = useMemo(
+    () =>
+      editSection.fields.reduce((acc, cur) => {
+        if (cur.name && cur.name in application) {
+          let value = application[cur.name]
+          if (cur.type === 'select' && !value) {
+            console.log(cur)
+            value = 'empty'
+          }
+          acc[cur.name] = value
+        }
+        return acc
+      }, {}),
+    [application, editSection],
+  )
 
   return {
     uuid,
+    error,
+    isError,
     isSuccess,
     isLoading,
-    isError,
-    error,
+    defaultValues,
     ...editSection,
-    defaultValues: application,
   }
 }
 
@@ -67,34 +97,35 @@ const applicantfields = [
   },
   {
     type: 'physical',
+    name: 'addresses',
     fields: {
       address: {
         type: 'text',
-        name: 'address',
+        name: 'physical.address',
         label: 'What is your physical address?',
         placeholder: 'Enter street address, No PO Box',
       },
       address_2: {
         type: 'text',
-        name: 'address_2',
+        name: 'physical.address_2',
         label: 'Address line 2',
         placeholder: 'Apt, ste, unit, etc. optional',
       },
       city: {
         type: 'text',
-        name: 'city',
+        name: 'physical.city',
         label: 'City',
         placeholder: 'City',
       },
       state: {
-        type: 'text',
-        name: 'state',
+        type: 'select',
+        name: 'physical.state',
         label: 'State',
         placeholder: 'State',
       },
       postal_code: {
         type: 'number',
-        name: 'postal_code',
+        name: 'physical.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
       },
@@ -118,35 +149,41 @@ const applicantfields = [
     placeholder: 'Social Security Number',
   },
   {
+    type: 'checkbox',
+    name: 'mailing_equal_physical',
+    label: 'My mailing address is the same as my physical',
+  },
+  {
     type: 'mailing',
+    name: 'addresses',
     fields: {
       address: {
         type: 'text',
-        name: 'address',
+        name: 'mailing.address',
         label: 'What is your mailing address?',
         placeholder: 'Enter street address, No PO Box',
       },
       address_2: {
         type: 'text',
-        name: 'address_2',
+        name: 'mailing.address_2',
         label: 'Address line 2',
         placeholder: 'Apt, ste, unit, etc. optional',
       },
       city: {
         type: 'text',
-        name: 'city',
+        name: 'mailing.city',
         label: 'City',
         placeholder: 'City',
       },
       state: {
-        type: 'text',
-        name: 'state',
+        type: 'select',
+        name: 'mailing.state',
         label: 'State',
         placeholder: 'State',
       },
       postal_code: {
         type: 'number',
-        name: 'postal_code',
+        name: 'mailing.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
       },
@@ -169,6 +206,223 @@ const applicantfields = [
     name: 'referrer',
     label: 'Who referred you to Solera National Bank?',
     placeholder: 'Referrer',
+  },
+]
+
+const propertyFields = [
+  {
+    type: 'property',
+    name: 'addresses',
+    fields: {
+      address: {
+        type: 'text',
+        name: 'property.address',
+        label: 'Physical address of property',
+        placeholder: 'Enter street address, No PO Box',
+      },
+      address_2: {
+        type: 'text',
+        name: 'property.address_2',
+        label: 'Address line 2',
+        placeholder: 'Apt, ste, unit, etc. optional',
+      },
+      city: {
+        type: 'text',
+        name: 'property.city',
+        label: 'City',
+        placeholder: 'City',
+      },
+      state: {
+        type: 'select',
+        name: 'property.state',
+        label: 'State',
+        placeholder: 'State',
+      },
+      postal_code: {
+        type: 'number',
+        name: 'property.postal_code',
+        label: 'ZIP code',
+        placeholder: 'ZIP code',
+      },
+    },
+  },
+  {
+    type: 'select',
+    name: 'property_type',
+    label: 'Property type',
+  },
+  {
+    type: 'radio',
+    name: 'lot_over_2_acres',
+    label: 'Is the lot more than 2 acres?',
+  },
+  {
+    type: 'radio',
+    name: 'built_after_1950',
+    label: 'Was the property built after 1950?',
+  },
+  {
+    type: 'radio',
+    name: 'well_or_septic',
+    label: 'Is the home on a well or septic system?',
+  },
+  {
+    type: 'number',
+    name: 'year_roof_replaced',
+    label: 'What year was the roof last replaced?',
+  },
+  {
+    type: 'number',
+    name: 'year_last_remodel',
+    label: 'When was the property last remodeled?',
+  },
+  {
+    type: 'heading',
+    text: 'Property Income and Fees',
+  },
+  {
+    type: 'radio',
+    name: 'is_rented',
+    label: 'Is the property currently rented?',
+  },
+  {
+    type: 'currency',
+    name: 'monthly_current_rent',
+    label: 'Current monthly rent',
+  },
+  {
+    type: 'currency',
+    name: 'annual_taxes',
+    label: 'Annual real estate taxes',
+  },
+  {
+    type: 'currency',
+    name: 'annual_insurance_premium',
+    label: 'Annual insurance premiums',
+  },
+  {
+    type: 'currency',
+    name: 'monthly_hoa_dues',
+    label: 'Monthly HOA fees',
+  },
+  {
+    type: 'currency',
+    name: 'monthly_mgmt_fee',
+    label: 'Monthly property management fees',
+  },
+  // financing section
+  {
+    type: 'heading',
+    text: 'Financing Information',
+  },
+  {
+    type: 'radio',
+    label: 'New purchase or refinance',
+    name: 'is_purchase',
+  },
+  {
+    type: 'currency',
+    label: 'Requested loan amount*',
+    name: 'requested_loan_amount',
+  },
+  {
+    type: 'currency',
+    label: 'Balance of current debt on the property',
+    name: 'current_debt_balance',
+  },
+  {
+    type: 'number',
+    label: 'Number of years you have owned the property',
+    name: 'years_owned',
+  },
+  {
+    type: 'currency',
+    label: 'Estimated amount spent on home improvements',
+    name: 'estimated_improvement_costs',
+  },
+  {
+    type: 'currency',
+    label: 'Estimated value of the property',
+    name: 'estimated_value',
+  },
+]
+
+const eraFields = [
+  {
+    type: 'radio',
+    label: 'Do you plan to "fix & flip" this property',
+    name: 'fix_and_flip',
+  },
+  {
+    type: 'heading',
+    text: 'Retirement Account Information',
+  },
+  {
+    type: 'radio',
+    label: 'What type of retirement plan do you have?',
+    name: 'plan_type',
+  },
+  {
+    type: 'select',
+    label: 'What entity type will the property be titled under?',
+    name: 'entity_type',
+  },
+  {
+    type: 'text',
+    label: 'Name of entity',
+    name: 'entity_name',
+  },
+  {
+    type: 'text',
+    label: 'EIN',
+    name: 'ein',
+  },
+  {
+    type: 'select',
+    label: 'State of formation',
+    placeholder: 'State of formation',
+    name: 'entity_state_of_formation',
+  },
+  {
+    type: 'text',
+    label: 'Where are the funds held to be used for this investment?',
+    name: 'funding_institution_name',
+  },
+  {
+    type: 'currency',
+    label:
+      'What is the cash balance in the account to be used for this investment?',
+    name: 'funding_account_balance',
+  },
+]
+
+const signCertifyFields = [
+  {
+    type: 'p',
+    text: 'I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.',
+  },
+  {
+    type: 'text',
+    name: 'signature_entity_name',
+    label: 'Name of entity',
+    placeholder: 'Name of entity',
+  },
+  {
+    type: 'text',
+    name: 'signature_title',
+    label: 'Legal name and title of authorized signer',
+    placeholder: 'Legal name and title',
+  },
+  {
+    type: 'text',
+    name: 'signature',
+    label: 'Signature of authorized signer',
+    placeholder: 'Enter legal name',
+  },
+  {
+    type: 'date',
+    label: 'Date',
+    name: 'signature_date',
   },
 ]
 

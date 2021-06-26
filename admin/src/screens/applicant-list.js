@@ -2,7 +2,7 @@
 import * as React from 'react'
 import {Link} from 'react-router-dom'
 import {useTable} from 'react-table'
-import {useForm, Controller} from 'react-hook-form'
+import {useForm} from 'react-hook-form'
 
 import {
   Th,
@@ -12,13 +12,13 @@ import {
   colors,
   Button,
   TextLink,
-  Checkbox,
   TableWrapper,
 } from '@solera/ui'
 import {useAuth} from 'context/auth-context'
 import {join, initial, phone} from 'utils/format'
 import {useApplications} from 'hooks/use-applications'
 import {
+  Checkbox,
   StatusBadge,
   StatusSelect,
   SearchInput,
@@ -39,10 +39,7 @@ export default function ApplicantList() {
 function FiltersPanel({setFilters}) {
   const {register, handleSubmit, reset, formState, control} = useForm()
 
-  const handleFilter = handleSubmit(form => {
-    const status = form.status !== 'empty' ? form.status : undefined
-    setFilters({...form, status})
-  })
+  const handleFilter = handleSubmit(setFilters)
 
   const clearFilters = e => {
     e.preventDefault()
@@ -94,18 +91,11 @@ function FiltersPanel({setFilters}) {
           />
         </div>
         <div>
-          <Controller
+          <Checkbox
             control={control}
+            label="Assinged to me"
+            id="only_assigned_to_me"
             name="only_assigned_to_me"
-            render={({field: {value, onChange}}) => (
-              <Checkbox
-                checked={value}
-                onChange={onChange}
-                label="Assinged to me"
-                id="only_assigned_to_me"
-                name="only_assigned_to_me"
-              />
-            )}
           />
         </div>
         <div>

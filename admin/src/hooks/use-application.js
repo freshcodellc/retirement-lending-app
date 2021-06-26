@@ -265,7 +265,7 @@ function eraFields(app, planTypesMap, entityTypesMap) {
       value: empty()(app.ein),
     },
     {
-      label: 'Sate of formation',
+      label: 'State of formation',
       value: empty()(app.entity_state_of_formation),
     },
     {

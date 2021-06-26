@@ -68,8 +68,64 @@ const SearchInput = forwardRef((props, ref) => (
   </FormControl>
 ))
 
-const SsnInput = forwardRef((props, ref) => (
-  <MaskedInput unmask mask="000-00-0000" {...props} />
-))
+const SsnInput = forwardRef(
+  ({name, control, rules, format = '000{-}00{-}0000', ...props}, ref) => {
+    const {
+      field: {onChange, value},
+    } = useController({
+      name,
+      control,
+      rules,
+    })
+    return (
+      <MaskedInput
+        unmask
+        id={name}
+        name={name}
+        value={value}
+        mask={format}
+        onAccept={onChange}
+        {...props}
+      />
+    )
+  },
+)
 
-export {MaskedInput, PasswordInput, SearchInput, PhoneInput, SsnInput}
+const CurrencyInput = forwardRef(
+  ({name, control, rules, format = '{$}num', ...props}, ref) => {
+    const {
+      field: {onChange, value},
+    } = useController({
+      name,
+      control,
+      rules,
+    })
+    const amount = String(value)
+    return (
+      <MaskedInput
+        unmask
+        id={name}
+        name={name}
+        mask={format}
+        value={amount}
+        blocks={{
+          num: {
+            mask: Number,
+            thousandsSeparator: ',',
+          },
+        }}
+        onAccept={onChange}
+        {...props}
+      />
+    )
+  },
+)
+
+export {
+  MaskedInput,
+  PasswordInput,
+  SearchInput,
+  PhoneInput,
+  SsnInput,
+  CurrencyInput,
+}

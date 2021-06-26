@@ -46,7 +46,7 @@ function AdminSelect({className, ...props}) {
   )
 }
 
-function NetWorthsSelect(props) {
+function NetWorthSelect(props) {
   const {netWorths} = useConstants()
 
   return (
@@ -65,4 +65,131 @@ function NetWorthsSelect(props) {
   )
 }
 
-export {Select, SelectOption, SelctEmptyOption, AdminSelect, NetWorthsSelect}
+function EntitySelect(props) {
+  const {entityTypes} = useConstants()
+
+  return (
+    <Select {...props}>
+      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
+        Select one
+      </SelctEmptyOption>
+      {entityTypes.map(status => (
+        <SelectOption key={status.name} value={status.name}>
+          <span css={{display: 'flex', alignItems: 'center'}}>
+            {status.humanized}
+          </span>
+        </SelectOption>
+      ))}
+    </Select>
+  )
+}
+
+function PropertySelect(props) {
+  const {propertyTypes} = useConstants()
+
+  return (
+    <Select {...props}>
+      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
+        Select one
+      </SelctEmptyOption>
+      {propertyTypes.map(status => (
+        <SelectOption key={status.name} value={status.name}>
+          <span css={{display: 'flex', alignItems: 'center'}}>
+            {status.humanized}
+          </span>
+        </SelectOption>
+      ))}
+    </Select>
+  )
+}
+
+const states = getStates()
+function UsStateSelect(props) {
+  return (
+    <Select {...props}>
+      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
+        Select one
+      </SelctEmptyOption>
+      {states.map((state, i) => (
+        <SelectOption key={state} value={state}>
+          <span css={{display: 'flex', alignItems: 'center'}}>{state}</span>
+        </SelectOption>
+      ))}
+    </Select>
+  )
+}
+
+export {
+  Select,
+  SelectOption,
+  SelctEmptyOption,
+  AdminSelect,
+  NetWorthSelect,
+  EntitySelect,
+  PropertySelect,
+  UsStateSelect,
+}
+
+function getStates() {
+  return [
+    'Alabama',
+    'Alaska',
+    'American Samoa',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'District of Columbia',
+    'Federated States of Micronesia',
+    'Florida',
+    'Georgia',
+    'Guam',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Marshall Islands',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Carolina',
+    'North Dakota',
+    'Northern Mariana Islands',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Palau',
+    'Pennsylvania',
+    'Puerto Rico',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virgin Island',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming',
+  ]
+}

@@ -178,6 +178,7 @@ function ApplicationInfo({application}) {
             {section.route ? (
               <Link to={`/applicants/${application.uuid}/${section.route}`}>
                 <TextLink
+                  variant="secondary"
                   css={{
                     right: '1.2rem',
                     fontWeight: 500,

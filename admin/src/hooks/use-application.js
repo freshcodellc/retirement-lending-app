@@ -39,7 +39,7 @@ const sections = {
     heading: 'property information',
   },
   financing: {
-    route: 'financing',
+    route: 'property',
     heading: 'financing information',
   },
   retirement: {

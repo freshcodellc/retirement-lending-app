@@ -2,7 +2,11 @@
 import styled from '@emotion/styled/macro'
 import {Link} from 'react-router-dom'
 
-import {colors} from '@solera/ui'
+import {
+  colors,
+  FormControl as UiFormControl,
+  FormHelperText as UiFormHelperText,
+} from '@solera/ui'
 import {ReactComponent as Logo} from 'assets/logo.svg'
 
 export const FormMessage = styled.p(
@@ -29,6 +33,13 @@ export const AuthForm = styled.form({
     marginTop: '40px',
   },
 })
+
+export const FormControl = ({helperText, children}) => (
+  <UiFormControl>
+    {children}
+    {helperText && <UiFormHelperText>{helperText}</UiFormHelperText>}
+  </UiFormControl>
+)
 
 export const Header = ({children}) => (
   <nav

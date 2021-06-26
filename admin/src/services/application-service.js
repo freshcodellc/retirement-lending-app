@@ -38,15 +38,27 @@ async function create(data) {
 async function get(uuid) {
   return apiSecureClient(`loan-applications/${uuid}`)
 }
-
+//TODO: fix decimal currency unmasking
 async function update(data) {
   const app = {}
   for (const key in data) {
     let value = data[key]
-    if ([null, undefined, 'empty'].includes(value)) continue
     if (['mailing_equal_physical'].includes(key)) continue
     if (['physical', 'mailing', 'property'].includes(key)) {
       //TODO: handle updating addresses
+    }
+    switch (value) {
+      case null:
+      case undefined:
+      case 'empty':
+        continue
+      case 'true':
+        value = true
+        break
+      case 'false':
+        value = false
+        break
+      default:
     }
     app[key] = value
   }

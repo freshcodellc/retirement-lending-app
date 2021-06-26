@@ -92,6 +92,7 @@ function FiltersPanel({setFilters}) {
         </div>
         <div>
           <Checkbox
+            variant="primary"
             control={control}
             label="Assinged to me"
             id="only_assigned_to_me"

@@ -41,7 +41,6 @@ function useEditFields() {
         if (cur.name && cur.name in application) {
           let value = application[cur.name]
           if (cur.type === 'select' && !value) {
-            console.log(cur)
             value = 'empty'
           }
           acc[cur.name] = value
@@ -141,6 +140,10 @@ const applicantfields = [
     type: 'radio',
     name: 'is_homeowner',
     label: 'Do you own or rent?',
+    options: [
+      {label: 'Own', value: true},
+      {label: 'Rent', value: false},
+    ],
   },
   {
     type: 'ssn',
@@ -255,16 +258,28 @@ const propertyFields = [
     type: 'radio',
     name: 'lot_over_2_acres',
     label: 'Is the lot more than 2 acres?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
   },
   {
     type: 'radio',
     name: 'built_after_1950',
     label: 'Was the property built after 1950?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
   },
   {
     type: 'radio',
     name: 'well_or_septic',
     label: 'Is the home on a well or septic system?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
   },
   {
     type: 'number',
@@ -277,13 +292,17 @@ const propertyFields = [
     label: 'When was the property last remodeled?',
   },
   {
-    type: 'heading',
+    type: 'h1',
     text: 'Property Income and Fees',
   },
   {
     type: 'radio',
     name: 'is_rented',
     label: 'Is the property currently rented?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
   },
   {
     type: 'currency',
@@ -312,18 +331,23 @@ const propertyFields = [
   },
   // financing section
   {
-    type: 'heading',
+    type: 'h1',
     text: 'Financing Information',
   },
   {
     type: 'radio',
     label: 'New purchase or refinance',
     name: 'is_purchase',
+    options: [
+      {label: 'New purchase', value: true},
+      {label: 'Refinance', value: false},
+    ],
   },
   {
     type: 'currency',
     label: 'Requested loan amount*',
     name: 'requested_loan_amount',
+    helperText: '(note: max loan amount is 65% of purchase price)',
   },
   {
     type: 'currency',
@@ -350,17 +374,25 @@ const propertyFields = [
 const eraFields = [
   {
     type: 'radio',
-    label: 'Do you plan to "fix & flip" this property',
     name: 'fix_and_flip',
+    label: 'Do you plan to "fix & flip" this property',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
   },
   {
-    type: 'heading',
+    type: 'h1',
     text: 'Retirement Account Information',
   },
   {
     type: 'radio',
-    label: 'What type of retirement plan do you have?',
     name: 'plan_type',
+    label: 'What type of retirement plan do you have?',
+    options: [
+      {label: 'IRA', value: 'IRA'},
+      {label: '401K', value: '401K'},
+    ],
   },
   {
     type: 'select',

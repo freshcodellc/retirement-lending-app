@@ -90,9 +90,9 @@ const SsnInput = forwardRef(
     )
   },
 )
-
+//TODO: fix coins decimal masking
 const CurrencyInput = forwardRef(
-  ({name, control, rules, format = '{$}num', ...props}, ref) => {
+  ({name, control, rules, format = '$num', ...props}, ref) => {
     const {
       field: {onChange, value},
     } = useController({

@@ -6,7 +6,7 @@ import * as colors from './styles/colors'
 import '@reach/checkbox/styles.css'
 
 function Checkbox({
-  variant = 'primary',
+  variant,
   checked = false,
   onChange,
   hasError,
@@ -23,8 +23,14 @@ function Checkbox({
           width: '20px',
           height: '20px',
           borderRadius: '2px',
-          border: `2px solid ${checked ? colors[variant] : colors.text}`,
-          background: checked && colors[variant],
+          border: `2px solid ${
+            checked
+              ? variant
+                ? colors[variant]
+                : colors.gray80
+              : colors.gray80
+          }`,
+          background: checked && (variant ? colors[variant] : colors.gray80),
           '&:focus-within': {
             boxShadow: 'none'
           },

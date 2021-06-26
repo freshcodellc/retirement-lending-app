@@ -38,16 +38,17 @@ const RadioInput = React.forwardRef((props, ref) => {
             },
             ...props.css
           }}
-          type='radio'
           ref={ref}
+          type='radio'
+          id={props.id}
           {...props}
         />
         <span
           css={{
             display: 'block',
-            width: '18px',
-            height: '18px',
-            border: `2px solid ${colors.lightBlue}`,
+            width: '22px',
+            height: '22px',
+            border: `2px solid ${colors.gray80}`,
             position: 'relative',
             borderRadius: '50%',
             marginRight: '10px',
@@ -62,7 +63,7 @@ const RadioInput = React.forwardRef((props, ref) => {
               display: 'none',
               width: '10px',
               height: '10px',
-              backgroundColor: `${colors.lightBlue}`,
+              backgroundColor: `${colors.gray80}`,
               borderRadius: '50%'
             }
           }}
@@ -75,15 +76,16 @@ const RadioInput = React.forwardRef((props, ref) => {
 function RadioGroup({ text, children }) {
   return (
     <div css={{ marginTop: '65px' }}>
-      <p
+      <div
         css={{
+          marginBottom: '0.5rem',
           fontWeight: '300',
           fontSize: '20px',
           lineHeight: '26px'
         }}
       >
         {text}
-      </p>
+      </div>
       <div css={{ display: 'flex' }}>{children}</div>
     </div>
   )

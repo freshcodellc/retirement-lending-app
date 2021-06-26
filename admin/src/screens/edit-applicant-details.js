@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
 
-import {Input} from '@solera/ui'
+import {Input, RadioGroup, RadioInput} from '@solera/ui'
 import {useEditApplication, useEditFields} from 'hooks/use-edit-application'
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   ReturnLink,
   PhoneInput,
   DatePicker,
+  FormControl,
   EntitySelect,
   UsStateSelect,
   CurrencyInput,
@@ -79,15 +80,11 @@ export default function EditApplicantInfo() {
         }}
       >
         {fields.map(field => {
-          const props = {
-            key: field.name,
-            hasError: isError,
-            ...field,
-          }
+          const props = {key: field.name, hasError: isError, ...field}
           switch (field.type) {
-            case 'heading':
+            case 'h1':
               return (
-                <h1 css={{margin: '100px 0 0'}} key={field.text}>
+                <h1 css={{margin: '90px 0 0'}} key={field.text}>
                   {field.text}
                 </h1>
               )
@@ -103,7 +100,11 @@ export default function EditApplicantInfo() {
             case 'phone':
               return <PhoneInput control={control} {...props} />
             case 'currency':
-              return <CurrencyInput control={control} {...props} />
+              return (
+                <FormControl {...props}>
+                  <CurrencyInput control={control} {...props} />
+                </FormControl>
+              )
             case 'date':
               return <DatePicker control={control} {...props} />
             case 'ssn':
@@ -114,11 +115,22 @@ export default function EditApplicantInfo() {
               return (
                 <Input
                   {...props}
-                  {...register(field.name, {
-                    required: true,
-                    pattern: /^\S+@\S+$/i,
-                  })}
+                  {...register(field.name, {pattern: /^\S+@\S+$/i})}
                 />
+              )
+            case 'radio':
+              return (
+                <RadioGroup key={field.name} text={field.label}>
+                  {field.options.map(o => (
+                    <RadioInput
+                      {...o}
+                      key={o.label}
+                      name={field.name}
+                      id={field.name + o.label}
+                      {...register(field.name)}
+                    />
+                  ))}
+                </RadioGroup>
               )
             case 'physical':
             case 'mailing':

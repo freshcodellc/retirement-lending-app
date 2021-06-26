@@ -53,6 +53,7 @@ function FormHelperText({ children }) {
   return (
     <div
       css={{
+        width: '100%',
         minHeight: '2rem',
         position: 'relative'
       }}
@@ -79,7 +80,8 @@ function FormControl({ children, ...props }) {
         width: '100%',
         display: 'flex',
         alignItems: 'center',
-        position: 'relative'
+        position: 'relative',
+        flexDirection: 'column'
       }}
       {...props}
     >

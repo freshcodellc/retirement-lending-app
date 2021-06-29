@@ -38,10 +38,18 @@ function useEditFields() {
   const defaultValues = useMemo(
     () =>
       editSection.fields.reduce((acc, cur) => {
-        if (cur.name && cur.name in application) {
+        if (cur.name in application) {
           let value = application[cur.name]
-          if (cur.type === 'select' && !value) {
-            value = 'empty'
+          if (value != null) {
+            if (cur.type === 'select') {
+              value = 'empty'
+            } else if (cur.type === 'radio') {
+              if (value === true) {
+                value = 'true'
+              } else if (value === false) {
+                value = 'false'
+              }
+            }
           }
           acc[cur.name] = value
         }

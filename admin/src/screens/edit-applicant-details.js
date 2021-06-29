@@ -2,6 +2,7 @@
 import * as React from 'react'
 import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
+import {useQueryClient} from 'react-query'
 
 import {Input, RadioGroup, RadioInput} from '@solera/ui'
 import {useEditApplication, useEditFields} from 'hooks/use-edit-application'
@@ -12,6 +13,7 @@ import {
   ReturnLink,
   PhoneInput,
   DatePicker,
+  FormMessage,
   FormControl,
   EntitySelect,
   UsStateSelect,
@@ -21,7 +23,12 @@ import {
 } from 'components'
 
 export default function EditApplicantInfo() {
-  const {mutate: saveEdit} = useEditApplication()
+  const queryClient = useQueryClient()
+  const {
+    mutate: saveEdit,
+    isLoading: isSaving,
+    isError: saveIsError,
+  } = useEditApplication()
   const {
     uuid,
     fields,
@@ -31,7 +38,10 @@ export default function EditApplicantInfo() {
     isSuccess,
     isLoading,
     defaultValues,
-  } = useEditFields()
+  } = useEditFields({
+    onSuccess: () =>
+      queryClient.invalidateQueries('applications', {refetchInactive: true}),
+  })
   const {handleSubmit, register, reset, control, watch, formState} = useForm({
     mode: 'onChange',
     defaultValues,
@@ -44,7 +54,7 @@ export default function EditApplicantInfo() {
     }
   }, [isSuccess, reset, defaultValues])
 
-  const handleEdit = handleSubmit(saveEdit)
+  const handleEdit = handleSubmit(form => saveEdit({...form, uuid}))
 
   if (!heading) {
     return <Navigate replace to="/" />
@@ -62,6 +72,9 @@ export default function EditApplicantInfo() {
     <div>
       <h1>Edit {heading}</h1>
       <ReturnLink to={`/applicants/${uuid}`}>Applicant details</ReturnLink>
+      {saveIsError ? (
+        <FormMessage variant="error">Failed to save!</FormMessage>
+      ) : null}
       <form
         name="edit-applicant-info"
         onSubmit={handleEdit}
@@ -165,7 +178,7 @@ export default function EditApplicantInfo() {
         <div css={{textAlign: 'center'}}>
           <Button
             type="submit"
-            isLoading={isLoading}
+            isLoading={isSaving}
             css={{margin: '1rem auto'}}
             disabled={!formState.isValid}
           >

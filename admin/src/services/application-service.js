@@ -39,13 +39,14 @@ async function get(uuid) {
   return apiSecureClient(`loan-applications/${uuid}`)
 }
 //TODO: fix decimal currency unmasking
-async function update(data) {
-  const app = {}
-  for (const key in data) {
-    let value = data[key]
+async function update({uuid, ...fields}) {
+  const data = {loan_application: {}}
+  for (const key in fields) {
+    let value = fields[key]
     if (['mailing_equal_physical'].includes(key)) continue
     if (['physical', 'mailing', 'property'].includes(key)) {
       //TODO: handle updating addresses
+      continue
     }
     switch (value) {
       case null:
@@ -60,11 +61,9 @@ async function update(data) {
         break
       default:
     }
-    app[key] = value
+    data.loan_application[key] = value
   }
-  console.log(app)
-  return Promise.resolve()
-  // return apiSecureClient(`loan-applications/${uuid}`, {data, method: 'PUT'})
+  return apiSecureClient(`loan-applications/${uuid}`, {data, method: 'PUT'})
 }
 
 async function constants() {

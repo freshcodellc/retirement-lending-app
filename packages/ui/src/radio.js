@@ -78,7 +78,7 @@ function RadioGroup({ text, children }) {
     <div css={{ marginTop: '65px' }}>
       <div
         css={{
-          marginBottom: '0.5rem',
+          marginBottom: '0.8rem',
           fontWeight: '300',
           fontSize: '20px',
           lineHeight: '26px'

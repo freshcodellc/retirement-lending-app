@@ -104,6 +104,7 @@ const CurrencyInput = forwardRef(
     return (
       <MaskedInput
         unmask
+        radix="."
         id={name}
         name={name}
         mask={format}

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/auth-context'
 import { useAsync } from '../utils/hooks'
 import { yupResolver } from "@hookform/resolvers/yup";
+import has from 'lodash/has';
 import { ErrorMessage } from "@hookform/error-message";
 import * as yup from "yup";
 import { Button, Input, InputError, TextLink } from "@solera/ui";

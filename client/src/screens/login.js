@@ -63,6 +63,7 @@ function LoginForm({ onSubmit }) {
             label="Email"
             name="email"
             type="email"
+            hasError={has(formState, "errors.email")}
             {...register("email")}
           />
           <ErrorMessage
@@ -81,6 +82,7 @@ function LoginForm({ onSubmit }) {
             label="Password"
             name="password"
             type="password"
+            hasError={has(formState, "errors.password")}
             {...register("password")}
           />
           <ErrorMessage
@@ -97,7 +99,11 @@ function LoginForm({ onSubmit }) {
             alignItems: "center",
           }}
         >
-          <Button variant="secondary" type="submit" disabled={!formState.isValid}>
+          <Button
+            variant="secondary"
+            type="submit"
+            disabled={!formState.isValid}
+          >
             Submit
           </Button>
           <Link

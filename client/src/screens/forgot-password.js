@@ -68,6 +68,7 @@ function ForgotPasswordForm({ onSubmit }) {
             label="Email"
             name="email"
             type="email"
+            hasError={has(formState, "errors.email")}
             {...register("email")}
           />
           <ErrorMessage
@@ -85,7 +86,11 @@ function ForgotPasswordForm({ onSubmit }) {
             alignItems: "center",
           }}
         >
-          <Button variant="secondary" disabled={!formState.isValid} type="submit">
+          <Button
+            variant="secondary"
+            disabled={!formState.isValid}
+            type="submit"
+          >
             Submit
           </Button>
           <Link

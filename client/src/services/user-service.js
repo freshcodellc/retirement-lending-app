@@ -1,7 +1,6 @@
 import { apiSecureClient } from "../utils/api-client";
 
 function getUser() {
-  debugger
   return apiSecureClient("users/me");
 }
 

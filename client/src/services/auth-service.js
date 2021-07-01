@@ -39,7 +39,6 @@ async function refreshAccessToken() {
 }
 
 function handleUserResponse({ user }) {
-  console.log('U', user)
   window.localStorage.setItem(accessTokenKey, user.token);
   return user;
 }
@@ -60,11 +59,9 @@ async function logout() {
 }
 
 function onTokensExpired() {
-  console.log('LOGGIN OUT')
   logout();
   queryClient.clear();
   // window.location.replace("/");
-  console.log('EXPIRED')
 }
 
 export { getToken, refreshAccessToken, login, register, logout };

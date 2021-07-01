@@ -223,7 +223,6 @@ function useFields() {
       }, {}),
     [data, fields],
   )
-  // console.log(fields, defaultValues)
   return {
     uuid,
     error,

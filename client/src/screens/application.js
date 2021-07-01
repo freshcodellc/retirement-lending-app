@@ -7,7 +7,6 @@ import {Button} from '@solera/ui'
 function ApplicationScreen() {
   const {uuid} = useParams()
   const {data} = useLoanApplication(uuid)
-  console.log(data)
   return (
     <div>
       <h1>{data.name}</h1>

@@ -39,7 +39,7 @@ async function refreshAccessToken() {
 }
 
 function handleUserResponse({ user }) {
-  console.log('HERE', user)
+  console.log('U', user)
   window.localStorage.setItem(accessTokenKey, user.token);
   return user;
 }

@@ -8,7 +8,7 @@ function makeClient(authRequired) {
     { data, headers: customHeaders, ...customConfig } = {}
   ) => {
     let token;
-    if (authRequired) {
+    if (authRequired && endpoint) {
       token = auth.getToken();
       if (!token) {
         await auth.refreshAccessToken();

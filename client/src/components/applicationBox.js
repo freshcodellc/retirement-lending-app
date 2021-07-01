@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { Button, colors } from '@solera/ui'
-import { Link } from 'react-router-dom'
+import {Button, colors} from '@solera/ui'
+import {Link} from 'react-router-dom'
 function ApplicationBox({data}) {
   return (
     <div
@@ -16,13 +16,13 @@ function ApplicationBox({data}) {
       >
         Application 1
       </div>
-      <div css={{ padding: "1rem" }}>
-        <Link to={`/pre-application/${data.uuid}`}>
+      <div css={{padding: '1rem'}}>
+        <Link to={`/${data.uuid}`}>
           <Button variation="secondary">Continue Loan Process</Button>
         </Link>
       </div>
     </div>
-  );
+  )
 }
 
-export { ApplicationBox }
+export {ApplicationBox}

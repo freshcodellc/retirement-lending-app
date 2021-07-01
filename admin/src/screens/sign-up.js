@@ -16,7 +16,7 @@ import {
 export default function SignUpScreen() {
   const {signup} = useAuth()
   const [searchParams] = useSearchParams()
-  const {isLoading, isSuccess, isError, error, run} = useAsync()
+  const {isLoading, isSuccess, isError, run} = useAsync()
   const {register, handleSubmit, formState, control} = useForm({
     mode: 'onChange',
   })

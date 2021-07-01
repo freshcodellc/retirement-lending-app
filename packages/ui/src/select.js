@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import * as React from 'react'
+import { Fragment } from 'react'
 import { jsx } from '@emotion/react'
 import {
   ListboxList,
@@ -8,8 +8,9 @@ import {
   ListboxPopover,
   ListboxOption as SelectOption
 } from '@reach/listbox'
-import * as colors from './styles/colors'
+import { useController } from 'react-hook-form'
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
+import * as colors from './styles/colors'
 
 import '@reach/listbox/styles.css'
 
@@ -24,7 +25,7 @@ const SelctEmptyOption = (props) => (
   />
 )
 
-function Select({
+function BaseSelect({
   children,
   label,
   name,
@@ -50,7 +51,7 @@ function Select({
       </label>
       <ListboxInput {...props} onChange={onChange}>
         {({ value, valueLabel, isExpanded }) => (
-          <React.Fragment>
+          <Fragment>
             <ListboxButton
               arrow={
                 isExpanded ? (
@@ -88,11 +89,120 @@ function Select({
                 {children}
               </ListboxList>
             </ListboxPopover>
-          </React.Fragment>
+          </Fragment>
         )}
       </ListboxInput>
     </div>
   )
 }
 
-export { Select, SelectOption, SelctEmptyOption }
+function Select({ name, rules, control, defaultValue = 'empty', ...props }) {
+  if (rules && rules.required) {
+    rules.validate = (value) => value !== 'empty'
+  }
+
+  const {
+    field: { onChange, value = defaultValue }
+  } = useController({ name, control, rules, defaultValue })
+
+  return <BaseSelect value={value} onChange={onChange} {...props} />
+}
+
+function ConstantSelect({ options, ...props }) {
+  return (
+    <Select {...props}>
+      <SelctEmptyOption css={{ padding: '0.55rem 0.5rem' }}>
+        Select one
+      </SelctEmptyOption>
+      {options.map((status) => (
+        <SelectOption key={status.name} value={status.name}>
+          <span css={{ display: 'flex', alignItems: 'center' }}>
+            {status.humanized}
+          </span>
+        </SelectOption>
+      ))}
+    </Select>
+  )
+}
+
+const states = getStates()
+function UsStateSelect(props) {
+  return (
+    <Select {...props}>
+      <SelctEmptyOption css={{ padding: '0.55rem 0.5rem' }}>
+        Select one
+      </SelctEmptyOption>
+      {states.map((state, i) => (
+        <SelectOption key={state} value={state}>
+          <span css={{ display: 'flex', alignItems: 'center' }}>{state}</span>
+        </SelectOption>
+      ))}
+    </Select>
+  )
+}
+
+export { Select, SelectOption, SelctEmptyOption, ConstantSelect, UsStateSelect }
+
+function getStates() {
+  return [
+    'Alabama',
+    'Alaska',
+    'American Samoa',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'District of Columbia',
+    'Federated States of Micronesia',
+    'Florida',
+    'Georgia',
+    'Guam',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Marshall Islands',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Carolina',
+    'North Dakota',
+    'Northern Mariana Islands',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Palau',
+    'Pennsylvania',
+    'Puerto Rico',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virgin Island',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming'
+  ]
+}

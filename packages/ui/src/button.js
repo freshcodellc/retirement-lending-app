@@ -1,4 +1,6 @@
 /** @jsx jsx */
+import { jsx, keyframes } from '@emotion/react'
+import { FiLoader } from 'react-icons/fi'
 import styled from '@emotion/styled/macro'
 import * as colors from './styles/colors'
 
@@ -13,7 +15,7 @@ const variants = {
   }
 }
 
-const Button = styled.button(
+const BaseButton = styled.button(
   {
     fontSize: '14px',
     border: 0,
@@ -47,6 +49,35 @@ const Button = styled.button(
         }
       : {})
   })
+)
+
+const spin = keyframes({
+  '0%': { transform: 'rotate(0deg)' },
+  '100%': { transform: 'rotate(360deg)' }
+})
+
+const Spinner = styled(FiLoader)({
+  animation: `${spin} 1s linear infinite`,
+  marginRight: '4px'
+})
+Spinner.defaultProps = {
+  'aria-label': 'loading'
+}
+
+const Button = ({
+  isLoading = false,
+  disabled = false,
+  children,
+  ...props
+}) => (
+  <BaseButton {...props} isLoading={isLoading} disabled={disabled || isLoading}>
+    <span
+      css={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    >
+      {isLoading ? <Spinner /> : null}
+      {children}
+    </span>
+  </BaseButton>
 )
 
 const IconButton = styled.button({

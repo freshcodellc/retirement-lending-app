@@ -1,9 +1,14 @@
 /** @jsx jsx */
-import React from 'react'
 import { jsx } from '@emotion/react'
+import { useState, forwardRef } from 'react'
+import { IMaskMixin } from 'react-imask'
+import { useController } from 'react-hook-form'
+import { FiEye, FiEyeOff, FiSearch } from 'react-icons/fi'
 import * as colors from './styles/colors'
+import { IconButton } from './button'
+import { FormControl } from './form'
 
-const Input = React.forwardRef(({ hasError, helperText, ...props }, ref) => (
+const Input = forwardRef(({ hasError, helperText, ...props }, ref) => (
   <div
     css={{
       display: 'flex',
@@ -49,29 +54,57 @@ function InputAdornment({ children, end = false, ...props }) {
   )
 }
 
-function FormHelperText({ children }) {
+const MaskedInput = IMaskMixin(({ inputRef, ...props }) => (
+  <Input {...props} ref={inputRef} />
+))
+
+const PhoneInput = forwardRef(
+  ({ control, name, rules, format = '{+1}000.000.0000', ...props }, ref) => {
+    const {
+      field: { onChange, value }
+    } = useController({
+      name,
+      control,
+      rules
+    })
+
+    return (
+      <MaskedInput
+        unmask
+        type='tel'
+        id={name}
+        name={name}
+        value={value}
+        mask={format}
+        onAccept={onChange}
+        {...props}
+      />
+    )
+  }
+)
+
+const PasswordInput = forwardRef((props, ref) => {
+  const [type, setType] = useState('password')
+
+  const toggleType = (e) => {
+    e.preventDefault()
+    setType((prev) => (prev === 'password' ? 'text' : 'password'))
+  }
   return (
-    <div
-      css={{
-        width: '100%',
-        minHeight: '2rem',
-        position: 'relative'
-      }}
-    >
-      <div
-        css={{
-          left: 0,
-          right: 0,
-          top: '8px',
-          fontSize: '0.9rem',
-          position: 'absolute'
-        }}
-      >
-        {children}
-      </div>
-    </div>
+    <FormControl>
+      <Input ref={ref} type={type} css={{ paddingRight: '20px' }} {...props} />
+      <InputAdornment end>
+        <IconButton type='button' onClick={toggleType} css={{ padding: '0' }}>
+          {type === 'password' ? (
+            <FiEye fontSize='1.2rem' />
+          ) : (
+            <FiEyeOff fontSize='1.2rem' />
+          )}
+        </IconButton>
+      </InputAdornment>
+    </FormControl>
   )
-}
+})
 
 function InputError({ children }) {
   return (
@@ -97,21 +130,77 @@ function InputError({ children }) {
   )
 }
 
-function FormControl({ children, ...props }) {
-  return (
-    <div
-      css={{
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        flexDirection: 'column'
-      }}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-}
+const SearchInput = forwardRef((props, ref) => (
+  <FormControl css={{ maxWidth: '300px' }}>
+    <InputAdornment>
+      <FiSearch />
+    </InputAdornment>
+    <Input ref={ref} type='search' css={{ paddingLeft: '20px' }} {...props} />
+  </FormControl>
+))
 
-export { Input, InputAdornment, FormControl, FormHelperText, InputError }
+const SsnInput = forwardRef(
+  ({ name, control, rules, format = '000{-}00{-}0000', ...props }, ref) => {
+    const {
+      field: { onChange, value }
+    } = useController({
+      name,
+      control,
+      rules
+    })
+    return (
+      <MaskedInput
+        unmask
+        id={name}
+        name={name}
+        value={value}
+        mask={format}
+        onAccept={onChange}
+        {...props}
+      />
+    )
+  }
+)
+// TODO: fix coins decimal masking
+const CurrencyInput = forwardRef(
+  ({ name, control, rules, format = '$num', ...props }, ref) => {
+    const {
+      field: { onChange, value }
+    } = useController({
+      name,
+      control,
+      rules
+    })
+    const amount = String(value)
+    return (
+      <MaskedInput
+        unmask
+        radix='.'
+        id={name}
+        name={name}
+        mask={format}
+        value={amount}
+        blocks={{
+          num: {
+            mask: Number,
+            thousandsSeparator: ','
+          }
+        }}
+        onAccept={onChange}
+        {...props}
+      />
+    )
+  }
+)
+
+export {
+  Input,
+  InputAdornment,
+  MaskedInput,
+  PasswordInput,
+  SearchInput,
+  PhoneInput,
+  SsnInput,
+  CurrencyInput,
+  InputError
+}

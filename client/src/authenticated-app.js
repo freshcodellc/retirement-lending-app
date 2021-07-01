@@ -1,25 +1,30 @@
-import { Routes, Route } from "react-router-dom";
-import { DashboardScreen } from "./screens/dashboard";
-import { PreApplicationScreen } from "./screens/pre-application";
-import { NotFoundScreen } from "./screens/not-found";
-import { Layout } from "./components/layout";
+import {Routes, Route} from 'react-router-dom'
+import {DashboardScreen} from './screens/dashboard'
+import {PreScreenApplicationScreen} from './screens/prescreen-application'
+import {NotFoundScreen} from './screens/not-found'
+import {ApplicationScreen} from './screens/application'
+import {Layout} from './components/layout'
 
 function AuthenticatedApp() {
   return (
     <Layout>
       <AppRoutes />
     </Layout>
-  );
+  )
 }
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<DashboardScreen />} />
-      <Route path="/pre-application/:uuid" element={<PreApplicationScreen />} />
+      <Route path="/:uuid" element={<ApplicationScreen />} />
+      <Route
+        path="/:uuid/prescreen/:step"
+        element={<PreScreenApplicationScreen />}
+      />
       <Route path="*" element={<NotFoundScreen />} />
     </Routes>
-  );
+  )
 }
 
-export default AuthenticatedApp;
+export default AuthenticatedApp

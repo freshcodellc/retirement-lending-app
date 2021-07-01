@@ -1,11 +1,13 @@
 /** @jsx jsx */
+import { forwardRef } from 'react'
 import { jsx } from '@emotion/react'
+import { useController } from 'react-hook-form'
 import { CustomCheckboxContainer, CustomCheckboxInput } from '@reach/checkbox'
 import * as colors from './styles/colors'
 
 import '@reach/checkbox/styles.css'
 
-function Checkbox({
+function BaseCheckbox({
   variant,
   checked = false,
   onChange,
@@ -68,5 +70,25 @@ function Checkbox({
     </label>
   )
 }
+
+const Checkbox = forwardRef(({ control, name, rules, ...props }, ref) => {
+  const {
+    field: { onChange, value }
+  } = useController({
+    name,
+    control,
+    rules
+  })
+  return (
+    <BaseCheckbox
+      ref={ref}
+      id={name}
+      name={name}
+      checked={value}
+      onChange={onChange}
+      {...props}
+    />
+  )
+})
 
 export { Checkbox }

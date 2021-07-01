@@ -13,7 +13,7 @@ function DashboardScreen() {
   const create = useCreateLoanApplication();
 
   const handleCreateClick = async () => {
-    create.mutateAsync({ first_name: 'Stephen'}).then(data => navigate(`/pre-application/${data.uuid}`))
+    create.mutateAsync({ first_name: 'Stephen'}).then(data => navigate(`/${data.uuid}`))
   }
 
   return (

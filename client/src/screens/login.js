@@ -3,11 +3,23 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/auth-context'
 import { useAsync } from '../utils/hooks'
-import { Button, Input, TextLink } from '@solera/ui'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ErrorMessage } from "@hookform/error-message";
+import * as yup from "yup";
+import { Button, Input, InputError, TextLink } from "@solera/ui";
+
+const schema = yup.object().shape({
+  email: yup.string().email().required("Required"),
+  password: yup.string().min(8).required("Required"),
+});
 
 function LoginForm({ onSubmit }) {
   const { isLoading, isError, error, run } = useAsync();
-  const { register, handleSubmit } = useForm();
+  const { formState, handleSubmit, register } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+    submitFocusError: true,
+  });
 
   function submitForm(formData) {
     const { email, password } = formData;
@@ -21,59 +33,93 @@ function LoginForm({ onSubmit }) {
   }
 
   return (
-    <div css={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      maxWidth: "600px",
-      width: "100%"
-    }}>
-      <h1>Log in</h1>
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        maxWidth: "600px",
+        width: "100%",
+      }}
+    >
+      <h1>Sign in to Solera’s lending platform</h1>
       <form
         name="login"
-        onSubmit={handleSubmit(d => submitForm(d))}
+        onSubmit={handleSubmit((d) => submitForm(d))}
         css={{
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
           width: "100%",
-          "& div": {
-            marginTop: "65px"
-          }
         }}
       >
-        <Input id="email"
-          label="Email"
-          name="email"
-          type="email"
-          {...register("email")} />
-        <Input id="password"
-          label="Password"
-          name="password"
-          type="password"
-          {...register("password")} />
-        <div css={{
-          marginTop: "75px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}>
-          <Button type="submit">Submit</Button>
-          <Link to="forgot-password" css={{
-            marginTop: '40px'
-          }}>
-            <TextLink>Forgot your password?</TextLink>
+        <div
+          css={{
+            marginTop: "65px",
+          }}
+        >
+          <Input
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            {...register("email")}
+          />
+          <ErrorMessage
+            errors={formState.errors}
+            name="email"
+            render={({ message }) => <InputError>{message}</InputError>}
+          />
+        </div>
+        <div
+          css={{
+            marginTop: "65px",
+          }}
+        >
+          <Input
+            id="password"
+            label="Password"
+            name="password"
+            type="password"
+            {...register("password")}
+          />
+          <ErrorMessage
+            errors={formState.errors}
+            name="password"
+            render={({ message }) => <InputError>{message}</InputError>}
+          />
+        </div>
+        <div
+          css={{
+            marginTop: "75px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Button variant="secondary" type="submit" disabled={!formState.isValid}>
+            Submit
+          </Button>
+          <Link
+            to="forgot-password"
+            css={{
+              marginTop: "40px",
+            }}
+          >
+            <TextLink variant="secondary">Forgot your password?</TextLink>
           </Link>
           <p>- OR -</p>
-          <Link to="sign-up" css={{
-            marginTop: '0px'
-          }}>
-            <TextLink>Sign up</TextLink>
+          <Link
+            to="sign-up"
+            css={{
+              marginTop: "0px",
+            }}
+          >
+            <TextLink variant="secondary">Sign up</TextLink>
           </Link>
         </div>
         {isError ? <div>An error happened</div> : null}
       </form>
-
     </div>
   );
 }

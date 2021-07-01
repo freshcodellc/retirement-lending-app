@@ -1,22 +1,41 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import has from 'lodash/has';
+import { ErrorMessage } from "@hookform/error-message";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import { useAsync } from "../utils/hooks";
-import { Button, Input, TextLink } from "@solera/ui";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Button, Input, InputError, TextLink } from "@solera/ui";
+
+function matchPasswords() {
+  return this.parent.password === this.parent.passwordConfirm
+}
+
+const schema = yup.object().shape({
+  email: yup.string().email().required("Required"),
+  password: yup.string().min(8).required("Required"),
+  passwordConfirm: yup
+    .string()
+    .min(8)
+    .test("passwordMatch", "Passwords must match", matchPasswords)
+    .required("Required"),
+});
 
 function SignUpForm({ onSubmit }) {
   const { isLoading, isError, isSuccess, data, error, run } = useAsync();
-  const { register, reset, handleSubmit } = useForm();
+  const { register, reset, handleSubmit, formState } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+    submitFocusError: true,
+  });
 
   function submitForm(formData) {
-    const { first_name, last_name, phone_number, email, password } = formData;
+    const { email, password } = formData;
     run(
       onSubmit({
-        first_name,
-        last_name,
-        phone_number,
         email,
         password,
       })
@@ -39,7 +58,7 @@ function SignUpForm({ onSubmit }) {
         width: "100%",
       }}
     >
-      <h1>Sign up</h1>
+      <h1>Create your account</h1>
       <form
         name="sign-up"
         onSubmit={handleSubmit((d) => submitForm(d))}
@@ -48,46 +67,65 @@ function SignUpForm({ onSubmit }) {
           flexDirection: "column",
           alignItems: "stretch",
           width: "100%",
-          "& div": {
-            marginTop: "65px",
-          },
         }}
       >
-        <Input
-          id="firstName"
-          label="First Name"
-          name="first_name"
-          type="text"
-          {...register("first_name")}
-        />
-        <Input
-          id="lastName"
-          label="Last Name"
-          name="last_name"
-          type="text"
-          {...register("last_name")}
-        />
-        <Input
-          id="phone"
-          label="Phone Number"
-          name="phone_number"
-          type="text"
-          {...register("phone_number")}
-        />
-        <Input
-          id="email"
-          label="Email"
-          name="email"
-          type="email"
-          {...register("email")}
-        />
-        <Input
-          id="password"
-          label="Password"
-          name="password"
-          type="password"
-          {...register("password")}
-        />
+        <div
+          css={{
+            marginTop: "65px",
+          }}
+        >
+          <Input
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            hasError={has(formState, 'errors.email')}
+            {...register("email")}
+          />
+          <ErrorMessage
+            errors={formState.errors}
+            name="email"
+            render={({ message }) => <InputError>{message}</InputError>}
+          />
+        </div>
+        <div
+          css={{
+            marginTop: "65px",
+          }}
+        >
+          <Input
+            id="password"
+            label="Password"
+            name="password"
+            type="password"
+            hasError={has(formState, "errors.password")}
+            {...register("password")}
+          />
+          <ErrorMessage
+            errors={formState.errors}
+            name="password"
+            render={({ message }) => <InputError>{message}</InputError>}
+          />
+        </div>
+        <div
+          css={{
+            marginTop: "65px",
+          }}
+        >
+          <Input
+            id="passwordConfirm"
+            label="Confirm Password"
+            name="passwordConfirm"
+            hasError={has(formState, "errors.passwordConfirm")}
+            type="password"
+            {...register("passwordConfirm")}
+          />
+          <ErrorMessage
+            errors={formState.errors}
+            name="passwordConfirm"
+            render={({ message }) => <InputError>{message}</InputError>}
+          />
+        </div>
         <div
           css={{
             marginTop: "75px",
@@ -96,14 +134,16 @@ function SignUpForm({ onSubmit }) {
             alignItems: "center",
           }}
         >
-          <Button type="submit">Submit</Button>
+          <Button variant="secondary" type="submit" disabled={!formState.isValid}>
+            Submit
+          </Button>
           <Link
             to="/"
             css={{
               marginTop: "40px",
             }}
           >
-            <TextLink>Already have an account?</TextLink>
+            <TextLink variant="secondary">Already have an account?</TextLink>
           </Link>
         </div>
         {isError ? <div>An error happened</div> : null}

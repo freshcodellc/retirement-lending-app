@@ -73,6 +73,30 @@ function FormHelperText({ children }) {
   )
 }
 
+function InputError({ children }) {
+  return (
+    <div
+      css={{
+        width: '100%',
+        position: 'relative'
+      }}
+    >
+      <span
+        css={{
+          left: 0,
+          right: 0,
+          top: '8px',
+          fontSize: '1.1rem',
+          position: 'absolute',
+          color: colors.danger
+        }}
+      >
+        {children}
+      </span>
+    </div>
+  )
+}
+
 function FormControl({ children, ...props }) {
   return (
     <div
@@ -90,4 +114,4 @@ function FormControl({ children, ...props }) {
   )
 }
 
-export { Input, InputAdornment, FormControl, FormHelperText }
+export { Input, InputAdornment, FormControl, FormHelperText, InputError }

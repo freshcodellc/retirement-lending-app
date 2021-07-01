@@ -1,4 +1,4 @@
-import {apiClient} from '../utils/api-client'
+import {apiBaseUrl, apiClient} from '../utils/api-client'
 import { queryClient } from "../context";
 
 const accessTokenKey = "SOLERA/__JWT__";
@@ -49,7 +49,7 @@ function login({ email, password }) {
 }
 
 function register(applicantData) {
-  return apiClient("users/register-applicant", {
+  return apiClient("applicants/register", {
     data: { user: { ...applicantData } }
   }).then((res) => res);
 }

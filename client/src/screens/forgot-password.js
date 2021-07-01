@@ -4,11 +4,22 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import { useAsync } from "../utils/hooks";
-import { Button, Input, TextLink } from "@solera/ui";
+import { ErrorMessage } from "@hookform/error-message";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Button, Input, InputError, TextLink } from "@solera/ui";
+
+const schema = yup.object().shape({
+  email: yup.string().email().required("Required"),
+});
 
 function ForgotPasswordForm({ onSubmit }) {
   const { isLoading, isError, isSuccess, data, error, run } = useAsync();
-  const { register, reset, handleSubmit } = useForm();
+  const { formState, register, reset, handleSubmit } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+    submitFocusError: true,
+  });
 
   function submitForm(formData) {
     const { email } = formData;
@@ -36,6 +47,7 @@ function ForgotPasswordForm({ onSubmit }) {
       }}
     >
       <h1>Forgot Password</h1>
+      <p>Enter your account email below and we’ll help you reset it.</p>
       <form
         name="forgot-password"
         onSubmit={handleSubmit((d) => submitForm(d))}
@@ -44,18 +56,27 @@ function ForgotPasswordForm({ onSubmit }) {
           flexDirection: "column",
           alignItems: "stretch",
           width: "100%",
-          "& div": {
-            marginTop: "65px",
-          },
         }}
       >
-        <Input
-          id="email"
-          label="Email"
-          name="email"
-          type="email"
-          {...register("email")}
-        />
+        <div
+          css={{
+            marginTop: "65px",
+          }}
+        >
+          <Input
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            {...register("email")}
+          />
+          <ErrorMessage
+            errors={formState.errors}
+            name="email"
+            render={({ message }) => <InputError>{message}</InputError>}
+          />
+        </div>
+
         <div
           css={{
             marginTop: "75px",
@@ -64,7 +85,9 @@ function ForgotPasswordForm({ onSubmit }) {
             alignItems: "center",
           }}
         >
-          <Button type="submit">Submit</Button>
+          <Button variant="secondary" disabled={!formState.isValid} type="submit">
+            Submit
+          </Button>
           <Link
             to="/"
             css={{

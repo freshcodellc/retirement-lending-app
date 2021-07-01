@@ -55,7 +55,13 @@ function FullPageErrorFallback({ error }) {
 export { FullPageErrorFallback, Spinner, FullPageSpinner, colors }
 export { Button, IconButton, CircleButton } from './button'
 export { TextLink } from './textLink'
-export { Input, InputAdornment, FormControl, FormHelperText } from './input'
+export {
+  Input,
+  InputAdornment,
+  InputError,
+  FormControl,
+  FormHelperText
+} from './input'
 export { TableWrapper, Table, Th, Tr, Td } from './table'
 export { default as VisuallyHidden } from '@reach/visually-hidden'
 export { Dialog } from './dialog'

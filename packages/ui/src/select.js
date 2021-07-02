@@ -45,7 +45,12 @@ function BaseSelect({
     >
       <label
         htmlFor={name}
-        css={{ fontWeight: '300', fontSize: '20px', lineHeight: '26px' }}
+        css={{
+          fontWeight: '300',
+          fontSize: '20px',
+          lineHeight: '26px',
+          marginBottom: '0.5rem'
+        }}
       >
         {label}
       </label>
@@ -55,9 +60,9 @@ function BaseSelect({
             <ListboxButton
               arrow={
                 isExpanded ? (
-                  <FaCaretUp size='2em' />
+                  <FaCaretUp size='2rem' />
                 ) : (
-                  <FaCaretDown size='2em' />
+                  <FaCaretDown size='2rem' />
                 )
               }
               css={{

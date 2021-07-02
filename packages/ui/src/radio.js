@@ -61,8 +61,8 @@ const RadioInput = React.forwardRef((props, ref) => {
               top: '4px',
               left: '4px',
               display: 'none',
-              width: '10px',
-              height: '10px',
+              width: '14px',
+              height: '14px',
               backgroundColor: `${colors.gray80}`,
               borderRadius: '50%'
             }
@@ -78,7 +78,7 @@ function RadioGroup({ text, children }) {
     <div css={{ marginTop: '65px' }}>
       <div
         css={{
-          marginBottom: '0.8rem',
+          marginBottom: '1rem',
           fontWeight: '300',
           fontSize: '20px',
           lineHeight: '26px'

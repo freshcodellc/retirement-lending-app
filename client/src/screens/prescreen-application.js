@@ -1,13 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import {useMemo, Fragment} from 'react'
 import {useForm} from 'react-hook-form'
-import {useParams} from 'react-router-dom'
+import {Link, Navigate, useParams, useNavigate} from 'react-router-dom'
 import {useLoanApplication} from 'hooks/useLoanApplication'
 import {useUpdateLoanApplication} from 'hooks/useUpdateLoanApplication'
+import {FiArrowLeft} from 'react-icons/fi'
 import {
   Button,
   Input,
   colors,
+  TextLink,
   Checkbox,
   SsnInput,
   RadioInput,
@@ -21,13 +23,38 @@ import {
 import {EntitySelect, NetWorthSelect, PropertySelect} from 'components/select'
 
 function PreScreenApplicationScreen() {
-  const {uuid, fields, defaultValues} = useFields()
-  const {mutate, isError} = useUpdateLoanApplication()
-  const {register, handleSubmit, control} = useForm({
+  const navigate = useNavigate()
+  const {
+    uuid,
+    step,
+    prevStep,
+    nextStep,
+    heading,
+    subHeading,
+    fields,
+    defaultValues,
+  } = useFields()
+  const {
+    mutate: saveEdit,
+    isLoading: isSaving,
+    isError: savingIsError,
+  } = useUpdateLoanApplication({
+    onSuccess() {
+      navigate(`${nextStep}`)
+    },
+  })
+  const {register, handleSubmit, watch, control, formState} = useForm({
     defaultValues,
   })
+  const planType = watch('plan_type')
+
   const mailingEqualPhysical = false
-  const handleEdit = handleSubmit(form => mutate({...form, uuid}))
+
+  const handleSave = handleSubmit(form => saveEdit({...form, uuid}))
+
+  if (!heading) {
+    return <Navigate replace to="/" />
+  }
 
   return (
     <div
@@ -40,22 +67,21 @@ function PreScreenApplicationScreen() {
         flexDirection: 'column',
       }}
     >
-      <h1 css={{marginBottom: '3rem', textAlign: 'center'}}>
-        Welcome to Solera National Bank's lending platform for retirement
-        accounts!
-      </h1>
-      <p>To get started, we'll need some basic information from you.</p>
+      <div css={{textAlign: 'center'}}>
+        <h1 css={{marginBottom: '3rem'}}>{heading}</h1>
+        {subHeading && <p css={{margin: 0, fontWeight: 500}}>{subHeading}</p>}
+      </div>
       <form
         name="prescreen"
         css={{
-          '& > div': {
+          '& > *': {
             marginTop: '65px',
           },
         }}
-        onSubmit={handleEdit}
+        onSubmit={handleSave}
       >
         {fields.map(field => {
-          const props = {key: field.name, hasError: isError, ...field}
+          const props = {key: field.name, hasError: savingIsError, ...field}
           switch (field.type) {
             case 'h1':
               return (
@@ -72,8 +98,12 @@ function PreScreenApplicationScreen() {
             case 'alert':
               return (
                 <p
-                  css={{fontWeight: 500, color: colors.danger}}
                   key={field.type}
+                  css={{
+                    fontWeight: 500,
+                    fontsize: '1.2rem',
+                    color: colors.danger,
+                  }}
                 >
                   {field.text}
                 </p>
@@ -84,11 +114,7 @@ function PreScreenApplicationScreen() {
             case 'phone':
               return <PhoneInput control={control} {...props} />
             case 'currency':
-              return (
-                <FormControl {...props}>
-                  <CurrencyInput control={control} {...props} />
-                </FormControl>
-              )
+              return <CurrencyInput control={control} {...props} />
             case 'date':
               return <DatePicker control={control} {...props} />
             case 'ssn':
@@ -124,8 +150,8 @@ function PreScreenApplicationScreen() {
                 <AddressFields
                   key={field.type}
                   control={control}
-                  hasError={isError}
                   register={register}
+                  hasError={savingIsError}
                   {...field.fields}
                 />
               )
@@ -136,7 +162,13 @@ function PreScreenApplicationScreen() {
                 case 'property_type':
                   return <PropertySelect control={control} {...props} />
                 case 'entity_type':
-                  return <EntitySelect control={control} {...props} />
+                  return (
+                    <EntitySelect
+                      control={control}
+                      planType={planType}
+                      {...props}
+                    />
+                  )
                 case 'entity_state_of_formation':
                   return <UsStateSelect control={control} {...props} />
                 default:
@@ -146,8 +178,37 @@ function PreScreenApplicationScreen() {
           }
           return ''
         })}
-        <div css={{textAlign: 'center'}}>
-          <Button type="submit">Continue</Button>
+        <div
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            gap: '3rem',
+          }}
+        >
+          <Button
+            type="submit"
+            isLoading={isSaving}
+            disabled={!formState.isValid}
+          >
+            Continue
+          </Button>
+          {step > 1 ? (
+            <Link
+              to={`/${uuid}/prescreen/${prevStep}`}
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <FiArrowLeft
+                color={colors.secondary}
+                css={{marginRight: '4px'}}
+              />
+              <TextLink variant="secondary">Back</TextLink>
+            </Link>
+          ) : null}
         </div>
       </form>
     </div>
@@ -193,17 +254,29 @@ function useFields() {
   const {uuid, step} = useParams()
   const {data, isSuccess, isLoading, isError, error} = useLoanApplication(uuid)
 
-  const fields = useMemo(
+  const section = useMemo(
     () =>
       ({
-        1: step1Fields,
-      }[step] || {}),
+        1: {
+          heading: `Welcome to Solera National Bank's lending platform for retirement accounts!`,
+          subHeading: `To get started, we'll need some basic information from you.`,
+          fields: step1Fields,
+        },
+        2: {
+          heading: `Tell us a little more about the property`,
+          fields: step2Fields,
+        },
+        3: {
+          heading: `Tell us a little more about yourself`,
+          fields: step3Fields,
+        },
+      }[step] || {fields: []}),
     [step],
   )
 
   const defaultValues = useMemo(
     () =>
-      fields.reduce((acc, cur) => {
+      section.fields.reduce((acc, cur) => {
         if (cur.name in data) {
           let value = data[cur.name]
           if (value != null) {
@@ -221,16 +294,23 @@ function useFields() {
         }
         return acc
       }, {}),
-    [data, fields],
+    [data, section],
   )
+  const maxStep = 4
+  const nextStep = Math.max(Number(step) + 1, 4)
+  const prevStep = Math.max(Number(step) - 1, 1)
+
   return {
     uuid,
+    step,
     error,
-    fields,
     isError,
+    prevStep,
+    nextStep,
     isSuccess,
     isLoading,
     defaultValues,
+    ...section,
   }
 }
 
@@ -315,5 +395,185 @@ const step1Fields = [
     type: 'email',
     name: 'email',
     label: 'Email',
+  },
+]
+
+const step2Fields = [
+  {
+    type: 'property',
+    name: 'addresses',
+    fields: {
+      address: {
+        type: 'text',
+        name: 'property.address',
+        label: 'Physical address of property',
+        placeholder: 'Enter street address, No PO Box',
+      },
+      address_2: {
+        type: 'text',
+        name: 'property.address_2',
+        label: 'Address line 2',
+        placeholder: 'Apt, ste, unit, etc. optional',
+      },
+      city: {
+        type: 'text',
+        name: 'property.city',
+        label: 'City',
+        placeholder: 'City',
+      },
+      state: {
+        type: 'select',
+        name: 'property.state',
+        label: 'State',
+        placeholder: 'State',
+      },
+      postal_code: {
+        type: 'number',
+        name: 'property.postal_code',
+        label: 'ZIP code',
+        placeholder: 'ZIP code',
+      },
+    },
+  },
+  {
+    type: 'select',
+    name: 'property_type',
+    label: 'Property type',
+  },
+  {
+    type: 'radio',
+    name: 'lot_over_2_acres',
+    label: 'Is the lot more than 2 acres?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'radio',
+    name: 'built_after_1950',
+    label: 'Was the property built after 1950?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'radio',
+    name: 'well_or_septic',
+    label: 'Is the home on a well or septic system?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'number',
+    name: 'year_roof_replaced',
+    label: 'What year was the roof last replaced?',
+  },
+  {
+    type: 'number',
+    name: 'year_last_remodel',
+    label: 'When was the property last remodeled?',
+  },
+  {
+    type: 'h1',
+    text: 'Property Income and Fees',
+  },
+  {
+    type: 'radio',
+    name: 'is_rented',
+    label: 'Is the property currently rented?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'currency',
+    name: 'monthly_current_rent',
+    label: 'Current monthly rent',
+  },
+  {
+    type: 'currency',
+    name: 'annual_taxes',
+    label: 'Annual real estate taxes',
+  },
+  {
+    type: 'currency',
+    name: 'annual_insurance_premium',
+    label: 'Annual insurance premiums',
+  },
+  {
+    type: 'currency',
+    name: 'monthly_hoa_dues',
+    label: 'Monthly HOA fees',
+  },
+  {
+    type: 'currency',
+    name: 'monthly_mgmt_fee',
+    label: 'Monthly property management fees',
+  },
+  // financing section
+  {
+    type: 'h1',
+    text: 'Financing Information',
+  },
+  {
+    type: 'radio',
+    label: 'New purchase or refinance',
+    name: 'is_purchase',
+    options: [
+      {label: 'New purchase', value: true},
+      {label: 'Refinance', value: false},
+    ],
+  },
+  {
+    type: 'currency',
+    label: 'Requested loan amount*',
+    name: 'requested_loan_amount',
+    helperText: '(note: max loan amount is 65% of purchase price)',
+  },
+  {
+    type: 'currency',
+    label: 'Balance of current debt on the property',
+    name: 'current_debt_balance',
+  },
+  {
+    type: 'number',
+    label: 'Number of years you have owned the property',
+    name: 'years_owned',
+  },
+  {
+    type: 'currency',
+    label: 'Estimated amount spent on home improvements',
+    name: 'estimated_improvement_costs',
+  },
+  {
+    type: 'currency',
+    label: 'Estimated value of the property',
+    name: 'estimated_value',
+  },
+]
+
+const step3Fields = [
+  {
+    type: 'number',
+    name: 'number_rental_properties',
+    label: 'How many rental properties do you own?',
+    placeholder: 'Number of rental properties',
+  },
+  {
+    type: 'select',
+    name: 'estimated_net_worth',
+    label: 'Estimated net worth',
+    placeholder: 'Select net worth',
+  },
+  {
+    type: 'text',
+    name: 'referrer',
+    label: 'Who referred you to Solera National Bank?',
+    placeholder: 'Referrer',
   },
 ]

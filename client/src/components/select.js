@@ -7,9 +7,11 @@ function NetWorthSelect(props) {
   return <ConstantSelect options={netWorths} {...props} />
 }
 
-function EntitySelect(props) {
+function EntitySelect({planType, ...props}) {
   const {entityTypes} = useConstants()
-  return <ConstantSelect options={entityTypes} {...props} />
+  const matchBy = planType === 'IRA' ? planType : '401'
+  const types = entityTypes.filter(e => e.name.includes(matchBy))
+  return <ConstantSelect options={types} {...props} />
 }
 
 function PropertySelect(props) {

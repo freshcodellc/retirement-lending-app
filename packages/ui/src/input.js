@@ -18,7 +18,12 @@ const Input = forwardRef(({ hasError, helperText, ...props }, ref) => (
   >
     <label
       htmlFor={props.name}
-      css={{ fontWeight: '300', fontSize: '20px', lineHeight: '26px' }}
+      css={{
+        fontWeight: '300',
+        fontSize: '20px',
+        lineHeight: '26px',
+        marginBottom: '0.5rem'
+      }}
     >
       {props.label}
     </label>

@@ -97,7 +97,7 @@ export default function EditApplicantInfo() {
           switch (field.type) {
             case 'h1':
               return (
-                <h1 css={{margin: '90px 0 0'}} key={field.text}>
+                <h1 css={{marginTop: '90px'}} key={field.text}>
                   {field.text}
                 </h1>
               )

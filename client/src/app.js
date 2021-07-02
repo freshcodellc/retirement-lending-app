@@ -1,16 +1,16 @@
-import * as React from "react";
-import { Global, css } from "@emotion/react";
-import { useAuth } from "./context/auth-context";
-import { FullPageSpinner, colors } from "@solera/ui";
-import normalize from "normalize.css";
+import * as React from 'react'
+import {Global, css} from '@emotion/react'
+import {useAuth} from './context/auth-context'
+import {FullPageSpinner, colors} from '@solera/ui'
+import normalize from 'normalize.css'
 
 const AuthenticatedApp = React.lazy(() =>
-  import(/* webpackPrefetch: true */ "./authenticated-app")
-);
-const UnauthenticatedApp = React.lazy(() => import("./unauthenticated-app"));
+  import(/* webpackPrefetch: true */ './authenticated-app'),
+)
+const UnauthenticatedApp = React.lazy(() => import('./unauthenticated-app'))
 
 function App() {
-  const { user } = useAuth();
+  const {user} = useAuth()
   return (
     <React.Suspense fallback={<FullPageSpinner />}>
       <Global
@@ -25,8 +25,8 @@ function App() {
             );
             --field-adorn-width: 25;
           }
-          * {
-            font-family: "Work Sans";
+          body {
+            font-family: 'Work Sans';
             font-size: 1.6rem;
             color: ${colors.text};
           }
@@ -43,7 +43,7 @@ function App() {
       />
       {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </React.Suspense>
-  );
+  )
 }
 
-export { App };
+export {App}

@@ -41,14 +41,16 @@ function useEditFields() {
         if (cur.name in application) {
           let value = application[cur.name]
           if (value != null) {
-            if (cur.type === 'select') {
-              value = 'empty'
-            } else if (cur.type === 'radio') {
+            if (cur.type === 'radio') {
               if (value === true) {
                 value = 'true'
               } else if (value === false) {
                 value = 'false'
               }
+            }
+          } else {
+            if (cur.type === 'select') {
+              value = 'empty'
             }
           }
           acc[cur.name] = value
@@ -208,7 +210,7 @@ const applicantfields = [
   },
   {
     type: 'select',
-    name: 'estimated_net_worth',
+    name: 'estimated_net_worth_bracket',
     label: 'Estimated net worth',
     placeholder: 'Select net worth',
   },

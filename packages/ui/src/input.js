@@ -75,6 +75,7 @@ const PhoneInput = forwardRef(
 
     return (
       <MaskedInput
+        ref={ref}
         unmask
         type='tel'
         id={name}

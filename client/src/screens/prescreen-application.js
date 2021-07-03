@@ -2,7 +2,7 @@
 import {Fragment, useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import {FiArrowLeft} from 'react-icons/fi'
-import {Link, Navigate, useNavigate} from 'react-router-dom'
+import {Link, useNavigate, Navigate} from 'react-router-dom'
 import {
   Button,
   Input,
@@ -26,8 +26,10 @@ import {
   PropertySelect,
   AddressFields,
 } from 'components'
-import {usePrescreenApplication} from 'hooks/use-presreen-application'
-import {useUpdateLoanApplication} from 'hooks/useUpdateLoanApplication'
+import {usePrescreenApplication} from 'hooks/use-prescreen-application'
+import {useUpdateApplication} from 'hooks/use-update-application'
+
+const stepRoute = (uuid, step) => `/application/${uuid}/prescreen/${step}`
 
 function PreScreenApplicationScreen() {
   const navigate = useNavigate()
@@ -46,15 +48,18 @@ function PreScreenApplicationScreen() {
     isThankYouStep,
   } = usePrescreenApplication()
   const {
+    reset: resetSave,
     mutate: saveEdit,
     isLoading: isSaving,
-    isError: savingIsError,
-  } = useUpdateLoanApplication({
+    isError: saveIsError,
+  } = useUpdateApplication({
     onSuccess() {
-      navigate(`${nextStep}`)
+      resetSave()
+      navigate(stepRoute(uuid, nextStep))
     },
   })
   const {register, handleSubmit, reset, watch, control, formState} = useForm({
+    mode: 'onChange',
     defaultValues,
   })
   useEffect(() => {
@@ -64,7 +69,11 @@ function PreScreenApplicationScreen() {
   }, [isSuccess, reset, defaultValues])
 
   const planType = watch('plan_type')
-  const mailingEqualPhysical = false
+  useEffect(() => {
+    if (planType !== defaultValues.plan_type) {
+      reset({...defaultValues, plan_type: planType, entity_type: 'empty'})
+    }
+  }, [planType, reset, defaultValues])
 
   const handleSave = handleSubmit(form => saveEdit({...form, uuid}))
 
@@ -86,15 +95,16 @@ function PreScreenApplicationScreen() {
         </div>
         <form
           name="prescreen"
+          onSubmit={handleSave}
           css={{
+            marginBottom: '3rem',
             '& > *': {
               marginTop: '65px',
             },
           }}
-          onSubmit={handleSave}
         >
           {fields.map(field => {
-            const props = {key: field.name, hasError: savingIsError, ...field}
+            const props = {key: field.name, hasError: saveIsError, ...field}
             switch (field.type) {
               case 'h1':
                 return (
@@ -155,22 +165,19 @@ function PreScreenApplicationScreen() {
                     ))}
                   </RadioGroup>
                 )
-              case 'physical':
-              case 'mailing':
               case 'property':
-                if (field.type === 'mailing' && mailingEqualPhysical) break
                 return (
                   <AddressFields
                     key={field.type}
                     control={control}
                     register={register}
-                    hasError={savingIsError}
+                    hasError={saveIsError}
                     {...field.fields}
                   />
                 )
               case 'select':
                 switch (field.name) {
-                  case 'estimated_net_worth':
+                  case 'estimated_net_worth_bracket':
                     return <NetWorthSelect control={control} {...props} />
                   case 'property_type':
                     return <PropertySelect control={control} {...props} />
@@ -210,7 +217,7 @@ function PreScreenApplicationScreen() {
             {currentStep !== minStep ? (
               <Link
                 replace
-                to={`/application/${uuid}/prescreen/${prevStep}`}
+                to={stepRoute(uuid, prevStep)}
                 css={{
                   display: 'flex',
                   alignItems: 'center',

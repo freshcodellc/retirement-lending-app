@@ -37,14 +37,16 @@ function usePrescreenApplication() {
         if (cur.name in data) {
           let value = data[cur.name]
           if (value != null) {
-            if (cur.type === 'select') {
-              value = 'empty'
-            } else if (cur.type === 'radio') {
+            if (cur.type === 'radio') {
               if (value === true) {
                 value = 'true'
               } else if (value === false) {
                 value = 'false'
               }
+            }
+          } else {
+            if (cur.type === 'select') {
+              value = 'empty'
             }
           }
           acc[cur.name] = value
@@ -58,7 +60,7 @@ function usePrescreenApplication() {
   const maxStep = 3
   const currentStep = Number(step)
   const prevStep = Math.max(currentStep - 1, minStep)
-  const nextStep = Math.max(currentStep + 1, maxStep + 1)
+  const nextStep = Math.min(currentStep + 1, maxStep + 1)
   const isThankYouStep = currentStep === 4
 
   return {
@@ -332,7 +334,7 @@ const step3Fields = [
   },
   {
     type: 'select',
-    name: 'estimated_net_worth',
+    name: 'estimated_net_worth_bracket',
     label: 'Estimated net worth',
     placeholder: 'Select net worth',
   },

@@ -1,5 +1,4 @@
 import {apiSecureClient} from '../utils/api-client'
-import * as auth from './auth-service'
 
 async function create(applicationData) {
   return await apiSecureClient('loan-applications', {
@@ -19,7 +18,7 @@ async function update({data, uuid}) {
   return await apiSecureClient(`loan-applications/${uuid}`, {
     data,
     method: 'PUT',
-  }).then(res => res)
+  })
 }
 
 async function constants() {

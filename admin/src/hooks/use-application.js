@@ -147,7 +147,7 @@ function applicantFields(app, netWorthsMap) {
     },
     {
       label: 'Estimated net worth',
-      value: empty(name => netWorthsMap[name])(app.estimated_net_worth),
+      value: empty(name => netWorthsMap[name])(app.estimated_net_worth_bracket),
     },
     {
       label: 'Referral source',
@@ -393,7 +393,7 @@ const app = {
   preapplication_submitted_at: '2021-06-12T04:35:57Z',
   funding_account_balance: 12345.67,
   signature_entity_name: 'Tom Hank',
-  estimated_net_worth: '1M_3M',
+  estimated_net_worth_bracket: '1M_3M',
   interest_rate_spread_low: 0.0,
   annual_insurance_premium: 1.0e3,
   lot_over_2_acres: true,

@@ -11,6 +11,7 @@ function EntitySelect({planType, ...props}) {
   const {entityTypes} = useConstants()
   const matchBy = planType === 'IRA' ? planType : '401'
   const types = entityTypes.filter(e => e.name.includes(matchBy))
+
   return <ConstantSelect options={types} {...props} />
 }
 

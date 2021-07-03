@@ -160,7 +160,7 @@ export default function EditApplicantInfo() {
               )
             case 'select':
               switch (field.name) {
-                case 'estimated_net_worth':
+                case 'estimated_net_worth_bracket':
                   return <NetWorthSelect control={control} {...props} />
                 case 'property_type':
                   return <PropertySelect control={control} {...props} />

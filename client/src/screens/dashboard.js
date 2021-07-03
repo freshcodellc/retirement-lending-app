@@ -1,31 +1,37 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useCreateLoanApplication } from "../hooks/useCreateLoanApplication";
-import { useLoanApplications } from "../hooks/useLoanApplications";
-import { useUser } from "../hooks/useUser";
-import { ApplicationBox } from "../components/applicationBox";
-import { Button } from '@solera/ui';
+import React from 'react'
+import {useNavigate} from 'react-router-dom'
+import {useCreateLoanApplication} from 'hooks/useCreateLoanApplication'
+import {useLoanApplications} from 'hooks/useLoanApplications'
+import {useUser} from 'hooks/useUser'
+import {ApplicationBox, Layout} from 'components'
+import {Button} from '@solera/ui'
 
 function DashboardScreen() {
-  const navigate = useNavigate();
-  const { data } = useLoanApplications();
-  const { data: { user } } = useUser();
-  const create = useCreateLoanApplication();
+  const navigate = useNavigate()
+  const {data} = useLoanApplications()
+  const {
+    data: {user},
+  } = useUser()
+  const create = useCreateLoanApplication()
 
   const handleCreateClick = async () => {
-    create.mutateAsync({ first_name: 'Stephen'}).then(data => navigate(`/${data.uuid}`))
+    create
+      .mutateAsync({first_name: 'Stephen'})
+      .then(data => navigate(`/application/${data.uuid}`))
   }
 
   return (
-    <div>
+    <Layout>
       <h1>Welcome, {user.first_name}</h1>
-      <Button variant="secondary" onClick={handleCreateClick}>Start New Application</Button>
+      <Button variant="secondary" onClick={handleCreateClick}>
+        Start New Application
+      </Button>
       <h2>Current Applications</h2>
-      {data.map((app) => (
+      {data.map(app => (
         <ApplicationBox key={app.uuid} data={app} />
       ))}
-    </div>
-  );
+    </Layout>
+  )
 }
 
-export { DashboardScreen };
+export {DashboardScreen}

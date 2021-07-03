@@ -1,29 +1,31 @@
-import {Routes, Route} from 'react-router-dom'
+import {Fragment} from 'react'
+import {Routes, Route, useNavigate} from 'react-router-dom'
 import {DashboardScreen} from './screens/dashboard'
 import {PreScreenApplicationScreen} from './screens/prescreen-application'
 import {NotFoundScreen} from './screens/not-found'
 import {ApplicationScreen} from './screens/application'
-import {Layout} from './components/layout'
+import {Header} from '@solera/ui'
 
 function AuthenticatedApp() {
-  return (
-    <Layout>
-      <AppRoutes />
-    </Layout>
-  )
-}
+  const navigate = useNavigate()
 
-function AppRoutes() {
+  const onLogoClick = () => navigate('/')
+
   return (
-    <Routes>
-      <Route path="/" element={<DashboardScreen />} />
-      <Route path="/:uuid" element={<ApplicationScreen />} />
-      <Route
-        path="/:uuid/prescreen/:step"
-        element={<PreScreenApplicationScreen />}
-      />
-      <Route path="*" element={<NotFoundScreen />} />
-    </Routes>
+    <Fragment>
+      <Header onLogoClick={onLogoClick} />
+      <main>
+        <Routes>
+          <Route path="/" element={<DashboardScreen />} />
+          <Route path="application/:uuid" element={<ApplicationScreen />} />
+          <Route
+            path="application/:uuid/prescreen/:step"
+            element={<PreScreenApplicationScreen />}
+          />
+          <Route path="*" element={<NotFoundScreen />} />
+        </Routes>
+      </main>
+    </Fragment>
   )
 }
 

@@ -17,7 +17,7 @@ function ApplicationBox({data}) {
         Application 1
       </div>
       <div css={{padding: '1rem'}}>
-        <Link to={`/${data.uuid}`}>
+        <Link to={`/application/${data.uuid}`}>
           <Button variation="secondary">Continue Loan Process</Button>
         </Link>
       </div>

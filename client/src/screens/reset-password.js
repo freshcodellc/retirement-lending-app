@@ -1,73 +1,66 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../context/auth-context";
-import { useAsync } from "../utils/hooks";
-import { ErrorMessage } from "@hookform/error-message";
-import { yupResolver } from "@hookform/resolvers/yup";
-import has from 'lodash/has';
-import * as yup from "yup";
-import { Button, Input, InputError, TextLink } from "@solera/ui";
+import {useEffect} from 'react'
+import {useForm} from 'react-hook-form'
+import {Link, useLocation} from 'react-router-dom'
+import {useAuth} from '../context/auth-context'
+import {useAsync} from '../utils/hooks'
+import {ErrorMessage} from '@hookform/error-message'
+import {yupResolver} from '@hookform/resolvers/yup'
+import has from 'lodash/has'
+import * as yup from 'yup'
+import {Button, Input, InputError, TextLink} from '@solera/ui'
+import {Layout} from 'components'
 
 function useQueryParams() {
-  return new URLSearchParams(useLocation().search);
+  return new URLSearchParams(useLocation().search)
 }
 
 const schema = yup.object().shape({
-  new_password: yup.string().min(8).required("Required"),
-});
+  new_password: yup.string().min(8).required('Required'),
+})
 
-function ResetPasswordForm({ onSubmit }) {
-  const { isLoading, isError, isSuccess, data, error, run } = useAsync();
-  const { formState, register, reset, handleSubmit } = useForm({
-    mode: "onBlur",
+function ResetPasswordForm({onSubmit}) {
+  const {isLoading, isError, isSuccess, data, error, run} = useAsync()
+  const {formState, register, reset, handleSubmit} = useForm({
+    mode: 'onBlur',
     resolver: yupResolver(schema),
     submitFocusError: true,
-  });
-  const query = useQueryParams();
-  const token = query.get('token');
+  })
+  const query = useQueryParams()
+  const token = query.get('token')
 
   function submitForm(formData) {
-    const { new_password } = formData;
+    const {new_password} = formData
     run(
       onSubmit({
         reset_token: token,
         new_password,
-      })
-    );
+      }),
+    )
   }
 
   useEffect(() => {
     if (isSuccess) {
-      reset();
+      reset()
     }
-  }, [isSuccess]);
+  }, [isSuccess])
 
   return (
-    <div
-      css={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        maxWidth: "600px",
-        width: "100%",
-      }}
-    >
+    <Layout css={{alignItems: 'center'}}>
       <h1>Reset Password</h1>
       <form
         name="confirm-reset"
-        onSubmit={handleSubmit((d) => submitForm(d))}
+        onSubmit={handleSubmit(d => submitForm(d))}
         css={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "stretch",
-          width: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          width: '100%',
         }}
       >
         <div
           css={{
-            marginTop: "65px",
+            marginTop: '65px',
           }}
         >
           <Input
@@ -76,20 +69,20 @@ function ResetPasswordForm({ onSubmit }) {
             name="new_password"
             type="password"
             hasError={has(formState, 'errors.new_password')}
-            {...register("new_password")}
+            {...register('new_password')}
           />
           <ErrorMessage
             errors={formState.errors}
             name="new_password"
-            render={({ message }) => <InputError>{message}</InputError>}
+            render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
         <div
           css={{
-            marginTop: "75px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            marginTop: '75px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Button
@@ -102,7 +95,7 @@ function ResetPasswordForm({ onSubmit }) {
           <Link
             to="/"
             css={{
-              marginTop: "40px",
+              marginTop: '40px',
             }}
           >
             <TextLink variant="secondary">Already have an account?</TextLink>
@@ -113,24 +106,24 @@ function ResetPasswordForm({ onSubmit }) {
           <div>Success! Please log in with your new password.</div>
         ) : null}
       </form>
-    </div>
-  );
+    </Layout>
+  )
 }
 
 function ResetPasswordScreen() {
-  const { confirmReset } = useAuth();
+  const {confirmReset} = useAuth()
   return (
     <div
       css={{
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <ResetPasswordForm onSubmit={confirmReset} />
     </div>
-  );
+  )
 }
 
-export { ResetPasswordScreen };
+export {ResetPasswordScreen}

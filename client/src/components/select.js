@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import {ConstantSelect} from '@solera/ui'
-import {useConstants} from 'hooks/useConstants'
+import {useConstants} from 'hooks/use-constants'
 
 function NetWorthSelect(props) {
   const {netWorths} = useConstants()

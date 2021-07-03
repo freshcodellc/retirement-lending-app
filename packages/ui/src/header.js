@@ -1,29 +1,32 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { Link } from 'react-router-dom'
 import { ReactComponent as Logo } from './assets/logo.svg'
 import * as colors from './styles/colors'
 
-const Header = ({ children }) => (
-  <nav
+const Header = ({ children, onLogoClick }) => (
+  <header
     css={{
+      top: 0,
+      zIndex: 1,
       width: '100%',
-      height: 'calc(var(--header-height)*1px)',
-      padding: '1rem calc(var(--grid-margin-width)*1px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      color: colors.base,
-      backgroundColor: colors.primary
+      position: 'sticky'
     }}
   >
-    <div>
-      <Link replace to='/'>
-        <Logo />
-      </Link>
-    </div>
-    {children}
-  </nav>
+    <nav
+      css={{
+        display: 'flex',
+        color: colors.base,
+        alignItems: 'center',
+        backgroundColor: colors.primary,
+        justifyContent: 'space-between',
+        height: 'calc(var(--header-height)*1px)',
+        padding: '0 calc(var(--grid-margin-width)*1px)'
+      }}
+    >
+      <Logo onClick={onLogoClick} css={{ cursor: 'pointer' }} />
+      {children}
+    </nav>
+  </header>
 )
 
 export { Header }

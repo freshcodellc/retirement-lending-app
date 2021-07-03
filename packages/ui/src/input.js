@@ -31,7 +31,7 @@ const Input = forwardRef(({ hasError, helperText, ...props }, ref) => (
       css={{
         border: 'none',
         alignSelf: 'stretch',
-        padding: '0.5rem 0',
+        padding: '0.7rem 0',
         borderBottom: `2px solid ${hasError ? colors.danger : colors.text}`
       }}
       ref={ref}

@@ -1,66 +1,60 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/auth-context";
-import { useAsync } from "../utils/hooks";
-import { ErrorMessage } from "@hookform/error-message";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Button, Input, InputError, TextLink } from "@solera/ui";
+import {useEffect} from 'react'
+import {useForm} from 'react-hook-form'
+import {Link} from 'react-router-dom'
+import {useAuth} from '../context/auth-context'
+import {useAsync} from '../utils/hooks'
+import {ErrorMessage} from '@hookform/error-message'
+import {yupResolver} from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import {Button, Input, InputError, TextLink} from '@solera/ui'
+import has from 'lodash/has'
+import {Layout} from 'components'
 
 const schema = yup.object().shape({
-  email: yup.string().email().required("Required"),
-});
+  email: yup.string().email().required('Required'),
+})
 
-function ForgotPasswordForm({ onSubmit }) {
-  const { isLoading, isError, isSuccess, data, error, run } = useAsync();
-  const { formState, register, reset, handleSubmit } = useForm({
-    mode: "onBlur",
+function ForgotPasswordForm({onSubmit}) {
+  const {isLoading, isError, isSuccess, data, error, run} = useAsync()
+  const {formState, register, reset, handleSubmit} = useForm({
+    mode: 'onBlur',
     resolver: yupResolver(schema),
     submitFocusError: true,
-  });
+  })
 
   function submitForm(formData) {
-    const { email } = formData;
+    const {email} = formData
     run(
       onSubmit({
         email,
-      })
-    );
+      }),
+    )
   }
 
   useEffect(() => {
     if (isSuccess) {
-      reset();
+      reset()
     }
-  }, [isSuccess]);
+  }, [isSuccess])
 
   return (
-    <div
-      css={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        maxWidth: "600px",
-        width: "100%",
-      }}
-    >
+    <Layout css={{alignItems: 'center'}}>
       <h1>Forgot Password</h1>
       <p>Enter your account email below and we’ll help you reset it.</p>
       <form
         name="forgot-password"
-        onSubmit={handleSubmit((d) => submitForm(d))}
+        onSubmit={handleSubmit(d => submitForm(d))}
         css={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "stretch",
-          width: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          width: '100%',
         }}
       >
         <div
           css={{
-            marginTop: "65px",
+            marginTop: '65px',
           }}
         >
           <Input
@@ -68,22 +62,22 @@ function ForgotPasswordForm({ onSubmit }) {
             label="Email"
             name="email"
             type="email"
-            hasError={has(formState, "errors.email")}
-            {...register("email")}
+            hasError={has(formState, 'errors.email')}
+            {...register('email')}
           />
           <ErrorMessage
             errors={formState.errors}
             name="email"
-            render={({ message }) => <InputError>{message}</InputError>}
+            render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
 
         <div
           css={{
-            marginTop: "75px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            marginTop: '75px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Button
@@ -96,7 +90,7 @@ function ForgotPasswordForm({ onSubmit }) {
           <Link
             to="/"
             css={{
-              marginTop: "40px",
+              marginTop: '40px',
             }}
           >
             <TextLink>Already have an account?</TextLink>
@@ -109,24 +103,24 @@ function ForgotPasswordForm({ onSubmit }) {
           </div>
         ) : null}
       </form>
-    </div>
-  );
+    </Layout>
+  )
 }
 
 function ForgotPasswordScreen() {
-  const { resetPassword } = useAuth();
+  const {resetPassword} = useAuth()
   return (
     <div
       css={{
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <ForgotPasswordForm onSubmit={resetPassword} />
     </div>
-  );
+  )
 }
 
-export { ForgotPasswordScreen };
+export {ForgotPasswordScreen}

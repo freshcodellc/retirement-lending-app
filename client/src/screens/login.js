@@ -1,62 +1,55 @@
 /** @jsxImportSource @emotion/react */
-import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../context/auth-context'
-import { useAsync } from '../utils/hooks'
-import { yupResolver } from "@hookform/resolvers/yup";
-import has from 'lodash/has';
-import { ErrorMessage } from "@hookform/error-message";
-import * as yup from "yup";
-import { Button, Input, InputError, TextLink } from "@solera/ui";
+import {useForm} from 'react-hook-form'
+import {Link} from 'react-router-dom'
+import {useAuth} from '../context/auth-context'
+import {useAsync} from '../utils/hooks'
+import {yupResolver} from '@hookform/resolvers/yup'
+import has from 'lodash/has'
+import {ErrorMessage} from '@hookform/error-message'
+import * as yup from 'yup'
+import {Button, Input, InputError, TextLink} from '@solera/ui'
+import {Layout} from 'components'
 
 const schema = yup.object().shape({
-  email: yup.string().email().required("Required"),
-  password: yup.string().min(8).required("Required"),
-});
+  email: yup.string().email().required('Required'),
+  password: yup.string().min(8).required('Required'),
+})
 
-function LoginForm({ onSubmit }) {
-  const { isLoading, isError, error, run } = useAsync();
-  const { formState, handleSubmit, register } = useForm({
-    mode: "onBlur",
+function LoginForm({onSubmit}) {
+  const {isLoading, isError, error, run} = useAsync()
+  const {formState, handleSubmit, register} = useForm({
+    mode: 'onBlur',
     resolver: yupResolver(schema),
     submitFocusError: true,
-  });
+  })
 
   function submitForm(formData) {
-    const { email, password } = formData;
+    const {email, password} = formData
 
     run(
       onSubmit({
         email,
         password,
-      })
-    );
+      }),
+    )
   }
 
   return (
-    <div
-      css={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        maxWidth: "600px",
-        width: "100%",
-      }}
-    >
+    <Layout css={{alignItems: 'center'}}>
       <h1>Sign in to Solera’s lending platform</h1>
       <form
         name="login"
-        onSubmit={handleSubmit((d) => submitForm(d))}
+        onSubmit={handleSubmit(d => submitForm(d))}
         css={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "stretch",
-          width: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          width: '100%',
         }}
       >
         <div
           css={{
-            marginTop: "65px",
+            marginTop: '65px',
           }}
         >
           <Input
@@ -64,18 +57,18 @@ function LoginForm({ onSubmit }) {
             label="Email"
             name="email"
             type="email"
-            hasError={has(formState, "errors.email")}
-            {...register("email")}
+            hasError={has(formState, 'errors.email')}
+            {...register('email')}
           />
           <ErrorMessage
             errors={formState.errors}
             name="email"
-            render={({ message }) => <InputError>{message}</InputError>}
+            render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
         <div
           css={{
-            marginTop: "65px",
+            marginTop: '65px',
           }}
         >
           <Input
@@ -83,21 +76,21 @@ function LoginForm({ onSubmit }) {
             label="Password"
             name="password"
             type="password"
-            hasError={has(formState, "errors.password")}
-            {...register("password")}
+            hasError={has(formState, 'errors.password')}
+            {...register('password')}
           />
           <ErrorMessage
             errors={formState.errors}
             name="password"
-            render={({ message }) => <InputError>{message}</InputError>}
+            render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
         <div
           css={{
-            marginTop: "75px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            marginTop: '75px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Button
@@ -110,7 +103,7 @@ function LoginForm({ onSubmit }) {
           <Link
             to="forgot-password"
             css={{
-              marginTop: "40px",
+              marginTop: '40px',
             }}
           >
             <TextLink variant="secondary">Forgot your password?</TextLink>
@@ -119,7 +112,7 @@ function LoginForm({ onSubmit }) {
           <Link
             to="sign-up"
             css={{
-              marginTop: "0px",
+              marginTop: '0px',
             }}
           >
             <TextLink variant="secondary">Sign up</TextLink>
@@ -127,24 +120,24 @@ function LoginForm({ onSubmit }) {
         </div>
         {isError ? <div>An error happened</div> : null}
       </form>
-    </div>
-  );
+    </Layout>
+  )
 }
 
 function LoginScreen() {
-  const { login } = useAuth();
+  const {login} = useAuth()
   return (
     <div
       css={{
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <LoginForm onSubmit={login} />
     </div>
-  );
+  )
 }
 
-export { LoginScreen };
+export {LoginScreen}

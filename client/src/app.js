@@ -18,11 +18,8 @@ function App() {
           ${normalize}
           :root {
             --header-height: 82;
-            --grid-base-width: 1500;
+            --grid-base-width: 600;
             --grid-margin-width: 120;
-            --grid-container-width: calc(
-              var(--grid-base-width) - 2 * var(--grid-margin-width)
-            );
             --field-adorn-width: 25;
           }
           body {

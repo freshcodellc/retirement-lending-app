@@ -65,4 +65,5 @@ export * from './tabs'
 export * from './textarea'
 export * from './datetime'
 export * from './status'
+export * from './header'
 export { FullPageErrorFallback, Spinner, FullPageSpinner, colors }

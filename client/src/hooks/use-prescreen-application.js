@@ -1,10 +1,10 @@
 import {useMemo} from 'react'
-import {useLoanApplication} from 'hooks/useLoanApplication'
+import {useApplication} from 'hooks/use-application'
 import {useParams} from 'react-router-dom'
 
 function usePrescreenApplication() {
   const {uuid, step} = useParams()
-  const {data, isSuccess, isLoading, isError, error} = useLoanApplication(uuid)
+  const {data, isSuccess, isLoading, isError, error} = useApplication(uuid)
 
   const section = useMemo(
     () =>

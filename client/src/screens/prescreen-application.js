@@ -42,6 +42,7 @@ function PreScreenApplicationScreen() {
     prevStep,
     nextStep,
     isSuccess,
+    isLoading,
     subHeading,
     currentStep,
     defaultValues,
@@ -62,11 +63,6 @@ function PreScreenApplicationScreen() {
     mode: 'onChange',
     defaultValues,
   })
-  useEffect(() => {
-    if (isSuccess) {
-      reset(defaultValues)
-    }
-  }, [isSuccess, reset, defaultValues])
 
   const planType = watch('plan_type')
   useEffect(() => {
@@ -76,6 +72,10 @@ function PreScreenApplicationScreen() {
   }, [planType, reset, defaultValues])
 
   const handleSave = handleSubmit(form => saveEdit({...form, uuid}))
+
+  if (isLoading) {
+    return 'Loading...'
+  }
 
   if (!heading) {
     return <Navigate replace to="/" />

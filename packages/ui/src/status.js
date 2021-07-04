@@ -5,31 +5,32 @@ import { Select, SelectOption, SelctEmptyOption } from './select'
 import * as colors from './styles/colors'
 
 const statusColors = {
-  STARTED: colors.yellow,
-  APPROVED: colors.green,
-  DENIED: colors.gray80,
-  FULL_APPLICATION_REQUESTED: colors.yellow,
-  FULL_APPLICATION_RECEIVED: colors.orange,
-  LOAN_COMMITTEE_REVIEW: colors.green80,
-  TERM_SHEET_SENT: colors.green,
-  TERM_SHEET_ACCEPTED: colors.green,
-  TERMS_SHEET_DENIED: colors.orange,
-  PRE_UNDERWRITING: colors.gray80,
-  UNDERWRITING: colors.gray80
+  notStarted: colors.gray10,
+  started: '#C5006E',
+  approved: '#8CCF6A',
+  denied: '#E14038',
+  full_application_requested: '#FF7B00',
+  full_application_received: '#FFD43B',
+  loan_committee_review: '#155626',
+  term_sheet_sent: '#001493',
+  term_sheet_accepted: '#6EC7FF',
+  terms_sheet_denied: '#E14038',
+  pre_underwriting: '#3752EE',
+  underwriting: '#FFF26E'
 }
 
 const StatusColor = styled.div(
   {
-    width: '1rem',
-    height: '1rem',
+    width: '1.6rem',
+    height: '1.6rem',
     borderRadius: '100%',
-    margin: '0.4rem',
-    background: colors.gray80
+    margin: '0.6rem',
+    background: colors.gray10
   },
   ({ color }) => ({ backgroundColor: color })
 )
 
-function StatusBadge({ status }) {
+function StatusBadge({ status, label }) {
   const color = statusColors[status]
 
   return (
@@ -45,14 +46,15 @@ function StatusBadge({ status }) {
       <StatusColor color={color} />
       <span
         css={{
-          fontSize: '0.9rem',
+          fontSize: '1.6rem',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          width: '200px'
+          width: '500px',
+          color: status === 'notStarted' ? colors.gray10 : colors.text
         }}
       >
-        {status}
+        {label || status}
       </span>
     </div>
   )

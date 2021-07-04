@@ -12,6 +12,7 @@ export const green = '#4caf50'
 export const green80 = '#155725'
 export const danger = '#ef5350'
 export const orange = 'orange'
+export const blue = '#001493'
 
 export const primary = '#E24038'
 export const secondary = '#764AF3'

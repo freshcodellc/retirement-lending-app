@@ -22,7 +22,7 @@ const TextLink = styled.span(
     ...variants[variant],
     ...(disabled
       ? {
-          color: colors.gray80,
+          color: colors.gray10,
           pointerEvents: 'none',
           '&:hover': { cursor: 'not-allowed' }
         }

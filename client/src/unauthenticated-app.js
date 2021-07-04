@@ -2,10 +2,8 @@ import {Fragment} from 'react'
 import {Routes, Route, useNavigate} from 'react-router-dom'
 import {ForgotPasswordScreen} from './screens/forgot-password'
 import {LoginScreen} from './screens/login'
-import {NotFoundScreen} from './screens/not-found'
 import {ResetPasswordScreen} from './screens/reset-password'
 import {SignUpScreen} from './screens/sign-up'
-import {Layout} from './components'
 import {Header} from '@solera/ui'
 
 function UnauthenticatedApp() {
@@ -21,7 +19,7 @@ function UnauthenticatedApp() {
         <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
         <Route path="/reset-password" element={<ResetPasswordScreen />} />
         <Route path="/sign-up" element={<SignUpScreen />} />
-        <Route path="*" element={<NotFoundScreen />} />
+        <Route path="*" element={<LoginScreen />} />
       </Routes>
     </Fragment>
   )

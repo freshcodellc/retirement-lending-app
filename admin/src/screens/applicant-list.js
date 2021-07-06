@@ -23,7 +23,7 @@ import {
   StatusSelect,
   SearchInput,
   DateRangePicker,
-} from 'components'
+} from '@solera/ui'
 export default function ApplicantList() {
   const [filters, setFilters] = React.useState()
 

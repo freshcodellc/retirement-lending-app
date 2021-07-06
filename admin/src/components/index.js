@@ -64,11 +64,9 @@ export const Header = ({children}) => (
 )
 
 export * from './input'
-export * from './modal'
 export * from './status'
 export * from './select'
 export * from './button'
-export * from './datetime'
 export * from './checkbox'
 export {default as ReturnLink} from './return-link'
 export {default as ErrorFallback} from './error-fallback'

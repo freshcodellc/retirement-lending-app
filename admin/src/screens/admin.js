@@ -12,7 +12,7 @@ import {
   ModalOpenButton,
   FormMessage,
   SearchInput,
-} from 'components'
+} from '@solera/ui'
 import {
   IconButton,
   Input,

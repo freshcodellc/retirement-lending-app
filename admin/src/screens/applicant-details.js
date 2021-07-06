@@ -2,7 +2,6 @@
 import * as React from 'react'
 import {useTable} from 'react-table'
 import {useForm} from 'react-hook-form'
-import {useConstants} from 'hooks/use-constants'
 import {Link} from 'react-router-dom'
 import {FiPhone, FiSend} from 'react-icons/fi'
 
@@ -23,8 +22,9 @@ import {
   Button,
 } from '@solera/ui'
 import {useSaveNote} from 'hooks/use-save-note'
-import {useSendTermsSheet} from 'hooks/use-send-terms-sheet'
 import {useApplication, useInfoSections} from 'hooks/use-application'
+import {useEditApplication} from 'hooks/use-edit-application'
+
 import {ReturnLink, StatusSelect, AdminSelect} from 'components'
 export default function ApplicantDetails() {
   const {application, isLoading, isError, error} = useApplication()
@@ -68,7 +68,7 @@ export default function ApplicantDetails() {
 }
 
 function ActionsPanel({activeTab, application}) {
-  const {mutate: sendTermsSheet, isLoading} = useSendTermsSheet()
+  const {mutate, isLoading} = useEditApplication()
   const {handleSubmit, control, formState} = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -77,17 +77,13 @@ function ActionsPanel({activeTab, application}) {
     },
   })
 
-  const handleTermSheet = handleSubmit(form => {
-    // TODO: send term sheet
-    console.log(form)
-    sendTermsSheet(form)
+  const handleTermSheet = handleSubmit(({status}) => {
+    mutate({status, uuid: application.uuid})
   })
-
-  const {statuses} = useConstants()
 
   return (
     <form
-      name="term-sheet"
+      name="terms-sheet"
       onSubmit={handleTermSheet}
       css={{
         gap: '2rem',
@@ -107,7 +103,6 @@ function ActionsPanel({activeTab, application}) {
       <div>
         <StatusSelect
           id="status"
-          options={statuses}
           name="status"
           label="Status"
           control={control}
@@ -118,7 +113,6 @@ function ActionsPanel({activeTab, application}) {
           name="admin"
           control={control}
           label="Assigned to"
-          rules={{required: true}}
           css={{marginTop: '2rem'}}
         />
       </div>

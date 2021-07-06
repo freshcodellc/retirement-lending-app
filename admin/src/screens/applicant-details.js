@@ -2,6 +2,7 @@
 import * as React from 'react'
 import {useTable} from 'react-table'
 import {useForm} from 'react-hook-form'
+import {useConstants} from 'hooks/use-constants'
 import {Link} from 'react-router-dom'
 import {FiPhone, FiSend} from 'react-icons/fi'
 
@@ -81,6 +82,8 @@ function ActionsPanel({activeTab, application}) {
     sendTermsSheet(form)
   })
 
+  const {statuses} = useConstants()
+
   return (
     <form
       name="term-sheet"
@@ -103,6 +106,7 @@ function ActionsPanel({activeTab, application}) {
       <div>
         <StatusSelect
           id="status"
+          options={statuses}
           name="status"
           label="Status"
           control={control}

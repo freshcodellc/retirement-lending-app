@@ -2,6 +2,7 @@
 import * as React from 'react'
 import {Link} from 'react-router-dom'
 import {useTable} from 'react-table'
+import {useConstants} from 'hooks/use-constants'
 import {useForm} from 'react-hook-form'
 
 import {
@@ -46,6 +47,8 @@ function FiltersPanel({setFilters}) {
     reset()
   }
 
+  const {statuses} = useConstants()
+
   return (
     <React.Fragment>
       <form
@@ -85,6 +88,7 @@ function FiltersPanel({setFilters}) {
         <div>
           <StatusSelect
             id="status"
+            options={statuses}
             name="status"
             control={control}
             label="Application status"

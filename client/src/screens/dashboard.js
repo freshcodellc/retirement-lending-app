@@ -16,7 +16,7 @@ function DashboardScreen() {
 
   const handleCreateClick = async () => {
     create
-      .mutateAsync({first_name: 'Stephen'})
+      .mutateAsync({applicant_user_id: user.uuid})
       .then(data => navigate(`/application/${data.uuid}`))
   }
 

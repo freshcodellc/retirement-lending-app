@@ -36,6 +36,11 @@ function App() {
           h2 {
             font-size: 2.6rem;
           }
+          *,
+          :before,
+          :after {
+            box-sizing: border-box;
+          }
         `}
       />
       {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}

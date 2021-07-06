@@ -58,8 +58,8 @@ const RadioInput = React.forwardRef((props, ref) => {
             '&:after': {
               content: '""',
               position: 'absolute',
-              top: '4px',
-              left: '4px',
+              top: '2px',
+              left: '2px',
               display: 'none',
               width: '14px',
               height: '14px',

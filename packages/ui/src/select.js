@@ -68,7 +68,7 @@ function BaseSelect({
               css={{
                 border: 'none',
                 width: '100%',
-                padding: '6px 0',
+                padding: '4px 0',
                 alignSelf: 'stretch',
                 borderBottom: `2px solid ${
                   hasError ? colors.danger : colors.text

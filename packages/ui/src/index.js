@@ -67,4 +67,5 @@ export * from './textarea'
 export * from './datetime'
 export * from './status'
 export * from './header'
+export * from './modal'
 export { FullPageErrorFallback, Spinner, FullPageSpinner, colors }

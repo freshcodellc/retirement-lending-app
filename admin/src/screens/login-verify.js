@@ -3,8 +3,8 @@ import {useForm} from 'react-hook-form'
 
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Input, TextLink} from '@solera/ui'
-import {Button, AuthForm, FormMessage} from 'components'
+import {Input, TextLink, FormMessage, Button} from '@solera/ui'
+import {AuthForm} from 'components'
 
 export default function LoginVerifyScreen() {
   const {verifyLogin} = useAuth()

@@ -31,7 +31,7 @@ const Input = forwardRef(({ hasError, helperText, ...props }, ref) => (
       css={{
         border: 'none',
         alignSelf: 'stretch',
-        padding: '0.7rem 0',
+        padding: '6px 0',
         borderBottom: `2px solid ${hasError ? colors.danger : colors.text}`
       }}
       ref={ref}
@@ -48,7 +48,7 @@ function InputAdornment({ children, end = false, ...props }) {
     <div
       css={{
         position: 'absolute',
-        marginBottom: '0.4rem',
+        marginBottom: '6px',
         bottom: 0,
         ...posStyles
       }}

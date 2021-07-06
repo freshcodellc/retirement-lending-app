@@ -21,10 +21,10 @@ const statusColors = {
 
 const StatusColor = styled.div(
   {
-    width: '1.6rem',
-    height: '1.6rem',
+    width: '18px',
+    height: '18px',
     borderRadius: '100%',
-    margin: '0.6rem',
+    margin: '5px',
     background: colors.gray10
   },
   ({ color }) => ({ backgroundColor: color })
@@ -38,24 +38,23 @@ function StatusBadge({ status, label }) {
       css={{
         display: 'flex',
         alignItems: 'center',
-        borderRadius: '1.5rem',
-        border: `2px solid ${color}`,
-        width: '100%'
+        borderRadius: '18px',
+        border: `2px solid ${color}`
       }}
     >
       <StatusColor color={color} />
-      <span
+      <div
         css={{
-          fontSize: '1.6rem',
+          fontSize: '16px',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          width: '500px',
+          minWidth: '180px',
           color: status === 'notStarted' ? colors.gray10 : colors.text
         }}
       >
         {label || status}
-      </span>
+      </div>
     </div>
   )
 }

@@ -12,8 +12,6 @@ import {
   ModalOpenButton,
   FormMessage,
   SearchInput,
-} from '@solera/ui'
-import {
   IconButton,
   Input,
   TableWrapper,

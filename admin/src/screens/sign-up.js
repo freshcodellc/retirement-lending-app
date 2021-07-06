@@ -5,14 +5,15 @@ import {Link, Navigate, useSearchParams} from 'react-router-dom'
 
 import {useAsync} from 'hooks/use-async'
 import {useAuth} from 'context/auth-context'
-import {Input, TextLink} from '@solera/ui'
 import {
-  Button,
-  AuthForm,
+  Input,
+  TextLink,
   FormMessage,
   PhoneInput,
   PasswordInput,
-} from 'components'
+  Button,
+} from '@solera/ui'
+import {AuthForm} from 'components'
 export default function SignUpScreen() {
   const {signup} = useAuth()
   const [searchParams] = useSearchParams()
@@ -33,7 +34,9 @@ export default function SignUpScreen() {
         <FormMessage variant="error">
           Invalid invite! Please request new invite
         </FormMessage>
-        <Link replace to="/">Return to Login page</Link>
+        <Link replace to="/">
+          Return to Login page
+        </Link>
       </React.Fragment>
     )
   }

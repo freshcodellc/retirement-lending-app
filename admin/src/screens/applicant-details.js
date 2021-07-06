@@ -20,11 +20,12 @@ import {
   Th,
   Td,
   TextLink,
+  Button,
 } from '@solera/ui'
 import {useSaveNote} from 'hooks/use-save-note'
 import {useSendTermsSheet} from 'hooks/use-send-terms-sheet'
 import {useApplication, useInfoSections} from 'hooks/use-application'
-import {ReturnLink, StatusSelect, AdminSelect, Button} from 'components'
+import {ReturnLink, StatusSelect, AdminSelect} from 'components'
 export default function ApplicantDetails() {
   const {application, isLoading, isError, error} = useApplication()
   const [activeTab, setActiveTab] = React.useState(0)

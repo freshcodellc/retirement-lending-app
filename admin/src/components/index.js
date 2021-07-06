@@ -1,25 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled/macro'
 import {Link} from 'react-router-dom'
+import {FiArrowLeft} from 'react-icons/fi'
 
 import {
   colors,
+  TextLink,
   FormControl as UiFormControl,
   FormHelperText as UiFormHelperText,
 } from '@solera/ui'
 import {ReactComponent as Logo} from 'assets/logo.svg'
-
-export const FormMessage = styled.p(
-  {
-    fontWeight: 500,
-    fontSize: '1rem',
-  },
-  ({variant = 'normal'}) => ({
-    color: {normal: colors.text, error: colors.danger, success: colors.green}[
-      variant
-    ],
-  }),
-)
 
 export const AuthForm = styled.form({
   width: '100%',
@@ -63,10 +53,40 @@ export const Header = ({children}) => (
   </nav>
 )
 
-export * from './input'
-export * from './status'
+export function ReturnLink({to, variant = 'primary', children}) {
+  return (
+    <Link
+      to={to}
+      css={{
+        fontSize: '1.1rem',
+        fontWeight: 500,
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '2rem',
+      }}
+    >
+      <FiArrowLeft color={colors[variant]} css={{marginRight: '4px'}} />
+      <TextLink variant={variant}>{children}</TextLink>
+    </Link>
+  )
+}
+
+export function ErrorFallback({error}) {
+  return (
+    <div
+      css={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {error}
+    </div>
+  )
+}
+
+
 export * from './select'
-export * from './button'
-export * from './checkbox'
-export {default as ReturnLink} from './return-link'
-export {default as ErrorFallback} from './error-fallback'
+export * from './datetime'

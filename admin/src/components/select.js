@@ -1,30 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import {useController} from 'react-hook-form'
-
 import {useAdmins} from 'hooks/use-admins'
 import {join, initial} from 'utils/format'
 import {
+  Select,
   FormControl,
-  Select as UiSelect,
   SelectOption,
   SelctEmptyOption,
+  ConstantSelect,
+  StatusSelect as UiStatusSelect,
 } from '@solera/ui'
 import {useConstants} from 'hooks/use-constants'
 
-function Select({name, rules, control, defaultValue = 'empty', ...props}) {
-  if (rules?.required) {
-    rules.validate = value => value !== 'empty'
-  }
-
-  const {
-    field: {onChange, value = defaultValue},
-  } = useController({name, control, rules, defaultValue})
-
-  return <UiSelect value={value} onChange={onChange} {...props} />
-}
-
 function AdminSelect({className, ...props}) {
   const {admins} = useAdmins()
+  const profiles = admins.filter(admin => admin.profile)
 
   return (
     <FormControl className={className}>
@@ -32,7 +21,7 @@ function AdminSelect({className, ...props}) {
         <SelctEmptyOption css={{padding: '0.5rem'}}>
           Select admin
         </SelctEmptyOption>
-        {admins.map(admin => (
+        {profiles.map(admin => (
           <SelectOption
             key={admin.uuid}
             value={admin.uuid}
@@ -48,148 +37,25 @@ function AdminSelect({className, ...props}) {
 
 function NetWorthSelect(props) {
   const {netWorths} = useConstants()
-
-  return (
-    <Select {...props}>
-      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
-        Select one
-      </SelctEmptyOption>
-      {netWorths.map(status => (
-        <SelectOption key={status.name} value={status.name}>
-          <span css={{display: 'flex', alignItems: 'center'}}>
-            {status.humanized}
-          </span>
-        </SelectOption>
-      ))}
-    </Select>
-  )
+  return <ConstantSelect options={netWorths} {...props} />
 }
 
-function EntitySelect(props) {
+function EntitySelect({planType, ...props}) {
   const {entityTypes} = useConstants()
+  const matchBy = planType === 'IRA' ? planType : '401'
+  const types = entityTypes.filter(e => e.name.includes(matchBy))
 
-  return (
-    <Select {...props}>
-      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
-        Select one
-      </SelctEmptyOption>
-      {entityTypes.map(status => (
-        <SelectOption key={status.name} value={status.name}>
-          <span css={{display: 'flex', alignItems: 'center'}}>
-            {status.humanized}
-          </span>
-        </SelectOption>
-      ))}
-    </Select>
-  )
+  return <ConstantSelect options={types} {...props} />
 }
 
 function PropertySelect(props) {
   const {propertyTypes} = useConstants()
-
-  return (
-    <Select {...props}>
-      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
-        Select one
-      </SelctEmptyOption>
-      {propertyTypes.map(status => (
-        <SelectOption key={status.name} value={status.name}>
-          <span css={{display: 'flex', alignItems: 'center'}}>
-            {status.humanized}
-          </span>
-        </SelectOption>
-      ))}
-    </Select>
-  )
+  return <ConstantSelect options={propertyTypes} {...props} />
 }
 
-const states = getStates()
-function UsStateSelect(props) {
-  return (
-    <Select {...props}>
-      <SelctEmptyOption css={{padding: '0.55rem 0.5rem'}}>
-        Select one
-      </SelctEmptyOption>
-      {states.map((state, i) => (
-        <SelectOption key={state} value={state}>
-          <span css={{display: 'flex', alignItems: 'center'}}>{state}</span>
-        </SelectOption>
-      ))}
-    </Select>
-  )
+function StatusSelect(props) {
+  const {statuses} = useConstants()
+  return <UiStatusSelect options={statuses} {...props} />
 }
 
-export {
-  Select,
-  SelectOption,
-  SelctEmptyOption,
-  AdminSelect,
-  NetWorthSelect,
-  EntitySelect,
-  PropertySelect,
-  UsStateSelect,
-}
-
-function getStates() {
-  return [
-    'Alabama',
-    'Alaska',
-    'American Samoa',
-    'Arizona',
-    'Arkansas',
-    'California',
-    'Colorado',
-    'Connecticut',
-    'Delaware',
-    'District of Columbia',
-    'Federated States of Micronesia',
-    'Florida',
-    'Georgia',
-    'Guam',
-    'Hawaii',
-    'Idaho',
-    'Illinois',
-    'Indiana',
-    'Iowa',
-    'Kansas',
-    'Kentucky',
-    'Louisiana',
-    'Maine',
-    'Marshall Islands',
-    'Maryland',
-    'Massachusetts',
-    'Michigan',
-    'Minnesota',
-    'Mississippi',
-    'Missouri',
-    'Montana',
-    'Nebraska',
-    'Nevada',
-    'New Hampshire',
-    'New Jersey',
-    'New Mexico',
-    'New York',
-    'North Carolina',
-    'North Dakota',
-    'Northern Mariana Islands',
-    'Ohio',
-    'Oklahoma',
-    'Oregon',
-    'Palau',
-    'Pennsylvania',
-    'Puerto Rico',
-    'Rhode Island',
-    'South Carolina',
-    'South Dakota',
-    'Tennessee',
-    'Texas',
-    'Utah',
-    'Vermont',
-    'Virgin Island',
-    'Virginia',
-    'Washington',
-    'West Virginia',
-    'Wisconsin',
-    'Wyoming',
-  ]
-}
+export {NetWorthSelect, EntitySelect, PropertySelect, AdminSelect, StatusSelect}

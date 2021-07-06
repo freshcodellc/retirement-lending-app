@@ -60,15 +60,15 @@ function BaseSelect({
             <ListboxButton
               arrow={
                 isExpanded ? (
-                  <FaCaretUp size='2rem' />
+                  <FaCaretUp size='20px' />
                 ) : (
-                  <FaCaretDown size='2rem' />
+                  <FaCaretDown size='20px' />
                 )
               }
               css={{
                 border: 'none',
                 width: '100%',
-                padding: '0.5rem 0',
+                padding: '6px 0',
                 alignSelf: 'stretch',
                 borderBottom: `2px solid ${
                   hasError ? colors.danger : colors.text

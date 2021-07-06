@@ -2,7 +2,6 @@
 import * as React from 'react'
 import {Link} from 'react-router-dom'
 import {useTable} from 'react-table'
-import {useConstants} from 'hooks/use-constants'
 import {useForm} from 'react-hook-form'
 
 import {
@@ -14,17 +13,16 @@ import {
   Button,
   TextLink,
   TableWrapper,
+  Checkbox,
+  StatusBadge,
+  SearchInput,
 } from '@solera/ui'
+import {StatusSelect, DateRangePicker} from 'components'
 import {useAuth} from 'context/auth-context'
 import {join, initial, phone} from 'utils/format'
 import {useApplications} from 'hooks/use-applications'
-import {
-  Checkbox,
-  StatusBadge,
-  StatusSelect,
-  SearchInput,
-  DateRangePicker,
-} from '@solera/ui'
+import {useConstants} from 'hooks/use-constants'
+
 export default function ApplicantList() {
   const [filters, setFilters] = React.useState()
 
@@ -135,6 +133,7 @@ function ApplicantTable({filters}) {
     applications,
     setApplicationData,
   } = useApplications(filters)
+  const {statusesMap} = useConstants()
 
   const columns = React.useMemo(
     () => [
@@ -148,7 +147,9 @@ function ApplicantTable({filters}) {
       {
         Header: 'Status',
         accessor: 'status',
-        Cell: ({value}) => <StatusBadge status={value} />,
+        Cell: ({value}) => (
+          <StatusBadge status={value} label={statusesMap[value]} />
+        ),
       },
       {
         Header: 'Assigned to',
@@ -178,7 +179,7 @@ function ApplicantTable({filters}) {
         },
       },
     ],
-    [user.uuid, setApplicationData],
+    [user.uuid, setApplicationData, statusesMap],
   )
   const data = React.useMemo(() => applications, [applications])
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =

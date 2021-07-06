@@ -4,8 +4,8 @@ import {Link, Navigate} from 'react-router-dom'
 
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Input, TextLink} from '@solera/ui'
-import {Button, AuthForm, FormMessage, PasswordInput} from 'components'
+import {Input, TextLink, FormMessage, PasswordInput, Button} from '@solera/ui'
+import {AuthForm} from 'components'
 
 export default function LoginScreen() {
   const {login} = useAuth()

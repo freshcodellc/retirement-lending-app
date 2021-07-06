@@ -4,22 +4,27 @@ import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
 import {useQueryClient} from 'react-query'
 
-import {useEditApplication, useEditFields} from 'hooks/use-edit-application'
-import {EntitySelect, NetWorthSelect, PropertySelect, ReturnLink} from 'components'
 import {
-  Button,
-  Checkbox,
   Input,
   RadioGroup,
   RadioInput,
+  Button,
+  Checkbox,
   SsnInput,
   PhoneInput,
-  DatePicker,
   FormMessage,
   FormControl,
   UsStateSelect,
   CurrencyInput,
 } from '@solera/ui'
+import {
+  DatePicker,
+  ReturnLink,
+  EntitySelect,
+  NetWorthSelect,
+  PropertySelect,
+} from 'components'
+import {useEditApplication, useEditFields} from 'hooks/use-edit-application'
 
 export default function EditApplicantInfo() {
   const queryClient = useQueryClient()

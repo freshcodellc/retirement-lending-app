@@ -5,8 +5,8 @@ import {Link, Navigate, useSearchParams} from 'react-router-dom'
 
 import {useAuth} from 'context/auth-context'
 import {useAsync} from 'hooks/use-async'
-import {Input, TextLink} from '@solera/ui'
-import {Button, AuthForm, FormMessage} from 'components'
+import {Input, TextLink, Button, FormMessage} from '@solera/ui'
+import {AuthForm} from 'components'
 
 export default function ForgotPasswordScreen() {
   const [searchParams] = useSearchParams()

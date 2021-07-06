@@ -13,6 +13,7 @@
     ]
   },
    "scripts": {
+     "build-client": "yarn workspace @solera/ui build & yarn workspace client build",
      "start-client": "yarn workspace client start & yarn workspace @solera/ui start",
      "start-admin": "yarn workspace admin start & yarn workspace @solera/ui start",
      "start-ui": "yarn workspace @solera/ui start",

@@ -1,24 +1,71 @@
 /** @jsxImportSource @emotion/react */
-import {Button, colors} from '@solera/ui'
+import {Button, colors, StatusBadge, TextLink} from '@solera/ui'
 import {Link} from 'react-router-dom'
+import get from 'lodash/get'
+
+const TERMS_STATUSES = [
+  'started',
+  'pre_application_submitted',
+  'term_sheet_sent',
+]
+
+const TERMS_HELPER_TEXT_MAP = {
+  denied: 'Your application was denied. Please contact us for more info.',
+  started: 'Pre-application incomplete',
+  pre_application_submitted: 'Pre-application received',
+  term_sheet_sent: 'Please review and sign your term sheet',
+  term_sheet_signed: 'Please complete full application',
+  full_application_complete: 'Your loan is awaiting processing',
+  underwriting: 'Your loan is being processed',
+  under_review: 'Underwriting complete',
+  approved: 'Your loan has been approved',
+}
+
 function ApplicationBox({data}) {
   return (
     <div
       css={{
         border: `2px solid ${colors.secondary}`,
+        marginTop: '2.5rem',
       }}
     >
       <div
         css={{
-          padding: `2rem 1rem`,
+          padding: `2rem 4.5rem`,
           borderBottom: `2px solid ${colors.secondary}`,
         }}
       >
-        Application 1
+        <p css={{fontSize: '2rem', fontWeight: '500', lineHeight: '2.6rem', margin: 0}}>Application 1</p>
       </div>
-      <div css={{padding: '1rem'}}>
-        <Link to={`/application/${data.uuid}`}>
-          <Button variation="secondary">Continue Loan Process</Button>
+      <div
+        css={{
+          padding: '4.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
+        <div css={{alignSelf: 'stretch'}}>
+          <StatusBadge status={data.status} css={{width: '100%'}} />
+          <p>
+            {get(
+              TERMS_HELPER_TEXT_MAP,
+              data.status,
+              'Please contact us for more information',
+            )}
+          </p>
+        </div>
+        {TERMS_STATUSES.includes(data.status) && (
+          <Link
+            to={`/application/${data.uuid}/prescreen/2`}
+            css={{marginTop: '2.5rem'}}
+          >
+            <TextLink variant="secondary">Update property address</TextLink>
+          </Link>
+        )}
+        <Link to={`/application/${data.uuid}`} css={{marginTop: '2rem'}}>
+          <Button variant="secondary">Continue Loan Process</Button>
         </Link>
       </div>
     </div>

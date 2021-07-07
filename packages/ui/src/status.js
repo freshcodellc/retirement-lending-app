@@ -49,7 +49,6 @@ function StatusBadge({ status, label }) {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          minWidth: '180px',
           color: status === 'notStarted' ? colors.gray10 : colors.text
         }}
       >

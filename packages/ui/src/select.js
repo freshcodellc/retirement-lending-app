@@ -101,7 +101,14 @@ function BaseSelect({
   )
 }
 
-function Select({ name, rules, control, defaultValue = 'empty', ...props }) {
+function Select({
+  name,
+  rules,
+  control,
+  values = [],
+  defaultValue = 'empty',
+  ...props
+}) {
   if (rules && rules.required) {
     rules.validate = (value) => value !== 'empty'
   }
@@ -110,12 +117,23 @@ function Select({ name, rules, control, defaultValue = 'empty', ...props }) {
     field: { onChange, value = defaultValue }
   } = useController({ name, control, rules, defaultValue })
 
-  return <BaseSelect value={value} onChange={onChange} {...props} />
+  const finalValue = values.length && !values.includes(value) ? 'empty' : value
+
+  return (
+    <BaseSelect
+      value={finalValue}
+      onChange={onChange}
+      defaultValue={defaultValue}
+      {...props}
+    />
+  )
 }
 
 function ConstantSelect({ options, ...props }) {
+  const values = options.map((o) => o.name)
+
   return (
-    <Select {...props}>
+    <Select values={values} {...props}>
       <SelctEmptyOption css={{ padding: '0.55rem 0.5rem' }}>
         Select one
       </SelctEmptyOption>

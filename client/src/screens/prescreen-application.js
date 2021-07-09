@@ -2,7 +2,7 @@
 import {Fragment, useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import {FiArrowLeft} from 'react-icons/fi'
-import {Link, useNavigate, Navigate} from 'react-router-dom'
+import {useNavigate, Navigate} from 'react-router-dom'
 import {
   Button,
   Input,
@@ -20,6 +20,7 @@ import {
 import {
   ThankYou,
   Layout,
+  PlanRadio,
   StepTracker,
   EntitySelect,
   NetWorthSelect,
@@ -41,7 +42,6 @@ function PreScreenApplicationScreen() {
     maxStep,
     prevStep,
     nextStep,
-    isSuccess,
     isLoading,
     subHeading,
     currentStep,
@@ -57,21 +57,29 @@ function PreScreenApplicationScreen() {
     onSuccess() {
       resetSave()
       navigate(stepRoute(uuid, nextStep))
+      window.scrollTo(0, 0)
     },
   })
-  const {register, handleSubmit, reset, watch, control, formState} = useForm({
-    mode: 'onChange',
-    defaultValues,
-  })
+  const {register, handleSubmit, reset, watch, setValue, control, formState} =
+    useForm({
+      mode: 'onChange',
+      defaultValues,
+    })
+  const idleStep = watch('idleStep')
+  const isPurchase = watch('is_purchase') === 'true'
 
-  const planType = watch('plan_type')
   useEffect(() => {
-    if (planType !== defaultValues.plan_type) {
-      reset({...defaultValues, plan_type: planType, entity_type: 'empty'})
+    if (idleStep !== defaultValues.idleStep) {
+      reset(defaultValues)
     }
-  }, [planType, reset, defaultValues])
+  }, [idleStep, reset, defaultValues])
 
   const handleSave = handleSubmit(form => saveEdit({...form, uuid}))
+
+  const stepBack = () => {
+    navigate(stepRoute(uuid, prevStep))
+    window.scrollTo(0, 0)
+  }
 
   if (isLoading) {
     return 'Loading...'
@@ -104,7 +112,30 @@ function PreScreenApplicationScreen() {
           }}
         >
           {fields.map(field => {
-            const props = {key: field.name, hasError: saveIsError, ...field}
+            let label = field.label
+
+            if (isPurchase) {
+              switch (field.name) {
+                case 'purchase_price':
+                case 'requested_loan_amount':
+                  label = field.label2
+                  break
+                case 'years_owned':
+                case 'current_debt_balance':
+                case 'estimated_improvement_costs':
+                  return ''
+                default:
+              }
+            } else {
+            }
+
+            const props = {
+              ...field,
+              label,
+              key: field.name,
+              hasError: saveIsError,
+            }
+
             switch (field.type) {
               case 'h1':
                 return (
@@ -124,6 +155,26 @@ function PreScreenApplicationScreen() {
                     key={field.type}
                     css={{
                       fontWeight: 500,
+                      fontsize: '1.2rem',
+                      color: colors.danger,
+                    }}
+                  >
+                    {field.text}
+                  </p>
+                )
+              case 'disclaimer':
+                if (
+                  field.name === 'requested_loan_amount_disclaimer' &&
+                  !isPurchase
+                )
+                  return ''
+
+                return (
+                  <p
+                    key={field.type}
+                    css={{
+                      fontWeight: 500,
+                      marginTop: '2rem',
                       fontsize: '1.2rem',
                       color: colors.danger,
                     }}
@@ -152,19 +203,30 @@ function PreScreenApplicationScreen() {
                   />
                 )
               case 'radio':
-                return (
-                  <RadioGroup key={field.name} text={field.label}>
-                    {field.options.map(o => (
-                      <RadioInput
-                        {...o}
-                        key={o.label}
-                        name={field.name}
-                        id={field.name + o.label}
+                switch (field.name) {
+                  case 'plan_type':
+                    return (
+                      <PlanRadio
+                        key={field.name}
+                        {...field}
                         {...register(field.name)}
                       />
-                    ))}
-                  </RadioGroup>
-                )
+                    )
+                  default:
+                    return (
+                      <RadioGroup key={field.name} text={field.label}>
+                        {field.options.map(o => (
+                          <RadioInput
+                            {...o}
+                            key={o.label}
+                            name={field.name}
+                            id={field.name + o.label}
+                            {...register(field.name)}
+                          />
+                        ))}
+                      </RadioGroup>
+                    )
+                }
               case 'property':
                 return (
                   <AddressFields
@@ -184,8 +246,8 @@ function PreScreenApplicationScreen() {
                   case 'entity_type':
                     return (
                       <EntitySelect
+                        setValue={setValue}
                         control={control}
-                        planType={planType}
                         {...props}
                       />
                     )
@@ -215,9 +277,9 @@ function PreScreenApplicationScreen() {
               {currentStep === maxStep ? 'Submit application' : 'Continue'}
             </Button>
             {currentStep !== minStep ? (
-              <Link
-                replace
-                to={stepRoute(uuid, prevStep)}
+              <TextLink
+                onClick={stepBack}
+                variant="secondary"
                 css={{
                   display: 'flex',
                   alignItems: 'center',
@@ -227,8 +289,8 @@ function PreScreenApplicationScreen() {
                   color={colors.secondary}
                   css={{marginRight: '4px'}}
                 />
-                <TextLink variant="secondary">Back</TextLink>
-              </Link>
+                Back
+              </TextLink>
             ) : null}
           </div>
         </form>

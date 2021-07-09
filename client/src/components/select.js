@@ -1,18 +1,20 @@
 /** @jsxImportSource @emotion/react */
 import {ConstantSelect} from '@solera/ui'
 import {useConstants} from 'hooks/use-constants'
+import {useWatch} from 'react-hook-form'
 
 function NetWorthSelect(props) {
   const {netWorths} = useConstants()
   return <ConstantSelect options={netWorths} {...props} />
 }
 
-function EntitySelect({planType, ...props}) {
+function EntitySelect({control, setValue, ...props}) {
   const {entityTypes} = useConstants()
-  const matchBy = planType === 'IRA' ? planType : '401'
-  const types = entityTypes.filter(e => e.name.includes(matchBy))
+  const planType = useWatch({control, name: 'plan_type'})
 
-  return <ConstantSelect options={types} {...props} />
+  const entities = entityTypes.filter(e => e.name.includes(planType))
+
+  return <ConstantSelect options={entities} control={control} {...props} />
 }
 
 function PropertySelect(props) {

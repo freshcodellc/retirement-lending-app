@@ -317,7 +317,7 @@ const propertyFields = [
   {
     type: 'currency',
     name: 'monthly_current_rent',
-    label: 'Current monthly rent',
+    label: 'Estimated monthly rent',
   },
   {
     type: 'currency',
@@ -427,7 +427,8 @@ const eraFields = [
   },
   {
     type: 'text',
-    label: 'Where are the funds held to be used for this investment?',
+    label:
+      'What is the name of the financial institution that holds the funds to be used for this investment?',
     name: 'funding_institution_name',
   },
   {

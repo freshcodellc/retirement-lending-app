@@ -181,15 +181,20 @@ const CurrencyInput = forwardRef(
     return (
       <MaskedInput
         unmask
-        radix='.'
         id={name}
         name={name}
         mask={format}
         value={amount}
+        lazy={false}
         blocks={{
           num: {
+            min: 3,
             mask: Number,
-            thousandsSeparator: ','
+            thousandsSeparator: ',',
+            normalizeZeros: false,
+            padFractionalZeros: true,
+            radix: '.',
+            scale: 2
           }
         }}
         onAccept={onChange}

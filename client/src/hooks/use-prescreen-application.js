@@ -33,27 +33,30 @@ function usePrescreenApplication() {
 
   const defaultValues = useMemo(
     () =>
-      section.fields.reduce((acc, cur) => {
-        if (cur.name in data) {
-          let value = data[cur.name]
-          if (value != null) {
-            if (cur.type === 'radio') {
-              if (value === true) {
-                value = 'true'
-              } else if (value === false) {
-                value = 'false'
+      section.fields.reduce(
+        (acc, cur) => {
+          if (cur.name in data) {
+            let value = data[cur.name]
+            if (value != null) {
+              if (cur.type === 'radio') {
+                if (value === true) {
+                  value = 'true'
+                } else if (value === false) {
+                  value = 'false'
+                }
+              }
+            } else {
+              if (cur.type === 'select') {
+                value = 'empty'
               }
             }
-          } else {
-            if (cur.type === 'select') {
-              value = 'empty'
-            }
+            acc[cur.name] = value
           }
-          acc[cur.name] = value
-        }
-        return acc
-      }, {}),
-    [data, section],
+          return acc
+        },
+        {idleStep: Number(step)},
+      ),
+    [data, section, step],
   )
 
   const minStep = 1
@@ -65,6 +68,7 @@ function usePrescreenApplication() {
 
   return {
     uuid,
+    data,
     error,
     isError,
     maxStep,
@@ -108,10 +112,6 @@ const step1Fields = [
     type: 'radio',
     name: 'plan_type',
     label: 'What type of retirement plan do you have?',
-    options: [
-      {label: 'IRA', value: 'IRA'},
-      {label: '401K', value: '401K'},
-    ],
   },
   {
     type: 'select',
@@ -125,7 +125,8 @@ const step1Fields = [
   },
   {
     type: 'text',
-    label: 'Where are the funds held to be used for this investment?',
+    label:
+      'What is the name of the financial institution that holds the funds to be used for this investment?',
     name: 'funding_institution_name',
   },
   {
@@ -261,7 +262,7 @@ const step2Fields = [
   {
     type: 'currency',
     name: 'monthly_current_rent',
-    label: 'Current monthly rent',
+    label: 'Estimated monthly rent',
   },
   {
     type: 'currency',
@@ -299,9 +300,20 @@ const step2Fields = [
   },
   {
     type: 'currency',
-    label: 'Requested loan amount*',
+    label: 'Original Purchase Price',
+    label2: 'What is the purchase price',
+    name: 'purchase_price',
+  },
+  {
+    type: 'currency',
+    label: 'Requested loan amount',
+    label2: 'Requested loan amount*',
     name: 'requested_loan_amount',
-    helperText: '(note: max loan amount is 65% of purchase price)',
+  },
+  {
+    type: 'disclaimer',
+    name: 'requested_loan_amount_disclaimer',
+    text: '*The maximum loan to value will be restricted to 65% of the lesser of the purchase price or appraised value.',
   },
   {
     type: 'currency',

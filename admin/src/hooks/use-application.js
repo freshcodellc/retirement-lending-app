@@ -191,7 +191,7 @@ function propertyFields(app, propertyTypesMap) {
       value: empty(yesNo)(app.is_rented),
     },
     {
-      label: 'Current monthly rent',
+      label: 'Estimated monthly rent',
       value: empty(currency)(app.monthly_current_rent),
     },
     {
@@ -269,7 +269,8 @@ function eraFields(app, planTypesMap, entityTypesMap) {
       value: empty()(app.entity_state_of_formation),
     },
     {
-      label: 'Where are the funds held to be used for this investment?',
+      label:
+        'What is the name of the financial institution that holds the funds to be used for this investment?',
       value: empty()(app.funding_institution_name),
     },
     {

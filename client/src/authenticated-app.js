@@ -5,6 +5,7 @@ import {PreScreenApplicationScreen} from './screens/prescreen-application'
 import {NotFoundScreen} from './screens/not-found'
 import {ApplicationScreen} from './screens/application'
 import {TermsSheetScreen} from './screens/terms-sheet'
+import {UserMenu} from './components/user-menu'
 import {Header} from '@solera/ui'
 
 function AuthenticatedApp() {
@@ -14,7 +15,9 @@ function AuthenticatedApp() {
 
   return (
     <Fragment>
-      <Header onLogoClick={onLogoClick} />
+      <Header onLogoClick={onLogoClick}>
+        <UserMenu />
+      </Header>
       <main>
         <Routes>
           <Route path="/" element={<DashboardScreen />} />

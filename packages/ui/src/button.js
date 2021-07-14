@@ -12,6 +12,11 @@ const variants = {
   secondary: {
     background: colors.secondary,
     color: colors.base
+  },
+  secondaryOutline: {
+    background: 'white',
+    color: colors.secondary,
+    border: `2px solid ${colors.secondary}`
   }
 }
 

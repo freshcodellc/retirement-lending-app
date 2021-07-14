@@ -14,7 +14,7 @@ export const danger = '#ef5350'
 export const orange = 'orange'
 export const blue = '#001493'
 
-export const primary = '#E24038'
+export const primary = '#E14038'
 export const secondary = '#764AF3'
 export const text = '#152B2C'
 export const lightBlue = '#5D8AAB'

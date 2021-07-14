@@ -8,7 +8,6 @@ function StepTracker({currentStep, maxStep}) {
   return (
     <div
       css={{
-        zIndex: 1,
         color: 'white',
         position: 'sticky',
         background: colors.tertiary,

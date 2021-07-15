@@ -6,7 +6,7 @@ import {Button} from '@solera/ui'
 function ThankYou({heading, subHeading}) {
   const navigate = useNavigate()
 
-  const backToPortal = () => navigate('/')
+  const backToPortal = () => navigate('/', {replace: true})
 
   return (
     <div

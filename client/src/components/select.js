@@ -1,21 +1,25 @@
 /** @jsxImportSource @emotion/react */
+import React from 'react'
 import {ConstantSelect} from '@solera/ui'
 import {useConstants} from 'hooks/use-constants'
 import {useWatch} from 'react-hook-form'
 
-function NetWorthSelect(props) {
+const NetWorthSelect = React.forwardRef((props, ref) => {
+  const {setValue, ...finalProps} = props
   const {netWorths} = useConstants()
-  return <ConstantSelect options={netWorths} {...props} />
-}
 
-function EntitySelect({control, setValue, ...props}) {
+  return <ConstantSelect options={netWorths} {...finalProps} />
+})
+
+const EntitySelect = React.forwardRef((props, ref) => {
+  const {control, setValue, finalProps} = props
   const {entityTypes} = useConstants()
   const planType = useWatch({control, name: 'plan_type'})
 
   const entities = entityTypes.filter(e => e.name.includes(planType))
 
-  return <ConstantSelect options={entities} control={control} {...props} />
-}
+  return <ConstantSelect options={entities} control={control} {...finalProps} />
+})
 
 function PropertySelect(props) {
   const {propertyTypes} = useConstants()

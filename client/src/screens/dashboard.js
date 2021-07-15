@@ -22,7 +22,7 @@ function DashboardScreen() {
 
   return (
     <Layout>
-      <h1>Welcome, {user.first_name}</h1>
+      <h1>Welcome, {user.profile.first_name}</h1>
       <Button variant="secondary" onClick={handleCreateClick}>
         Start New Application
       </Button>

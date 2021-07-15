@@ -5,6 +5,7 @@ import {PreScreenApplicationScreen} from './screens/prescreen-application'
 import {NotFoundScreen} from './screens/not-found'
 import {ApplicationScreen} from './screens/application'
 import {TermsSheetScreen} from './screens/terms-sheet'
+import {FullApplicationScreen} from './screens/full-application'
 import {UserMenu} from './components/user-menu'
 import {Header} from '@solera/ui'
 
@@ -29,6 +30,10 @@ function AuthenticatedApp() {
           <Route
             path="application/:uuid/terms-sheet/:step"
             element={<TermsSheetScreen />}
+          />
+          <Route
+            path="application/:uuid/full/:step"
+            element={<FullApplicationScreen />}
           />
           <Route path="*" element={<NotFoundScreen />} />
         </Routes>

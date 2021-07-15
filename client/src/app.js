@@ -17,6 +17,8 @@ function App() {
         styles={css`
           ${normalize}
           :root {
+            --primary: ${colors.primary};
+            --secondary: ${colors.secondary};
             --header-height: 82;
             --grid-base-width: 600;
             --grid-margin-width: 120;

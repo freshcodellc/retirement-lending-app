@@ -3,29 +3,30 @@ import {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import has from 'lodash/has'
 import {ErrorMessage} from '@hookform/error-message'
-import {Link} from 'react-router-dom'
 import {useAuth} from '../context/auth-context'
 import {useAsync} from '../utils/hooks'
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import {Button, Input, InputError, TextLink} from '@solera/ui'
+import {Button, Input, InputError} from '@solera/ui'
 import {Layout} from 'components'
 
-function matchPasswords() {
-  return this.parent.password === this.parent.passwordConfirm
-}
-
 const schema = yup.object().shape({
+  plan_type: yup.string().required('Required'),
+  entity_type: yup.string().required('Required'),
+  entity_name: yup.string().required('Required'),
+  funding_institution_name: yup.string().required('Required'),
+  funding_account_balance: yup.string().required('Required'),
+  first_name: yup.string().required('Required'),
+  middle_name: yup.string(),
+  last_name: yup.string().required('Required'),
+  phone: yup.string().required('Required'),
   email: yup.string().email().required('Required'),
-  password: yup.string().min(8).required('Required'),
-  passwordConfirm: yup
-    .string()
-    .min(8)
-    .test('passwordMatch', 'Passwords must match', matchPasswords)
-    .required('Required'),
+  number_rental_properties: yup.string().required('Required'),
+  estimated_net_worth_bracket: yup.string().required('Required'),
+  referrer: yup.string().required('Required'),
 })
 
-function SignUpForm({onSubmit}) {
+function ProfileUpdateForm({onSubmit}) {
   const {isLoading, isError, isSuccess, data, error, run} = useAsync()
   const {register, reset, handleSubmit, formState} = useForm({
     mode: 'onBlur',
@@ -51,7 +52,7 @@ function SignUpForm({onSubmit}) {
 
   return (
     <Layout css={{alignItems: 'center'}}>
-      <h1>Create your account</h1>
+      <h1>Profile Update</h1>
       <form
         name="sign-up"
         onSubmit={handleSubmit(d => submitForm(d))}
@@ -68,16 +69,16 @@ function SignUpForm({onSubmit}) {
           }}
         >
           <Input
-            id="email"
-            label="Email"
-            name="email"
-            type="email"
-            hasError={has(formState, 'errors.email')}
-            {...register('email')}
+            id="firstName"
+            label="First name"
+            name="first_name"
+            type="text"
+            hasError={has(formState, 'errors.first_name')}
+            {...register('first_name')}
           />
           <ErrorMessage
             errors={formState.errors}
-            name="email"
+            name="first_name"
             render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
@@ -87,16 +88,16 @@ function SignUpForm({onSubmit}) {
           }}
         >
           <Input
-            id="password"
-            label="Password"
-            name="password"
-            type="password"
-            hasError={has(formState, 'errors.password')}
-            {...register('password')}
+            id="middleName"
+            label="Middle name"
+            name="middle_name"
+            type="text"
+            hasError={has(formState, 'errors.middle_name')}
+            {...register('middle_name')}
           />
           <ErrorMessage
             errors={formState.errors}
-            name="password"
+            name="middle_name"
             render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
@@ -106,16 +107,16 @@ function SignUpForm({onSubmit}) {
           }}
         >
           <Input
-            id="passwordConfirm"
-            label="Confirm Password"
-            name="passwordConfirm"
-            hasError={has(formState, 'errors.passwordConfirm')}
-            type="password"
-            {...register('passwordConfirm')}
+            id="lastName"
+            label="Last name"
+            name="last_name"
+            hasError={has(formState, 'errors.last_name')}
+            type="text"
+            {...register('last_name')}
           />
           <ErrorMessage
             errors={formState.errors}
-            name="passwordConfirm"
+            name="last_name"
             render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
@@ -134,14 +135,6 @@ function SignUpForm({onSubmit}) {
           >
             Submit
           </Button>
-          <Link
-            to="/"
-            css={{
-              marginTop: '40px',
-            }}
-          >
-            <TextLink variant="secondary">Already have an account?</TextLink>
-          </Link>
         </div>
         {isError ? <div>An error happened</div> : null}
         {isSuccess ? (
@@ -155,7 +148,7 @@ function SignUpForm({onSubmit}) {
   )
 }
 
-function SignUpScreen() {
+function ProfileUpdateScreen() {
   const {register} = useAuth()
   return (
     <div
@@ -166,9 +159,9 @@ function SignUpScreen() {
         justifyContent: 'center',
       }}
     >
-      <SignUpForm onSubmit={register} />
+      <ProfileUpdateForm onSubmit={register} />
     </div>
   )
 }
 
-export {SignUpScreen}
+export {ProfileUpdateScreen}

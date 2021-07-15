@@ -4,6 +4,7 @@ import {DashboardScreen} from './screens/dashboard'
 import {PreScreenApplicationScreen} from './screens/prescreen-application'
 import {NotFoundScreen} from './screens/not-found'
 import {ApplicationScreen} from './screens/application'
+import {ProfileUpdateScreen} from './screens/profile-update'
 import {TermsSheetScreen} from './screens/terms-sheet'
 import {UserMenu} from './components/user-menu'
 import {Header} from '@solera/ui'
@@ -30,6 +31,7 @@ function AuthenticatedApp() {
             path="application/:uuid/terms-sheet/:step"
             element={<TermsSheetScreen />}
           />
+          <Route path="/profile/update" element={<ProfileUpdateScreen />} />
           <Route path="*" element={<NotFoundScreen />} />
         </Routes>
       </main>

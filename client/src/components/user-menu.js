@@ -1,12 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import React, {useState} from 'react'
 import {FiUser} from 'react-icons/fi'
+import {Link} from 'react-router-dom'
 import {Button, colors} from '@solera/ui'
 import { useAuth } from '../context/auth-context'
 
 function UserMenu() {
   const [open, setOpen] = useState(false)
   const {logout} = useAuth()
+
   return (
     <div>
       <div
@@ -71,9 +73,11 @@ function UserMenu() {
           >
             Account
           </p>
-          <Button variant="secondary" css={{width: '250px', marginTop: '35px'}}>
-            Update Profile
-          </Button>
+          <Link to="/profile/update">
+            <Button variant="secondary" css={{width: '250px', marginTop: '35px'}} onClick={() => setOpen(false)}>
+              Update Profile
+            </Button>
+          </Link>
           <Button
             variant="secondaryOutline"
             css={{width: '250px', marginTop: '35px'}}

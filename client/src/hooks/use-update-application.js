@@ -1,6 +1,7 @@
 import {useMutation} from 'react-query'
 import {queryClient} from 'context/index'
 import * as loanApplicationService from 'services/loan-application-service'
+import currency from 'currency.js'
 
 function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
   return useMutation(
@@ -34,12 +35,6 @@ function adaptFields(fields) {
   for (const key in fields) {
     let value = fields[key]
 
-    if (['mailing_equal_physical'].includes(key)) continue
-    if (['physical', 'mailing', 'property'].includes(key)) {
-      //TODO: handle updating addresses
-      continue
-    }
-
     switch (value) {
       case null:
       case undefined:
@@ -52,6 +47,44 @@ function adaptFields(fields) {
         value = false
         break
       default:
+    }
+
+    if (['mailing_equal_physical'].includes(key)) continue
+    if (['physical', 'mailing', 'property'].includes(key)) {
+      if (!value.address) continue
+      if (!('addresses' in data)) {
+        data.addresses = []
+      }
+      if (key === 'mailing' && fields.mailing_equal_physical) {
+        value = {...(fields.physical || {})}
+      }
+
+      value.type = key
+      const addressPos = data.addresses.findIndex(a => a.type === key)
+      if (addressPos !== -1) {
+        data.addresses[addressPos] = value
+      } else {
+        data.addresses.push(value)
+      }
+      continue
+    }
+
+    if (
+      [
+        'funding_account_balance',
+        'monthly_current_rent',
+        'annual_taxes',
+        'annual_insurance_premium',
+        'monthly_hoa_dues',
+        'monthly_mgmt_fee',
+        'purchase_price',
+        'requested_loan_amount',
+        'current_debt_balance',
+        'estimated_improvement_costs',
+        'estimated_value',
+      ].includes(key)
+    ) {
+      value = currency(value).multiply(100)
     }
 
     data[key] = value

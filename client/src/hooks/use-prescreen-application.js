@@ -1,11 +1,21 @@
 import {useMemo} from 'react'
 import {useApplication} from 'hooks/use-application'
 import {useParams} from 'react-router-dom'
+import currency from 'currency.js'
 
 function usePrescreenApplication() {
   const {uuid, step} = useParams()
   const {data, isSuccess, isLoading, isError, error} = useApplication(uuid)
-
+  // data.addresses = [
+  //   {
+  //     type: 'property',
+  //     address: '12 Main St',
+  //     address_2: null,
+  //     city: 'Lehi',
+  //     state: 'Utah',
+  //     postal_code: '84043',
+  //   },
+  // ]
   const section = useMemo(
     () =>
       ({
@@ -33,29 +43,7 @@ function usePrescreenApplication() {
 
   const defaultValues = useMemo(
     () =>
-      section.fields.reduce(
-        (acc, cur) => {
-          if (cur.name in data) {
-            let value = data[cur.name]
-            if (value != null) {
-              if (cur.type === 'radio') {
-                if (value === true) {
-                  value = 'true'
-                } else if (value === false) {
-                  value = 'false'
-                }
-              }
-            } else {
-              if (cur.type === 'select') {
-                value = 'empty'
-              }
-            }
-            acc[cur.name] = value
-          }
-          return acc
-        },
-        {idleStep: Number(step)},
-      ),
+      section.fields.reduce(setDefaultValues(data), {idleStep: Number(step)}),
     [data, section, step],
   )
 
@@ -81,6 +69,40 @@ function usePrescreenApplication() {
     defaultValues,
     isThankYouStep,
     ...section,
+  }
+}
+
+function setDefaultValues(data) {
+  return (acc, cur) => {
+    if (cur.name in data) {
+      let key = cur.name
+      let value = data[cur.name]
+
+      if (value != null) {
+        if (cur.type === 'radio') {
+          if (value === true) {
+            value = 'true'
+          } else if (value === false) {
+            value = 'false'
+          }
+        } else if (cur.type === 'currency') {
+          value = currency(value, {fromCents: true})
+        } else if (['physical', 'mailing', 'property'].includes(cur.type)) {
+          const addressPos = value.findIndex(a => a.type === cur.type)
+          key = cur.type
+          value = {}
+          if (addressPos !== -1) {
+            value = {...value[addressPos]}
+          }
+        }
+      } else {
+        if (cur.type === 'select') {
+          value = 'empty'
+        }
+      }
+      acc[key] = value
+    }
+    return acc
   }
 }
 

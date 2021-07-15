@@ -174,10 +174,11 @@ const CurrencyInput = forwardRef(
       field: { onChange, value }
     } = useController({
       name,
-      control,
-      rules
+      rules,
+      control
     })
     const amount = String(value)
+
     return (
       <MaskedInput
         unmask
@@ -188,10 +189,10 @@ const CurrencyInput = forwardRef(
         lazy={false}
         blocks={{
           num: {
-            min: 3,
             mask: Number,
             thousandsSeparator: ',',
-            normalizeZeros: false,
+            normalizeZeros: true,
+            allowDecimal: true,
             padFractionalZeros: true,
             radix: '.',
             scale: 2

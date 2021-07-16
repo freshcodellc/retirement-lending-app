@@ -5,17 +5,9 @@ import {useNavigate} from 'react-router-dom'
 import {Button, Input} from '@solera/ui'
 import {Layout, StepTracker} from 'components'
 import {useUpdateApplication} from 'hooks/use-update-application'
-import {useTermsSheet} from 'hooks/use-terms-sheet'
+import {useTermsSheet, validationResolver} from 'hooks/use-terms-sheet'
 import currency from 'currency.js'
 import {format} from 'date-fns'
-import {yupResolver} from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-
-const schema = yup.object().shape({
-  signature: yup.string().required('Required'),
-  signature_title: yup.string().required('Required'),
-  signature_entity_name: yup.string().min(8).required('Required'),
-})
 
 function TermsSheetScreen() {
   const navigate = useNavigate()
@@ -28,7 +20,7 @@ function TermsSheetScreen() {
   const {register, handleSubmit, formState} = useForm({
     defaultValues,
     mode: 'onChange',
-    resolver: yupResolver(schema),
+    resolver: validationResolver,
   })
 
   const signedDate = format(new Date(), `do 'day of' MMMM, yyyy`)

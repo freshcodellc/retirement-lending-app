@@ -66,7 +66,6 @@ function FullApplicationScreen() {
       defaultValues,
     })
   const idleStep = watch('idleStep')
-  const isPurchase = watch('is_purchase') === 'true'
   const mailingEqualPhysical = watch('mailing_equal_physical', false)
 
   useEffect(() => {
@@ -177,6 +176,34 @@ function FullApplicationScreen() {
                       </RadioGroup>
                     )
                 }
+              case 'property':
+                const {address, address_2, city, state, postal_code} =
+                  defaultValues.property
+                return (
+                  <div
+                    key={field.type}
+                    css={{
+                      border: `1px solid #000`,
+                      padding: '2rem',
+                      textAlign: 'center',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      maxWidth: '400px',
+                      margin: '50px auto 0',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <div css={{fontWeight: 600, fontsize: '18px', marginBottom: '1.5rem'}}>
+                      {field.label}
+                    </div>
+                    <div>
+                      {address} {address_2}
+                    </div>
+                    <div>
+                      {city}, {state} {postal_code}
+                    </div>
+                  </div>
+                )
               case 'physical':
               case 'mailing':
                 if (field.type === 'mailing' && mailingEqualPhysical) break

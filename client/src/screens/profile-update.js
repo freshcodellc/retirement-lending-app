@@ -91,7 +91,7 @@ function ProfileUpdateForm({onSubmit}) {
               name="401K"
               id="plan_type-401K"
               label="401K"
-              value="401K"
+              value="401k"
               {...register('plan_type')}
             />
           </RadioGroup>

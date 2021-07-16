@@ -1,21 +1,23 @@
 import {useMemo} from 'react'
 import {useApplication} from 'hooks/use-application'
 import {useParams} from 'react-router-dom'
-import currency from 'currency.js'
+import {yupResolver} from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import {setApplicationDefaultValues} from 'utils/form'
 
 function usePrescreenApplication() {
   const {uuid, step} = useParams()
   const {data, isSuccess, isLoading, isError, error} = useApplication(uuid)
-  // data.addresses = [
-  //   {
-  //     type: 'property',
-  //     address: '12 Main St',
-  //     address_2: null,
-  //     city: 'Lehi',
-  //     state: 'Utah',
-  //     postal_code: '84043',
-  //   },
-  // ]
+  data.addresses = [
+    {
+      type: 'property',
+      address: '12 Main St',
+      address_2: null,
+      city: 'Lehi',
+      state: 'Utah',
+      postal_code: '84043',
+    },
+  ]
   const section = useMemo(
     () =>
       ({
@@ -23,19 +25,23 @@ function usePrescreenApplication() {
           heading: `Welcome to Solera National Bank's lending platform for retirement accounts!`,
           subHeading: `To get started, we'll need some basic information from you.`,
           fields: step1Fields,
+          resolver: step1Resolver,
         },
         2: {
           heading: `Tell us a little more about the property`,
           fields: step2Fields,
+          resolver: step2Resolver,
         },
         3: {
           heading: `Tell us a little more about yourself`,
           fields: step3Fields,
+          resolver: step3Resolver,
         },
         4: {
           heading: `Thank you for your application`,
           subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within x — x business days.`,
           fields: [],
+          resolver: emptyResolver,
         },
       }[step] || {fields: []}),
     [step],
@@ -43,7 +49,9 @@ function usePrescreenApplication() {
 
   const defaultValues = useMemo(
     () =>
-      section.fields.reduce(setDefaultValues(data), {idleStep: Number(step)}),
+      section.fields.reduce(setApplicationDefaultValues(data), {
+        idleStep: Number(step),
+      }),
     [data, section, step],
   )
 
@@ -72,42 +80,11 @@ function usePrescreenApplication() {
   }
 }
 
-function setDefaultValues(data) {
-  return (acc, cur) => {
-    if (cur.name in data) {
-      let key = cur.name
-      let value = data[cur.name]
-
-      if (value != null) {
-        if (cur.type === 'radio') {
-          if (value === true) {
-            value = 'true'
-          } else if (value === false) {
-            value = 'false'
-          }
-        } else if (cur.type === 'currency') {
-          value = currency(value, {fromCents: true})
-        } else if (['physical', 'mailing', 'property'].includes(cur.type)) {
-          const addressPos = value.findIndex(a => a.type === cur.type)
-          key = cur.type
-          value = {}
-          if (addressPos !== -1) {
-            value = {...value[addressPos]}
-          }
-        }
-      } else {
-        if (cur.type === 'select') {
-          value = 'empty'
-        }
-      }
-      acc[key] = value
-    }
-    return acc
-  }
-}
-
 export {usePrescreenApplication}
 
+const emptyResolver = yupResolver(yup.object().shape({}))
+
+// step 1
 const step1Fields = [
   {
     type: 'h1',
@@ -188,7 +165,22 @@ const step1Fields = [
     label: 'Email',
   },
 ]
-
+const step1Resolver = yupResolver(
+  yup.object().shape({
+    fix_and_flip: yup.string().required('Required'),
+    plan_type: yup.string().required('Required'),
+    entity_type: yup.mixed().notOneOf(['empty'], 'Required'),
+    entity_name: yup.string().required('Required'),
+    funding_institution_name: yup.string().required('Required'),
+    funding_account_balance: yup.string().required('Required'),
+    first_name: yup.string().required('Required'),
+    middle_name: yup.string(),
+    last_name: yup.string().required('Required'),
+    phone_number: yup.string().required('Required'),
+    email: yup.string().email().required('Required'),
+  }),
+)
+// step 2
 const step2Fields = [
   {
     type: 'property',
@@ -358,7 +350,38 @@ const step2Fields = [
     name: 'estimated_value',
   },
 ]
-
+const step2Resolver = yupResolver(
+  yup.object().shape({
+    property: yup.object().shape({
+      address: yup.string().required('Required'),
+      address_2: yup.mixed().notRequired(),
+      city: yup.string().required('Required'),
+      state: yup.mixed().notOneOf(['empty'], 'Required'),
+      postal_code: yup.number().required('Required'),
+    }),
+    property_type: yup.mixed().notOneOf(['empty'], 'Required'),
+    lot_over_2_acres: yup.string().required('Required'),
+    built_after_1950: yup.string().required('Required'),
+    well_or_septic: yup.string().required('Required'),
+    year_roof_replaced: yup.number().required('Required'),
+    year_last_remodel: yup.number().required('Required'),
+    is_rented: yup.string().required('Required'),
+    monthly_current_rent: yup.string().required('Required'),
+    annual_taxes: yup.string().required('Required'),
+    annual_insurance_premium: yup.string().required('Required'),
+    monthly_hoa_dues: yup.string().required('Required'),
+    monthly_mgmt_fee: yup.string().required('Required'),
+    is_purchase: yup.string().required('Required'),
+    purchase_price: yup.string().required('Required'),
+    requested_loan_amount: yup.string().required('Required'),
+    //TODO: dynamically required when its new purchase
+    years_owned: yup.mixed().notRequired(),
+    current_debt_balance: yup.mixed().notRequired(),
+    estimated_improvement_costs: yup.mixed().notRequired(),
+    estimated_value: yup.string().required('Required'),
+  }),
+)
+// step 3
 const step3Fields = [
   {
     type: 'number',
@@ -379,3 +402,10 @@ const step3Fields = [
     placeholder: 'Referrer',
   },
 ]
+const step3Resolver = yupResolver(
+  yup.object().shape({
+    number_rental_properties: yup.number().required('Required'),
+    estimated_net_worth_bracket: yup.mixed().notOneOf(['empty'], 'Required'),
+    referrer: yup.mixed().notRequired(),
+  }),
+)

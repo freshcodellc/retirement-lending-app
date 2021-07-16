@@ -167,7 +167,7 @@ const SsnInput = forwardRef(
     )
   }
 )
-// TODO: fix coins decimal masking
+
 const CurrencyInput = forwardRef(
   ({ name, control, rules, format = '$num', ...props }, ref) => {
     const {
@@ -182,6 +182,7 @@ const CurrencyInput = forwardRef(
     return (
       <MaskedInput
         unmask
+        ref={ref}
         id={name}
         name={name}
         mask={format}

@@ -16,7 +16,7 @@ const schema = yup.object().shape({
 })
 
 function LoginForm({onSubmit}) {
-  const {isLoading, isError, error, run} = useAsync()
+  const {isError, run} = useAsync()
   const {formState, handleSubmit, register} = useForm({
     mode: 'onBlur',
     resolver: yupResolver(schema),

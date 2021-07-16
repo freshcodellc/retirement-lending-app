@@ -20,7 +20,7 @@ const schema = yup.object().shape({
 })
 
 function ResetPasswordForm({onSubmit}) {
-  const {isLoading, isError, isSuccess, data, error, run} = useAsync()
+  const {isError, isSuccess, run} = useAsync()
   const {formState, register, reset, handleSubmit} = useForm({
     mode: 'onBlur',
     resolver: yupResolver(schema),
@@ -43,7 +43,7 @@ function ResetPasswordForm({onSubmit}) {
     if (isSuccess) {
       reset()
     }
-  }, [isSuccess])
+  }, [isSuccess, reset])
 
   return (
     <Layout css={{alignItems: 'center'}}>

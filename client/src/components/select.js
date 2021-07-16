@@ -12,10 +12,9 @@ const NetWorthSelect = React.forwardRef((props, ref) => {
 })
 
 const EntitySelect = React.forwardRef((props, ref) => {
-  const {control, setValue, finalProps} = props
+  const {control, ...finalProps} = props
   const {entityTypes} = useConstants()
   const planType = useWatch({control, name: 'plan_type'})
-
   const entities = entityTypes.filter(e => e.name.includes(planType))
 
   return <ConstantSelect options={entities} control={control} {...finalProps} />

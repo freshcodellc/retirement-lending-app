@@ -1,7 +1,8 @@
 import {useMemo} from 'react'
 import {useApplication} from 'hooks/use-application'
 import {useParams} from 'react-router-dom'
-import currency from 'currency.js'
+import {yupResolver} from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 function useTermsSheet() {
   const {uuid} = useParams()
@@ -37,4 +38,12 @@ function useTermsSheet() {
   }
 }
 
-export {useTermsSheet}
+const schema = yup.object().shape({
+  signature: yup.string().required('Required'),
+  signature_title: yup.string().required('Required'),
+  signature_entity_name: yup.string().required('Required'),
+})
+
+const validationResolver = yupResolver(schema)
+
+export {useTermsSheet, validationResolver}

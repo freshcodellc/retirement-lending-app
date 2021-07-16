@@ -41,6 +41,7 @@ function PreScreenApplicationScreen() {
     minStep,
     maxStep,
     prevStep,
+    resolver,
     nextStep,
     isLoading,
     subHeading,
@@ -60,11 +61,11 @@ function PreScreenApplicationScreen() {
       window.scrollTo(0, 0)
     },
   })
-  const {register, handleSubmit, reset, watch, setValue, control, formState} =
-    useForm({
-      mode: 'onChange',
-      defaultValues,
-    })
+  const {register, handleSubmit, reset, watch, control, formState} = useForm({
+    resolver,
+    defaultValues,
+    mode: 'onChange',
+  })
   const idleStep = watch('idleStep')
   const isPurchase = watch('is_purchase') === 'true'
 
@@ -113,6 +114,7 @@ function PreScreenApplicationScreen() {
         >
           {fields.map(field => {
             let label = field.label
+            let validation
 
             if (isPurchase) {
               switch (field.name) {
@@ -127,6 +129,14 @@ function PreScreenApplicationScreen() {
                 default:
               }
             } else {
+              switch (field.name) {
+                case 'years_owned':
+                case 'current_debt_balance':
+                case 'estimated_improvement_costs':
+                  validation = {required: 'Required'}
+                  break
+                default:
+              }
             }
 
             const props = {
@@ -184,7 +194,9 @@ function PreScreenApplicationScreen() {
                 )
               case 'text':
               case 'number':
-                return <Input {...props} {...register(field.name)} />
+                return (
+                  <Input {...props} {...register(field.name, validation)} />
+                )
               case 'phone':
                 return <PhoneInput control={control} {...props} />
               case 'currency':
@@ -244,13 +256,7 @@ function PreScreenApplicationScreen() {
                   case 'property_type':
                     return <PropertySelect control={control} {...props} />
                   case 'entity_type':
-                    return (
-                      <EntitySelect
-                        setValue={setValue}
-                        control={control}
-                        {...props}
-                      />
-                    )
+                    return <EntitySelect control={control} {...props} />
                   case 'entity_state_of_formation':
                     return <UsStateSelect control={control} {...props} />
                   default:

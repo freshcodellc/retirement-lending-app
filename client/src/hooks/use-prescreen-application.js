@@ -8,16 +8,7 @@ import {setApplicationDefaultValues} from 'utils/form'
 function usePrescreenApplication() {
   const {uuid, step} = useParams()
   const {data, isSuccess, isLoading, isError, error} = useApplication(uuid)
-  data.addresses = [
-    {
-      type: 'property',
-      address: '12 Main St',
-      address_2: null,
-      city: 'Lehi',
-      state: 'Utah',
-      postal_code: '84043',
-    },
-  ]
+
   const section = useMemo(
     () =>
       ({

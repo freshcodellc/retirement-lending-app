@@ -1,6 +1,8 @@
-import {useMemo} from 'react'
+import {useMemo, useEffect} from 'react'
 import {useApplication} from 'hooks/use-application'
 import {useParams} from 'react-router-dom'
+import {yupResolver} from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import {setApplicationDefaultValues} from 'utils/form'
 
 function useFullApplication() {
@@ -16,6 +18,8 @@ function useFullApplication() {
       postal_code: '84043',
     },
   ]
+  const isIraCustodian = data.entity_type === 'IRA_custodial'
+
   const section = useMemo(
     () =>
       ({
@@ -23,32 +27,42 @@ function useFullApplication() {
           heading: `Welcome back ${data.first_name}!`,
           subHeading: `We're excited to have you continue the application.`,
           fields: step1Fields,
+          resolver: step1Resolver,
         },
         2: {
-          heading: `Entity Information `,
+          heading: `Entity Information`,
           fields: step2Fields,
+          resolver: step2Resolver,
         },
-        3: {
-          heading: `Custodian and IRA Information`,
-          fields: step3Fields,
-        },
-        4: {
+        ...(isIraCustodian
+          ? {
+              3: {
+                heading: `Custodian and IRA Information`,
+                fields: step3Fields,
+                resolver: step3Resolver,
+              },
+            }
+          : {}),
+        [isIraCustodian ? 4 : 3]: {
           heading: `Please attach the following documents`,
           subHeading: `Files should be pfd, jpg, or png`,
           fields: steps4Fields,
+          resolver: emptyResolver,
         },
-        5: {
-          heading: `Sign and certify `,
+        [isIraCustodian ? 5 : 4]: {
+          heading: `Sign and certify`,
           subHeading: `I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.`,
           fields: step5Fields,
+          resolver: step5Resolver,
         },
-        6: {
+        [isIraCustodian ? 6 : 5]: {
           heading: `Thank you for your application`,
           subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within x — x business days.`,
           fields: [],
+          resolver: emptyResolver,
         },
       }[step] || {fields: []}),
-    [step, data],
+    [step, data, isIraCustodian],
   )
 
   const defaultValues = useMemo(
@@ -60,11 +74,12 @@ function useFullApplication() {
   )
 
   const minStep = 1
-  const maxStep = 5
+  const maxStep = isIraCustodian ? 5 : 4
+
   const currentStep = Number(step)
   const prevStep = Math.max(currentStep - 1, minStep)
   const nextStep = Math.min(currentStep + 1, maxStep + 1)
-  const isThankYouStep = currentStep === 6
+  const isThankYouStep = currentStep === (isIraCustodian ? 6 : 5)
 
   return {
     uuid,
@@ -86,6 +101,9 @@ function useFullApplication() {
 
 export {useFullApplication}
 
+const emptyResolver = yupResolver(yup.object().shape({}))
+
+// step 1
 const step1Fields = [
   {
     type: 'property',
@@ -197,7 +215,30 @@ const step1Fields = [
     },
   },
 ]
-
+const step1Resolver = yupResolver(
+  yup.object().shape({
+    date_of_birth: yup.string().required('Required'),
+    physical: yup.object().shape({
+      address: yup.string().required('Required'),
+      address_2: yup.mixed().notRequired(),
+      city: yup.string().required('Required'),
+      state: yup.mixed().notOneOf(['empty'], 'Required'),
+      postal_code: yup.number().required('Required'),
+    }),
+    years_at_address: yup.number().required('Required'),
+    is_homeowner: yup.string().required('Required'),
+    ssn: yup.string().required('Required'),
+    mailing_equal_physical: yup.mixed().notRequired(),
+    mailing: yup.object().shape({
+      address: yup.mixed().notRequired(),
+      address_2: yup.mixed().notRequired(),
+      city: yup.mixed().notRequired(),
+      state: yup.mixed().notRequired(),
+      postal_code: yup.mixed().notRequired(),
+    }),
+  }),
+)
+// step 2
 const step2Fields = [
   {
     type: 'text',
@@ -216,25 +257,53 @@ const step2Fields = [
     name: 'entity_state_of_formation',
   },
 ]
-
+const step2Resolver = yupResolver(
+  yup.object().shape({
+    entity_name: yup.string().required('Required'),
+    ein: yup.number().required('Required'),
+    entity_state_of_formation: yup.mixed().notOneOf(['empty'], 'Required'),
+  }),
+)
+// step 3
 const step3Fields = [
   {
+    type: 'text',
+    label: 'Name of custodian',
+    placeholder: 'Name of custodian',
+    name: 'custodian.name',
+  },
+  {
     type: 'radio',
-    name: 'plan_type',
-    label: 'What type of retirement plan do you have?',
+    name: 'custodian.account_type',
+    label: 'Is the IRA account a Roth or Traditional?',
     options: [
-      {label: 'IRA', value: 'IRA'},
-      {label: '401K', value: '401K'},
+      {label: 'Roth', value: 'Roth'},
+      {label: 'Traditional', value: 'Traditional'},
     ],
   },
+  {
+    type: 'number',
+    label: 'What is the IRA account number?',
+    placeholder: 'IRA account number',
+    name: 'custodian.account_number',
+  },
 ]
-
+const step3Resolver = yupResolver(
+  yup.object().shape({
+    custodian: yup.object().shape({
+      name: yup.string().required('Required'),
+      account_type: yup.string().required('Required'),
+      account_number: yup.number().required('Required'),
+    }),
+  }),
+)
+// step 4
 const steps4Fields = [
   {
     type: 'p',
   },
 ]
-
+// step 5
 const step5Fields = [
   {
     type: 'text',
@@ -260,3 +329,11 @@ const step5Fields = [
     name: 'signature_date',
   },
 ]
+const step5Resolver = yupResolver(
+  yup.object().shape({
+    signature_entity_name: yup.string().required('Required'),
+    signature_title: yup.string().required('Required'),
+    signature: yup.string().required('Required'),
+    signature_date: yup.string().required('Required'),
+  }),
+)

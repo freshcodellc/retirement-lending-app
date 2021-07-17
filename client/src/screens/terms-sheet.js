@@ -8,6 +8,7 @@ import {useUpdateApplication} from 'hooks/use-update-application'
 import {useTermsSheet, validationResolver} from 'hooks/use-terms-sheet'
 import currency from 'currency.js'
 import {format} from 'date-fns'
+import {ReactComponent as AvramSignature} from 'images/avram-signature.svg'
 
 function TermsSheetScreen() {
   const navigate = useNavigate()
@@ -23,6 +24,7 @@ function TermsSheetScreen() {
     resolver: validationResolver,
   })
 
+  const name = data.plan_type === 'IRA' ? 'Manager' : 'Trustee'
   const signedDate = format(new Date(), `do 'day of' MMMM, yyyy`)
   const loanAmount = currency(data.requested_loan_amount, {
     fromCents: true,
@@ -30,12 +32,9 @@ function TermsSheetScreen() {
   const {address, address_2, city, state, postal_code} = data.addresses.find(
     a => a.type === 'property',
   )
-  const {first_name = 'admin_first', last_name = 'admin_last'} =
-    data.assigned_admin
 
   const handleSave = handleSubmit(form => {
-    const signature_date = new Date().toISOString()
-    saveSignature({signature_date, uuid: data.uuid, ...form})
+    saveSignature({uuid: data.uuid, ...form})
   })
 
   if (isLoading) {
@@ -86,16 +85,18 @@ function TermsSheetScreen() {
           <p>
             TBD – The rate at closing will be fixed for the first seven years of
             the loan term. This rate, if the loan were closed today, would
-            likely be between 5.15-5.35 %. This rate may vary depending on the
-            actual timing of closing. At the seventh anniversary and annually
-            thereafter, the rate will adjust to the then-current One-Year
-            Treasury Constant Maturity Plus a margin of between 4.65 and 4.85%,
-            adjusting annually thereafter for the remaining term of the loan.
+            likely be between {data.interest_rate_range_low}-
+            {data.interest_rate_range_high}%. This rate may vary depending on
+            the actual timing of closing. At the seventh anniversary and
+            annually thereafter, the rate will adjust to the then-current
+            One-Year Treasury Constant Maturity Plus a margin of between{' '}
+            {data.interest_rate_spread_low} and {data.interest_rate_spread_high}
+            %, adjusting annually thereafter for the remaining term of the loan.
             Interest rates will not adjust, up or down, by more than 2.0% at
             each annual rate adjustment, and by no more than a cumulative 6.0%
             over the life of the loan. The minimum rate to be charged will not
-            be below 4.50% and the maximum rate charged will not exceed the
-            initial rate plus 6.0%.
+            be below {data.minimum_chargeable_interest_rate}% and the maximum
+            rate charged will not exceed the initial rate plus 6.0%.
           </p>
         </div>
         <div>
@@ -134,9 +135,10 @@ function TermsSheetScreen() {
           <h3>Reserve Account:</h3>
           <p>
             The borrower is required to maintain a reserve account at Solera
-            National Bank with a collected balance of not less than SIX (6)
-            months of PITI plus Property Management Fee payments. Failure to
-            maintain balances may result in the imposition of fees.
+            National Bank with a collected balance of not less than{' '}
+            {data.piti_reserve_months} months of PITI plus Property Management
+            Fee payments. Failure to maintain balances may result in the
+            imposition of fees.
           </p>
         </div>
         <div>
@@ -278,19 +280,17 @@ function TermsSheetScreen() {
             if the original is then delivered to the Bank.
           </p>
         </div>
-        <div css={{marginBottom: '3rem'}}>
+        <div css={{marginBottom: '2rem'}}>
           <p css={{fontWeight: 600}}>Sincerely,</p>
-          <p>who's signature goes here?</p>
+          <AvramSignature />
         </div>
         <div>
           <p>
-            Name:{' '}
-            <span css={{fontWeight: 600}}>
-              {first_name} {last_name}
-            </span>
+            Name: <span css={{fontWeight: 600}}>Avram Shabanyan</span>
           </p>
           <p>
-            Title: <span css={{fontWeight: 600}}>title?</span>
+            Title:{' '}
+            <span css={{fontWeight: 600}}>Business Relationship Manager</span>
           </p>
         </div>
         <div>
@@ -316,22 +316,22 @@ function TermsSheetScreen() {
           <Input
             label="Borrower"
             placeholder="Borrower"
-            name="signature"
-            {...register('signature')}
+            name="entity_name"
+            {...register('entity_name')}
           />
           <Input
             label="By"
             placeholder="By"
-            name="signature_title"
-            {...register('signature_title')}
+            name="signature"
+            {...register('signature')}
           />
           <Input
             label="Name"
             placeholder="Name"
-            name="signature_entity_name"
-            {...register('signature_entity_name')}
+            name="full_name"
+            {...register('full_name')}
           />
-          <p>Name: name?</p>
+          <p>Its: {name}</p>
           <div css={{textAlign: 'center'}}>
             <Button
               type="submit"

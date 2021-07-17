@@ -9,6 +9,7 @@ function StepTracker({currentStep, maxStep}) {
     <div
       css={{
         color: 'white',
+        zIndex: 1,
         position: 'sticky',
         background: colors.tertiary,
         top: 'calc(var(--header-height)*1px)',
@@ -28,7 +29,7 @@ function StepTracker({currentStep, maxStep}) {
           css={{
             height: '5px',
             width: '100%',
-            maxWidth:  `${full}px`,
+            maxWidth: `${full}px`,
             marginLeft: '6rem',
             background: 'white',
             borderRadius: '50px',

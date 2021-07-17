@@ -41,6 +41,7 @@ function FullApplicationScreen() {
     minStep,
     maxStep,
     prevStep,
+    resolver,
     nextStep,
     isLoading,
     subHeading,
@@ -64,6 +65,7 @@ function FullApplicationScreen() {
     useForm({
       mode: 'onChange',
       defaultValues,
+      resolver,
     })
   const idleStep = watch('idleStep')
   const mailingEqualPhysical = watch('mailing_equal_physical', false)
@@ -190,10 +192,16 @@ function FullApplicationScreen() {
                       justifyContent: 'center',
                       maxWidth: '400px',
                       margin: '50px auto 0',
-                      flexDirection: 'column'
+                      flexDirection: 'column',
                     }}
                   >
-                    <div css={{fontWeight: 600, fontsize: '18px', marginBottom: '1.5rem'}}>
+                    <div
+                      css={{
+                        fontWeight: 600,
+                        fontsize: '18px',
+                        marginBottom: '1.5rem',
+                      }}
+                    >
                       {field.label}
                     </div>
                     <div>

@@ -8,16 +8,6 @@ import {setApplicationDefaultValues} from 'utils/form'
 function useFullApplication() {
   const {uuid, step} = useParams()
   const {data, isSuccess, isLoading, isError, error} = useApplication(uuid)
-  data.addresses = [
-    {
-      type: 'property',
-      address: '12 Main St',
-      address_2: null,
-      city: 'Lehi',
-      state: 'Utah',
-      postal_code: '84043',
-    },
-  ]
   const isIraCustodian = data.entity_type === 'IRA_custodial'
 
   const section = useMemo(
@@ -145,7 +135,7 @@ const step1Fields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'physical.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
@@ -207,7 +197,7 @@ const step1Fields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'mailing.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
@@ -223,7 +213,7 @@ const step1Resolver = yupResolver(
       address_2: yup.mixed().notRequired(),
       city: yup.string().required('Required'),
       state: yup.mixed().notOneOf(['empty'], 'Required'),
-      postal_code: yup.number().required('Required'),
+      postal_code: yup.string().required('Required'),
     }),
     years_at_address: yup.number().required('Required'),
     is_homeowner: yup.string().required('Required'),
@@ -260,32 +250,38 @@ const step2Fields = [
 const step2Resolver = yupResolver(
   yup.object().shape({
     entity_name: yup.string().required('Required'),
-    ein: yup.number().required('Required'),
+    ein: yup.string().required('Required'),
     entity_state_of_formation: yup.mixed().notOneOf(['empty'], 'Required'),
   }),
 )
 // step 3
 const step3Fields = [
   {
-    type: 'text',
-    label: 'Name of custodian',
-    placeholder: 'Name of custodian',
-    name: 'custodian.name',
-  },
-  {
-    type: 'radio',
-    name: 'custodian.account_type',
-    label: 'Is the IRA account a Roth or Traditional?',
-    options: [
-      {label: 'Roth', value: 'Roth'},
-      {label: 'Traditional', value: 'Traditional'},
-    ],
-  },
-  {
-    type: 'number',
-    label: 'What is the IRA account number?',
-    placeholder: 'IRA account number',
-    name: 'custodian.account_number',
+    type: 'custodian',
+    name: 'custodian',
+    fields: {
+      name: {
+        type: 'text',
+        label: 'Name of custodian',
+        placeholder: 'Name of custodian',
+        name: 'custodian.name',
+      },
+      account_type: {
+        type: 'radio',
+        name: 'custodian.account_type',
+        label: 'Is the IRA account a Roth or Traditional?',
+        options: [
+          {label: 'Roth', value: 'Roth'},
+          {label: 'Traditional', value: 'Traditional'},
+        ],
+      },
+      account_number: {
+        type: 'number',
+        label: 'What is the IRA account number?',
+        placeholder: 'IRA account number',
+        name: 'custodian.account_number',
+      },
+    },
   },
 ]
 const step3Resolver = yupResolver(
@@ -293,14 +289,30 @@ const step3Resolver = yupResolver(
     custodian: yup.object().shape({
       name: yup.string().required('Required'),
       account_type: yup.string().required('Required'),
-      account_number: yup.number().required('Required'),
+      account_number: yup.string().required('Required'),
     }),
   }),
 )
 // step 4
 const steps4Fields = [
   {
-    type: 'p',
+    type: 'upload',
+    name: 'documents',
+    label: 'Please provide a copy of your driver’s license',
+    props: {
+      maxFiles: 1,
+      multiple: false,
+      canCancel: false,
+    },
+  },
+  {
+    type: 'upload',
+    name: 'documents',
+    label:
+      'Please provide Articles of Organization for any other business entities associated with the request',
+    props: {
+      multiple: true,
+    },
   },
 ]
 // step 5

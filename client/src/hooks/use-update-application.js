@@ -5,11 +5,26 @@ import currency from 'currency.js'
 
 function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
   return useMutation(
-    ({uuid, ...fields}) =>
-      loanApplicationService.update({
+    ({uuid, ...fields}) => {
+      const cached = queryClient.getQueryData(['loan-application', uuid])
+      const updated = adaptFields(fields)
+      const updatedAddressTypes = (updated.addresses || []).map(a => a.type)
+      const addresses = [
+        ...(cached.addresses || []).filter(
+          a => !updatedAddressTypes.includes(a.type),
+        ),
+        ...(updated.addresses || []),
+      ]
+      const custodian = {
+        ...(cached.custodian || {}),
+        ...(updated.custodian || {}),
+      }
+
+      return loanApplicationService.update({
         uuid,
-        data: {loan_application: adaptFields(fields)},
-      }),
+        data: {loan_application: {...cached, ...updated, addresses, custodian}},
+      })
+    },
     {
       onMutate: values => {
         const previousData = queryClient.getQueryData('loan-application')
@@ -49,9 +64,8 @@ function adaptFields(fields) {
       default:
     }
 
-    if (['mailing_equal_physical'].includes(key)) continue
+    if (['mailing_equal_physical', 'idleStep'].includes(key)) continue
     if (['physical', 'mailing', 'property'].includes(key)) {
-      if (!value.address) continue
       if (!('addresses' in data)) {
         data.addresses = []
       }

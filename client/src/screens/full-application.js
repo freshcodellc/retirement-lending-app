@@ -23,6 +23,7 @@ import {
   DatePicker,
   StepTracker,
   EntitySelect,
+  FileUploader,
   NetWorthSelect,
   PropertySelect,
   AddressFields,
@@ -132,6 +133,66 @@ function FullApplicationScreen() {
                   <p css={{fontWeight: 500}} key={field.type}>
                     {field.text}
                   </p>
+                )
+              case 'upload':
+                return (
+                  <div
+                    key={field.label}
+                    css={{
+                      border: `1px solid #000`,
+                      padding: '3rem',
+                      textAlign: 'center',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      maxWidth: '600px',
+                      margin: '50px auto 0',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <div
+                      css={{
+                        fontWeight: 600,
+                        fontSize: '18px',
+                        marginBottom: '4rem',
+                      }}
+                    >
+                      {field.label}
+                    </div>
+                    <FileUploader appUuid={uuid} {...field.props} />
+                  </div>
+                )
+              case 'custodian':
+                const {name, account_type, account_number} = field.fields
+                return (
+                  <Fragment key={field.type}>
+                    <Input
+                      {...props}
+                      {...name}
+                      key={name.name}
+                      {...register(name.name)}
+                    />
+                    <RadioGroup
+                      {...props}
+                      key={account_type.name}
+                      text={account_type.label}
+                    >
+                      {account_type.options.map(o => (
+                        <RadioInput
+                          {...o}
+                          key={o.label}
+                          name={account_type.name}
+                          id={account_type.name + o.label}
+                          {...register(account_type.name)}
+                        />
+                      ))}
+                    </RadioGroup>
+                    <Input
+                      {...props}
+                      {...account_number}
+                      key={account_number.name}
+                      {...register(account_number.name)}
+                    />
+                  </Fragment>
                 )
               case 'text':
               case 'number':

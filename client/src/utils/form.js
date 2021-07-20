@@ -15,6 +15,8 @@ function setApplicationDefaultValues(app) {
           }
         } else if (cur.type === 'currency') {
           value = currency(value, {fromCents: true})
+        } else if (cur.type === 'custodian') {
+          value = value || {}
         } else if (['physical', 'mailing', 'property'].includes(cur.type)) {
           const addressPos = value.findIndex(a => a.type === cur.type)
           key = cur.type

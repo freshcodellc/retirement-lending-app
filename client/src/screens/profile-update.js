@@ -21,17 +21,17 @@ import {EntitySelect, Layout, NetWorthSelect} from 'components'
 
 const schema = yup.object().shape({
   plan_type: yup.string().required('Required'),
-  entity_type: yup.string().required('Required'),
+  entity_type: yup.mixed().notOneOf(['empty'], 'Required'),
   entity_name: yup.string().required('Required'),
   funding_institution_name: yup.string().required('Required'),
   funding_account_balance: yup.string().required('Required'),
   first_name: yup.string().required('Required'),
   middle_name: yup.string(),
   last_name: yup.string().required('Required'),
-  phone: yup.string().required('Required'),
+  phone_number: yup.string().required('Required'),
   email: yup.string().email().required('Required'),
   number_rental_properties: yup.string().required('Required'),
-  estimated_net_worth_bracket: yup.string().required('Required'),
+  estimated_net_worth_bracket: yup.mixed().notOneOf(['empty'], 'Required'),
   referrer: yup.string(),
 })
 
@@ -40,18 +40,20 @@ function ProfileUpdateForm({onSubmit}) {
   const {
     data: {user},
   } = useUser()
-  const {control, formState, handleSubmit, register, reset, setValue} = useForm(
-    {
-      mode: 'all',
-      resolver: yupResolver(schema),
-      submitFocusError: true,
-    },
-  )
+  const { profile: profileFields } = user
+  const {control, formState, handleSubmit, register, reset} = useForm({
+    defaultValues: { email: user.email, ...profileFields },
+    mode: 'all',
+    resolver: yupResolver(schema),
+    submitFocusError: true,
+  })
 
   function submitForm(formData) {
+    const { email, ...profile } = formData
     mutate({
       ...user,
-      profile: {...formData},
+      email,
+      profile: { ...user.profile, ...profile },
     })
   }
 
@@ -104,9 +106,12 @@ function ProfileUpdateForm({onSubmit}) {
           <EntitySelect
             name="entity_type"
             label="What entity type will the property be titled under?"
-            setValue={setValue}
             control={control}
-            {...register('entity_type')}
+          />
+          <ErrorMessage
+            errors={formState.errors}
+            name="entity_type"
+            render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
         <div
@@ -230,15 +235,15 @@ function ProfileUpdateForm({onSubmit}) {
           <PhoneInput
             id="phone"
             label="Phone"
-            name="phone"
-            hasError={has(formState, 'errors.phone')}
+            name="phone_number"
+            hasError={has(formState, 'errors.phone_number')}
             type="text"
             control={control}
-            {...register('phone')}
+            {...register('phone_number')}
           />
           <ErrorMessage
             errors={formState.errors}
-            name="phone"
+            name="phone_number"
             render={({message}) => <InputError>{message}</InputError>}
           />
         </div>
@@ -329,8 +334,7 @@ function ProfileUpdateForm({onSubmit}) {
         {isError ? <div>An error happened</div> : null}
         {isSuccess ? (
           <div>
-            Success! Please check your email and click the confirmation link
-            before logging in.
+            Success! Your profile has been updated.
           </div>
         ) : null}
       </form>

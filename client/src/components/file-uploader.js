@@ -1,52 +1,75 @@
 /** @jsxImportSource @emotion/react */
 import 'styles/react-dropzone-uploader.css'
-import {Fragment, useRef} from 'react'
+import {Fragment, useRef, useState} from 'react'
 import {Button} from '@solera/ui'
 import Dropzone from 'react-dropzone-uploader'
 import {getDroppedOrSelectedFiles} from 'html5-file-selector'
 import {getToken} from 'services/auth-service'
 import {apiBaseUrl} from 'utils/api-client'
 
-function FileUploader({appUuid, multiple, maxFiles, canCancel, accept = '*'}) {
+const cleanFileName = fileName => {
+  const fileNameParts = fileName.split('.')
+  const ext = fileNameParts.pop()
+  const name = fileNameParts.join('_').replace(/\s+/gi, '_')
+  return `${name}.${ext}`
+}
+//TODO: Get document type
+function FileUploader({appUuid, type, multiple, maxFiles, canCancel, accept = '*'}) {
+  const [error, setError] = useState()
+
   // specify upload params and url for your files
-  const getUploadParams = ({file, meta}) => {
+  const getUploadParams = ({file}) => {
+
+    const fileName = cleanFileName(file.name)
+    const modFile = new File([file], fileName, {...file})
     const body = new FormData()
-    body.append('file', file)
-    body.append('type', meta.type)
-    const token = getToken()
+    body.append('file', modFile)
+    body.append('type', type)
+
     return {
-      url: `${apiBaseUrl}/${appUuid}/document-upload`,
+      url: `${apiBaseUrl}/loan-applications/${appUuid}/document-upload`,
       body,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     }
   }
 
   // called every time a file's `status` changes
-  const handleChangeStatus = ({meta, file}, status) => {
-    // console.log(status, meta, file)
+  const handleChangeStatus = ({meta, file, xhr}, status) => {
+    console.log(status, xhr)
+    switch (status) {
+      case 'error_upload':
+        return setError(xhr.statusText)
+      case 'done':
+        JSON.parse(xhr.response)
+        return
+      default:
+    }
   }
 
   const getFilesFromEvent = e => {
     return new Promise(resolve => {
-      getDroppedOrSelectedFiles(e).then(chosenFiles => {
-        resolve(chosenFiles.map(f => f.fileObject))
+      getDroppedOrSelectedFiles(e).then(files => {
+        resolve(files.map(f => f.fileObject))
       })
     })
   }
 
   return (
-    <Dropzone
-      InputComponent={Input}
-      getUploadParams={getUploadParams}
-      onChangeStatus={handleChangeStatus}
-      getFilesFromEvent={getFilesFromEvent}
-      multiple={multiple}
-      maxFiles={maxFiles}
-      canCancel={canCancel}
-      accept={accept}
-    />
+    <Fragment>
+      <Dropzone
+        InputComponent={Input}
+        getUploadParams={getUploadParams}
+        onChangeStatus={handleChangeStatus}
+        getFilesFromEvent={getFilesFromEvent}
+        multiple={multiple}
+        maxFiles={maxFiles}
+        canCancel={canCancel}
+        accept={accept}
+      />
+      {error && <span css={{color: 'red'}}>Error: {error}</span>}
+    </Fragment>
   )
 }
 
@@ -86,8 +109,8 @@ function Input({accept, onFiles, files, multiple = true, getFilesFromEvent}) {
           multiple={multiple}
           style={{display: 'none'}}
           onChange={e => {
-            getFilesFromEvent(e).then(chosenFiles => {
-              onFiles(chosenFiles)
+            getFilesFromEvent(e).then(files => {
+              onFiles(files)
             })
           }}
         />

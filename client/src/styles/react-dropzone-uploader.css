@@ -3,12 +3,13 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-height: 120px;
+  padding: 4rem 0;
   overflow: scroll;
   margin: 0 auto;
   position: relative;
   box-sizing: border-box;
   transition: all 0.15s linear;
+  background-color: #f1f2f7;
 }
 
 .dzu-dropzoneActive {
@@ -111,7 +112,6 @@
 }
 
 .dzu-submitButtonContainer {
-  margin-top: 24px;
   z-index: 1;
 }
 

@@ -16,7 +16,7 @@ const STATUS_STEPS_MAP = {
   full_application_complete: 3,
   under_review: 3,
   underwriting: 3,
-  approved: 4
+  approved: 4,
 }
 
 const SECTIONS = [
@@ -41,7 +41,7 @@ const SECTIONS = [
     description:
       'Tell us a little more about yourself, the entity, custodian/IRA, provide documents, sign, and certify.',
     action: 'Start application',
-    route: 'application/1',
+    route: 'full/1',
     statuses: ['full_application_requested', 'full_application_received'],
   },
   {
@@ -71,7 +71,7 @@ function ApplicationScreen() {
         {SECTIONS.map((section, i) => {
           //TODO: better logic to track active & progress section
           const current = get(STATUS_STEPS_MAP, `${data.status}`, 0) > i
-          const completed = (i + 1) < get(STATUS_STEPS_MAP, `${data.status}`, 0)
+          const completed = i + 1 < get(STATUS_STEPS_MAP, `${data.status}`, 0)
           const status = current ? data.status : 'notStarted'
           const headingColor = current ? 'white' : colors.text
           const highLightColor = current ? colors.blue : colors.gray20
@@ -92,9 +92,12 @@ function ApplicationScreen() {
                 <h3>{section.title}</h3>
               </div>
               <div css={{padding: '4rem'}}>
-                <StatusBadge status={completed ? 'approved' : status} label={completed ? 'Completed' : statusLabel[status]} />
+                <StatusBadge
+                  status={completed ? 'approved' : status}
+                  label={completed ? 'Completed' : statusLabel[status]}
+                />
                 <p css={{margin: '4rem 0'}}>{section.description}</p>
-                {!completed &&
+                {!completed && (
                   <TextLink
                     onClick={() => navigate(section.route)}
                     disabled={!current}
@@ -107,7 +110,7 @@ function ApplicationScreen() {
                     {action}
                     <FiArrowRight fontSize="2rem" css={{marginLeft: '1rem'}} />
                   </TextLink>
-                }
+                )}
               </div>
             </div>
           )

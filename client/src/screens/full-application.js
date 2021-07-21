@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import {Fragment, useEffect} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
 import {FiArrowLeft} from 'react-icons/fi'
 import {useNavigate, Navigate} from 'react-router-dom'
@@ -23,20 +23,24 @@ import {
   DatePicker,
   StepTracker,
   EntitySelect,
+  FilePreview,
   FileUploader,
   NetWorthSelect,
   PropertySelect,
   AddressFields,
 } from 'components'
+import {useConstants} from 'hooks/use-constants'
 import {useFullApplication} from 'hooks/use-full-application'
 import {useUpdateApplication} from 'hooks/use-update-application'
 
 const stepRoute = (uuid, step) => `/application/${uuid}/full/${step}`
 
 function FullApplicationScreen() {
+  const [hasAddDocs, setHasAddDocs] = useState(false)
   const navigate = useNavigate()
   const {
     uuid,
+    data,
     fields,
     heading,
     minStep,
@@ -136,30 +140,13 @@ function FullApplicationScreen() {
                 )
               case 'upload':
                 return (
-                  <div
-                    key={field.label}
-                    css={{
-                      border: `1px solid #000`,
-                      padding: '3rem',
-                      textAlign: 'center',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      maxWidth: '600px',
-                      margin: '50px auto 0',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <div
-                      css={{
-                        fontWeight: 600,
-                        fontSize: '18px',
-                        marginBottom: '4rem',
-                      }}
-                    >
-                      {field.label}
-                    </div>
-                    <FileUploader appUuid={uuid} {...field.props} />
-                  </div>
+                  <DocumentUploads
+                    uuid={uuid}
+                    key={field.name}
+                    documents={data.documents}
+                    setHasAddDocs={setHasAddDocs}
+                    entityType={data.entity_type}
+                  />
                 )
               case 'custodian':
                 const {name, account_type, account_number} = field.fields
@@ -320,7 +307,7 @@ function FullApplicationScreen() {
             <Button
               type="submit"
               isLoading={isSaving}
-              disabled={!formState.isValid}
+              disabled={!formState.isValid || !hasAddDocs}
             >
               {currentStep === maxStep ? 'Submit application' : 'Continue'}
             </Button>
@@ -346,5 +333,95 @@ function FullApplicationScreen() {
     </Fragment>
   )
 }
-
 export {FullApplicationScreen}
+
+function DocumentUploads({uuid, entityType, documents, setHasAddDocs}) {
+  const {documentTypes} = useConstants()
+
+  let selectedTypes = []
+  switch (entityType) {
+    case 'IRA_LLC':
+      selectedTypes = [
+        'operating_agreement',
+        'articles_of_incorporation',
+        'lease_agreement',
+        'purchase_contract',
+      ]
+      break
+    case 'IRA_custodial':
+      selectedTypes = [
+        'traditional_and_roth_ira_custodial_account_agreement',
+        'corporate_resolution',
+        'most_recent_ira_statement',
+        'direction_of_investment_form',
+        'lease_agreement',
+        'purchase_contract',
+      ]
+      break
+    case '401k_trust':
+    case 'IRA_trust':
+      selectedTypes = [
+        'adoption_agreement',
+        'trust_agreement',
+        'lease_agreement',
+        'purchase_contract',
+      ]
+      break
+    case '401k_LLC':
+      selectedTypes = [
+        'operating_agreement',
+        'articles_of_incorporation',
+        'lease_agreement',
+        'purchase_contract',
+      ]
+      break
+    default:
+  }
+
+  const filteredTypes = documentTypes.filter(d =>
+    selectedTypes.includes(d.name),
+  )
+  const existingTypes = documents.map(dc => dc.document_type)
+  const hasAllDocs = selectedTypes.every(t => existingTypes.includes(t))
+
+  useEffect(() => {
+    setHasAddDocs(hasAllDocs)
+  }, [hasAllDocs, setHasAddDocs])
+
+  return filteredTypes.map(d => (
+    <div
+      key={d.name}
+      css={{
+        border: `1px solid #000`,
+        padding: '3rem',
+        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        maxWidth: '600px',
+        margin: '50px auto 0',
+        flexDirection: 'column',
+      }}
+    >
+      <div
+        css={{
+          fontWeight: 600,
+          fontSize: '18px',
+          marginBottom: '4rem',
+        }}
+      >
+        {d.humanized}
+      </div>
+      {documents
+        .filter(dc => d.name === dc.document_type)
+        .map(dc => (
+          <FilePreview
+            isDone
+            name={dc.name}
+            key={dc.s3_key}
+            blob={dc.presigned_url}
+          />
+        ))}
+      <FileUploader multiple type={d.name} appUuid={uuid} canCancel={false} />
+    </div>
+  ))
+}

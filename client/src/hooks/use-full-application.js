@@ -233,17 +233,18 @@ const step2Fields = [
   {
     type: 'text',
     label: 'Name of entity',
+    placeholder: 'Name of entity',
     name: 'entity_name',
   },
   {
     type: 'text',
     label: 'EIN',
+    placeholder: 'EIN',
     name: 'ein',
   },
   {
     type: 'select',
     label: 'State of formation',
-    placeholder: 'State of formation',
     name: 'entity_state_of_formation',
   },
 ]
@@ -297,22 +298,7 @@ const step3Resolver = yupResolver(
 const steps4Fields = [
   {
     type: 'upload',
-    name: 'documents',
-    label: 'Please provide a copy of your driver’s license',
-    props: {
-      maxFiles: 1,
-      multiple: false,
-      canCancel: false,
-    },
-  },
-  {
-    type: 'upload',
-    name: 'documents',
-    label:
-      'Please provide Articles of Organization for any other business entities associated with the request',
-    props: {
-      multiple: true,
-    },
+    name: 'documents-uploads',
   },
 ]
 // step 5

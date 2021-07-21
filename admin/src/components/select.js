@@ -27,7 +27,7 @@ function AdminSelect({className, ...props}) {
             value={admin.uuid}
             css={{padding: '0.5rem'}}
           >
-            {join(admin.first_name, initial(admin.last_name))}
+            {join(admin.profile.first_name, initial(admin.profile.last_name))}
           </SelectOption>
         ))}
       </Select>

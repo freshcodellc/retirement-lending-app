@@ -15,10 +15,12 @@ function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
         ),
         ...(updated.addresses || []),
       ]
-      const custodian = {
-        ...(cached.custodian || {}),
-        ...(updated.custodian || {}),
-      }
+      const custodian = updated.custodian
+        ? {
+            ...(cached.custodian || {}),
+            ...(updated.custodian || {}),
+          }
+        : null
 
       return loanApplicationService.update({
         uuid,
@@ -63,7 +65,7 @@ function adaptFields(fields) {
         break
       default:
     }
-
+    // address fields
     if (['mailing_equal_physical', 'idleStep'].includes(key)) continue
     if (['physical', 'mailing', 'property'].includes(key)) {
       if (!('addresses' in data)) {
@@ -82,7 +84,7 @@ function adaptFields(fields) {
       }
       continue
     }
-
+    // currency fields
     if (
       [
         'funding_account_balance',
@@ -99,6 +101,10 @@ function adaptFields(fields) {
       ].includes(key)
     ) {
       value = currency(value).multiply(100)
+    }
+    // date fields
+    if (['date_of_birth', 'signature_date'].includes(key)) {
+      value = new Date(value).toISOString()
     }
 
     data[key] = value

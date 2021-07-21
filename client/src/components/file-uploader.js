@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import 'styles/react-dropzone-uploader.css'
 import {Fragment, useRef, useState} from 'react'
-import {Button} from '@solera/ui'
+import {Button, Spinner, TextLink} from '@solera/ui'
 import Dropzone from 'react-dropzone-uploader'
 import {getDroppedOrSelectedFiles} from 'html5-file-selector'
 import {getToken} from 'services/auth-service'
 import {apiBaseUrl} from 'utils/api-client'
+import {queryClient} from 'context/index'
 
 const cleanFileName = fileName => {
   const fileNameParts = fileName.split('.')
@@ -13,13 +14,18 @@ const cleanFileName = fileName => {
   const name = fileNameParts.join('_').replace(/\s+/gi, '_')
   return `${name}.${ext}`
 }
-//TODO: Get document type
-function FileUploader({appUuid, type, multiple, maxFiles, canCancel, accept = '*'}) {
+
+function FileUploader({
+  appUuid,
+  type,
+  multiple,
+  maxFiles,
+  canCancel,
+  accept = '*',
+}) {
   const [error, setError] = useState()
 
-  // specify upload params and url for your files
   const getUploadParams = ({file}) => {
-
     const fileName = cleanFileName(file.name)
     const modFile = new File([file], fileName, {...file})
     const body = new FormData()
@@ -35,15 +41,15 @@ function FileUploader({appUuid, type, multiple, maxFiles, canCancel, accept = '*
     }
   }
 
-  // called every time a file's `status` changes
-  const handleChangeStatus = ({meta, file, xhr}, status) => {
-    console.log(status, xhr)
+  const handleChangeStatus = async ({xhr, remove}, status) => {
     switch (status) {
       case 'error_upload':
         return setError(xhr.statusText)
+      case 'aborted':
+        return setError('Uploading aborted!')
       case 'done':
-        JSON.parse(xhr.response)
-        return
+        await queryClient.fetchQuery(['loan-application', appUuid])
+        return remove()
       default:
     }
   }
@@ -59,18 +65,42 @@ function FileUploader({appUuid, type, multiple, maxFiles, canCancel, accept = '*
   return (
     <Fragment>
       <Dropzone
-        InputComponent={Input}
-        getUploadParams={getUploadParams}
-        onChangeStatus={handleChangeStatus}
-        getFilesFromEvent={getFilesFromEvent}
+        accept={accept}
         multiple={multiple}
         maxFiles={maxFiles}
         canCancel={canCancel}
-        accept={accept}
+        InputComponent={Input}
+        LayoutComponent={Layout}
+        PreviewComponent={UploadPreview}
+        getUploadParams={getUploadParams}
+        onChangeStatus={handleChangeStatus}
+        getFilesFromEvent={getFilesFromEvent}
       />
       {error && <span css={{color: 'red'}}>Error: {error}</span>}
     </Fragment>
   )
+}
+
+const Layout = ({
+  files,
+  input,
+  previews,
+  submitButton,
+  dropzoneProps,
+  extra: {maxFiles},
+}) => {
+  return (
+    <div>
+      {previews}
+      <div {...dropzoneProps}>{input}</div>
+    </div>
+  )
+}
+
+const UploadPreview = ({meta, fileWithMeta}) => {
+  const {name, status} = meta
+  const isDone = status === 'done'
+  return <FilePreview name={name} isDone={isDone} />
 }
 
 function Input({accept, onFiles, files, multiple = true, getFilesFromEvent}) {
@@ -84,12 +114,7 @@ function Input({accept, onFiles, files, multiple = true, getFilesFromEvent}) {
   return (
     <Fragment>
       {multiple && hasFiles ? (
-        <Button
-          variant="secondary"
-          type="button"
-          onClick={onUpload}
-          css={{marginTop: '2rem'}}
-        >
+        <Button variant="secondary" type="button" onClick={onUpload}>
           Upload more
         </Button>
       ) : (
@@ -119,4 +144,32 @@ function Input({accept, onFiles, files, multiple = true, getFilesFromEvent}) {
   )
 }
 
-export {FileUploader}
+function FilePreview({isDone, blob, name}) {
+  const uploadStatus = isDone ? null : <Spinner />
+
+  const downloadFile = () => {
+    const downloadAnchor = document.getElementById('download-anchor')
+    downloadAnchor.download = name
+    downloadAnchor.href = blob
+    downloadAnchor.click()
+  }
+
+  return (
+    <div
+      css={{
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        marginBottom: '2rem',
+        justifyContent: 'flex-start',
+      }}
+    >
+      <TextLink onClick={downloadFile} disabled={!isDone}>
+        {name}
+      </TextLink>
+      <div css={{position: 'absolute', right: 0}}>{uploadStatus}</div>
+    </div>
+  )
+}
+
+export {FileUploader, FilePreview}

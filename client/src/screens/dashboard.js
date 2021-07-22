@@ -5,6 +5,7 @@ import {useLoanApplications} from 'hooks/useLoanApplications'
 import {useUser} from 'hooks/useUser'
 import {ApplicationBox, Layout} from 'components'
 import {Button} from '@solera/ui'
+import get from 'lodash/get'
 
 function DashboardScreen() {
   const navigate = useNavigate()
@@ -25,7 +26,7 @@ function DashboardScreen() {
 
   return (
     <Layout>
-      <h1>Welcome, {user.profile.first_name}</h1>
+      <h1>Welcome, {get(user, 'profile.first_name', 'Valued Customer')}</h1>
       <Button variant="secondary" onClick={handleCreateClick}>
         Start New Application
       </Button>

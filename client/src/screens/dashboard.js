@@ -6,6 +6,7 @@ import {useUser} from 'hooks/useUser'
 import {ApplicationBox, Layout} from 'components'
 import {Button} from '@solera/ui'
 import get from 'lodash/get'
+import isNull from 'lodash/isNull'
 
 function DashboardScreen() {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ function DashboardScreen() {
       .then(data => navigate(`/application/${data.uuid}`))
   }
 
-  if (!isFetched) return null
+  if (!isFetched || isNull(user)) return null
 
   return (
     <Layout>

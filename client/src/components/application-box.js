@@ -50,7 +50,7 @@ function ApplicationBox({data}) {
         >
           Application {data.uuid.split('-')[0]}
         </p>
-        {!isNull(data.inserted_at) &&
+        {typeof data.inserted_at === 'string' &&
           <span css={{ fontSize: '1.2rem'}}>Started: {format(new Date(parseISO(data.inserted_at)), 'MM/dd/yyyy')}</span>
         }
       </div>

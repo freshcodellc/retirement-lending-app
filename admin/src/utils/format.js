@@ -19,6 +19,7 @@ const empty =
       : state
 
 const phone = phone => {
+  if (typeof phone !== 'string') return ''
   const tenDigits = phone.replace(/^\+1/g, '')
   return tenDigits.replace(/(\d{3})(\d{3})(\d{4})/, '$1.$2.$3')
 }

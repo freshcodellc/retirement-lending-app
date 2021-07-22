@@ -15,8 +15,6 @@ function makeClient(authRequired) {
       }
     }
 
-    console.log('CC', customConfig)
-
     const config = {
       method: data ? 'POST' : 'GET',
       body: data ? JSON.stringify(data) : undefined,

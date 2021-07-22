@@ -215,7 +215,6 @@ function NotesTab() {
 
   const handleTakeNote = handleSubmit(form => {
     //TODO: save note
-    console.log(form)
     saveNote(form)
   })
 

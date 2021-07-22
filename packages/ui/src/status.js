@@ -10,12 +10,12 @@ const statusColors = {
   approved: '#8CCF6A',
   denied: '#E14038',
   full_application_requested: '#FF7B00',
-  full_application_received: '#FFD43B',
-  loan_committee_review: '#155626',
-  term_sheet_sent: '#001493',
-  term_sheet_accepted: '#6EC7FF',
+  term_sheet_accepted: '#FFD43B',
+  under_review: '#155626',
+  pre_application_submitted: '#001493',
+  term_sheet_sent: '#6EC7FF',
   terms_sheet_denied: '#E14038',
-  pre_underwriting: '#3752EE',
+  full_application_complete: '#3752EE',
   underwriting: '#FFF26E'
 }
 
@@ -52,7 +52,7 @@ function StatusBadge({ status, label }) {
           color: status === 'notStarted' ? colors.gray10 : colors.text
         }}
       >
-        {label || status}
+        {label || status.split('_').join(' ').toUpperCase()}
       </div>
     </div>
   )

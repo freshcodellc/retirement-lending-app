@@ -396,7 +396,7 @@ const step3Fields = [
 const step3Resolver = yupResolver(
   yup.object().shape({
     number_rental_properties: yup.number().required('Required'),
-    estimated_net_worth_bracket: yup.mixed().notOneOf(['empty'], 'Required'),
+    estimated_net_worth_bracket: yup.mixed().notOneOf(['empty', null, undefined], 'Required'),
     referrer: yup.mixed().notRequired(),
   }),
 )

@@ -21,7 +21,6 @@ import {
   TextLink,
   Button,
 } from '@solera/ui'
-import {useAdmins} from 'hooks/use-admins'
 import {useSaveNote} from 'hooks/use-save-note'
 import {useEditApplication} from 'hooks/use-edit-application'
 import {useApplication, useInfoSections} from 'hooks/use-application'
@@ -69,7 +68,6 @@ export default function ApplicantDetails() {
 }
 
 function ActionsPanel({activeTab, application}) {
-  const {admins} = useAdmins()
   const {mutate, isLoading} = useEditApplication()
   const {handleSubmit, control, formState} = useForm({
     mode: 'onChange',
@@ -80,8 +78,7 @@ function ActionsPanel({activeTab, application}) {
   })
 
   const handleTermSheet = handleSubmit(({status, admin}) => {
-    const assigned_admin = admins.find(a => a.uuid === admin)
-    mutate({status, assigned_admin, uuid: application.uuid})
+    mutate({status, assigned_admin_user_uuid: admin, uuid: application.uuid})
   })
 
   return (

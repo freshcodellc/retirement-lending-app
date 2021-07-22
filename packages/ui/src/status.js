@@ -11,6 +11,7 @@ const statusColors = {
   denied: '#E14038',
   full_application_requested: '#FF7B00',
   full_application_received: '#FFD43B',
+  full_application_complete: '#8CCF6A',
   loan_committee_review: '#155626',
   term_sheet_sent: '#001493',
   term_sheet_accepted: '#6EC7FF',
@@ -49,7 +50,8 @@ function StatusBadge({ status, label }) {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          color: status === 'notStarted' ? colors.gray10 : colors.text
+          marginRight: '10px',
+          color: status === 'notStarted' ? colors.gray10 : 'inherit'
         }}
       >
         {label || status}

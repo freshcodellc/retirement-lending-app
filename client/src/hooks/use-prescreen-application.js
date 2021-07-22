@@ -165,7 +165,7 @@ const step1Resolver = yupResolver(
     funding_institution_name: yup.string().required('Required'),
     funding_account_balance: yup.string().required('Required'),
     first_name: yup.string().required('Required'),
-    middle_name: yup.string(),
+    middle_name: yup.mixed().notRequired(),
     last_name: yup.string().required('Required'),
     phone_number: yup.string().required('Required'),
     email: yup.string().email().required('Required'),

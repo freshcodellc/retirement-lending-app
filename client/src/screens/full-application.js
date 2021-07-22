@@ -307,7 +307,7 @@ function FullApplicationScreen() {
             <Button
               type="submit"
               isLoading={isSaving}
-              disabled={!formState.isValid || !hasAddDocs}
+              disabled={!formState.isValid || (currentStep === 4 && !hasAddDocs)}
             >
               {currentStep === maxStep ? 'Submit application' : 'Continue'}
             </Button>

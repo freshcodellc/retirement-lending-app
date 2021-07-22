@@ -23,7 +23,7 @@ function DashboardScreen() {
       userProfile = {}
     }
     create
-      .mutateAsync({...userProfile})
+      .mutateAsync({status: 'started', ...userProfile, email: user.email})
       .then(data => navigate(`/application/${data.uuid}`))
   }
 

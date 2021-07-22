@@ -21,6 +21,7 @@ import {
   TextLink,
   Button,
   Input,
+  FormMessage,
 } from '@solera/ui'
 import {useSaveNote} from 'hooks/use-save-note'
 import {useUpdateApplication} from 'hooks/use-update-application'
@@ -69,7 +70,7 @@ export default function ApplicantDetails() {
 }
 
 function ActionsPanel({activeTab, application}) {
-  const {mutate, isLoading} = useUpdateApplication()
+  const {mutate, isError, isSuccess, isLoading} = useUpdateApplication()
   const {handleSubmit, control, register, formState} = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -94,7 +95,6 @@ function ActionsPanel({activeTab, application}) {
 
   return (
     <form
-      novalidate
       name="terms-sheet"
       onSubmit={handleTermSheet}
       css={{
@@ -144,6 +144,12 @@ function ActionsPanel({activeTab, application}) {
           >
             Update
           </Button>
+          {isSuccess && (
+            <FormMessage variant="success">Successfully Updated!</FormMessage>
+          )}
+          {isError ? (
+            <FormMessage variant="error">Failed to Update!</FormMessage>
+          ) : null}
         </div>
       </div>
       <div

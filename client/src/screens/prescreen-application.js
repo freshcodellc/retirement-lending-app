@@ -61,7 +61,7 @@ function PreScreenApplicationScreen() {
       window.scrollTo(0, 0)
     },
   })
-  const {register, handleSubmit, reset, watch, control, formState} = useForm({
+  const {register, handleSubmit, reset, watch, control, formState, getValues} = useForm({
     resolver,
     defaultValues,
     mode: 'onChange',
@@ -75,7 +75,15 @@ function PreScreenApplicationScreen() {
     }
   }, [idleStep, reset, defaultValues])
 
-  const handleSave = handleSubmit(form => saveEdit({...form, uuid}))
+  const isLastStep = maxStep === currentStep
+
+  const handleSave = handleSubmit(form =>
+    saveEdit(
+      !isLastStep
+        ? {...form, uuid}
+        : {...form, uuid, status: 'pre_application_submitted'},
+    ),
+  )
 
   const stepBack = () => {
     navigate(stepRoute(uuid, prevStep))

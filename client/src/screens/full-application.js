@@ -81,7 +81,15 @@ function FullApplicationScreen() {
     }
   }, [idleStep, reset, defaultValues])
 
-  const handleSave = handleSubmit(form => saveEdit({...form, uuid}))
+  const isLastStep = maxStep === currentStep
+
+  const handleSave = handleSubmit(form =>
+    saveEdit(
+      !isLastStep
+        ? {...form, uuid}
+        : {...form, uuid, status: 'full_application_complete'},
+    ),
+  )
 
   const stepBack = () => {
     navigate(stepRoute(uuid, prevStep))

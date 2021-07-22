@@ -11,6 +11,7 @@ function DashboardScreen() {
   const {data} = useLoanApplications()
   const {
     data: {user},
+    isFetched
   } = useUser()
   const create = useCreateLoanApplication()
 
@@ -19,6 +20,8 @@ function DashboardScreen() {
       .mutateAsync({})
       .then(data => navigate(`/application/${data.uuid}`))
   }
+
+  if (!isFetched) return null
 
   return (
     <Layout>

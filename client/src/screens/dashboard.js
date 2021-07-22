@@ -18,8 +18,12 @@ function DashboardScreen() {
   const create = useCreateLoanApplication()
 
   const handleCreateClick = async () => {
+    let userProfile = user.profile
+    if (isNull(user.profile)) {
+      userProfile = {}
+    }
     create
-      .mutateAsync({})
+      .mutateAsync({...userProfile})
       .then(data => navigate(`/application/${data.uuid}`))
   }
 

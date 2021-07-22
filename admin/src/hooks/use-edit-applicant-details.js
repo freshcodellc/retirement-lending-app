@@ -1,18 +1,13 @@
 import {useMemo} from 'react'
-import {useMutation} from 'react-query'
 import {useParams} from 'react-router-dom'
 
-import applicationService from 'services/application-service'
 import {useApplication, sections} from './use-application'
+import {setApplicationDefaultValues} from 'utils/form'
 
-function useEditApplication(config) {
-  return useMutation(applicationService.update, config)
-}
-
-function useEditFields() {
+function useEditApplicantDetails() {
   const {application, isSuccess, isLoading, isError, error} = useApplication()
   const {uuid, section} = useParams()
-  // check if mailing equals physical and set default value for "mailing_equal_physical"
+
   const editSection = useMemo(
     () =>
       ({
@@ -37,26 +32,7 @@ function useEditFields() {
   )
   const defaultValues = useMemo(
     () =>
-      editSection.fields.reduce((acc, cur) => {
-        if (cur.name in application) {
-          let value = application[cur.name]
-          if (value != null) {
-            if (cur.type === 'radio') {
-              if (value === true) {
-                value = 'true'
-              } else if (value === false) {
-                value = 'false'
-              }
-            }
-          } else {
-            if (cur.type === 'select') {
-              value = 'empty'
-            }
-          }
-          acc[cur.name] = value
-        }
-        return acc
-      }, {}),
+      editSection.fields.reduce(setApplicationDefaultValues(application), {}),
     [application, editSection],
   )
 
@@ -399,10 +375,6 @@ const eraFields = [
     type: 'radio',
     name: 'plan_type',
     label: 'What type of retirement plan do you have?',
-    options: [
-      {label: 'IRA', value: 'IRA'},
-      {label: '401K', value: '401K'},
-    ],
   },
   {
     type: 'select',
@@ -469,4 +441,4 @@ const signCertifyFields = [
   },
 ]
 
-export {useEditApplication, useEditFields}
+export {useEditApplicantDetails}

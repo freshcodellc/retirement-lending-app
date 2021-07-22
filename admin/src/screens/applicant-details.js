@@ -20,9 +20,10 @@ import {
   Td,
   TextLink,
   Button,
+  Input,
 } from '@solera/ui'
 import {useSaveNote} from 'hooks/use-save-note'
-import {useEditApplication} from 'hooks/use-edit-application'
+import {useUpdateApplication} from 'hooks/use-update-application'
 import {useApplication, useInfoSections} from 'hooks/use-application'
 
 import {ReturnLink, StatusSelect, AdminSelect} from 'components'
@@ -68,79 +69,137 @@ export default function ApplicantDetails() {
 }
 
 function ActionsPanel({activeTab, application}) {
-  const {mutate, isLoading} = useEditApplication()
-  const {handleSubmit, control, formState} = useForm({
+  const {mutate, isLoading} = useUpdateApplication()
+  const {handleSubmit, control, register, formState} = useForm({
     mode: 'onChange',
     defaultValues: {
       status: application.status,
       admin: application.assigned_admin?.uuid,
+      interest_rate_floor: application.interest_rate_floor,
+      interest_rate_range_low: application.interest_rate_range_low,
+      interest_rate_range_high: application.interest_rate_range_high,
+      interest_rate_spread_low: application.interest_rate_spread_low,
+      interest_rate_spread_high: application.interest_rate_spread_high,
     },
   })
 
-  const handleTermSheet = handleSubmit(({status, admin}) => {
-    mutate({status, assigned_admin_user_uuid: admin, uuid: application.uuid})
+  const handleTermSheet = handleSubmit(({status, admin, ...rates}) => {
+    mutate({
+      ...rates,
+      status,
+      assigned_admin_user_uuid: admin,
+      uuid: application.uuid,
+    })
   })
 
   return (
     <form
+      novalidate
       name="terms-sheet"
       onSubmit={handleTermSheet}
       css={{
-        gap: '2rem',
-        flexWrap: 'wrap',
-        padding: '2rem',
-        marginBottom: '2rem',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
         border: `5px solid ${colors.gray40}`,
         display: activeTab !== 0 ? 'none' : 'flex',
-        '&>div': {
-          width: '100%',
-          maxWidth: '300px',
-          minWidth: '200px',
-        },
+        padding: '2rem',
+        marginBottom: '2rem',
       }}
     >
-      <div>
-        <StatusSelect
-          id="status"
-          name="status"
-          label="Status"
-          control={control}
-          rules={{required: true}}
-        />
-        <AdminSelect
-          id="admin"
-          name="admin"
-          control={control}
-          label="Assigned to"
-          css={{marginTop: '2rem'}}
-        />
+      <div
+        css={{
+          display: 'flex',
+          gap: '2rem',
+          marginBottom: '2rem',
+          justifyContent: 'space-between',
+          '&>div': {
+            width: '100%',
+            maxWidth: '300px',
+            minWidth: '200px',
+          },
+        }}
+      >
+        <div>
+          <StatusSelect
+            id="status"
+            name="status"
+            label="Status"
+            control={control}
+            rules={{required: true}}
+          />
+          <AdminSelect
+            id="admin"
+            name="admin"
+            control={control}
+            label="Assigned to"
+            css={{marginTop: '2rem'}}
+            rules={{required: true}}
+          />
+        </div>
+        <div>
+          <Button
+            type="submit"
+            variant="secondary"
+            isLoading={isLoading}
+            disabled={!formState.isValid}
+          >
+            Send terms sheet
+          </Button>
+        </div>
       </div>
-      <div>
-        <Button
-          type="submit"
-          variant="secondary"
-          isLoading={isLoading}
-          disabled={!formState.isValid}
-        >
-          Send terms sheet
-        </Button>
+      <div
+        css={{
+          display: 'flex',
+          gap: '2rem',
+          flexWrap: 'wrap',
+          flexDirection: 'row',
+          '&>*': {
+            width: '100%',
+            maxWidth: '200px',
+            minWidth: '200px',
+          },
+        }}
+      >
+        <Input
+          step="any"
+          type="number"
+          placeholder="%"
+          label="Floor rate"
+          {...register('interest_rate_floor', {required: true})}
+        />
+        <Input
+          step="any"
+          type="number"
+          placeholder="%"
+          label="Range low rate"
+          {...register('interest_rate_range_low', {required: true})}
+        />
+        <Input
+          step="any"
+          type="number"
+          placeholder="%"
+          label="Range high rate"
+          {...register('interest_rate_range_high', {required: true})}
+        />
+        <Input
+          step="any"
+          type="number"
+          placeholder="%"
+          label="Spread low rate"
+          {...register('interest_rate_spread_low', {required: true})}
+        />
+        <Input
+          step="any"
+          type="number"
+          placeholder="%"
+          label="Spread high rate"
+          {...register('interest_rate_spread_high', {required: true})}
+        />
       </div>
     </form>
   )
 }
 
 function ApplicationInfo({application}) {
-  application.addresses = [
-    {
-      type: 'physical',
-      address: '12 Main St',
-      address_2: null,
-      city: 'Lehi',
-      state: 'UT',
-      postal_code: '84043',
-    },
-  ]
   const sections = useInfoSections(application)
 
   return (

@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import {useRef} from 'react'
 import {parseISO} from 'date-fns'
 import {FiCalendar} from 'react-icons/fi'
 import {useController} from 'react-hook-form'
@@ -17,6 +18,7 @@ const DateRangePicker = ({
   placeholder,
   ...props
 }) => {
+  const pickerRef = useRef()
   const {
     field: {onChange: onStartChnage, value: startDate},
   } = useController({
@@ -37,10 +39,19 @@ const DateRangePicker = ({
     onEndChange(end)
   }
 
+  const openPicker = () => {
+    pickerRef.current.setOpen(true)
+  }
+
   return (
     <FormControl className={className}>
       <ReactDatePicker
+        ref={pickerRef}
         selectsRange
+        peekNextMonth
+        showMonthDropdown
+        showYearDropdown
+        dropdownMode="select"
         endDate={endDate}
         startDate={startDate}
         onChange={onDateChange}
@@ -57,7 +68,11 @@ const DateRangePicker = ({
         }
       />
       <InputAdornment end>
-        <FiCalendar size="1.4em" />
+        <FiCalendar
+          size="1.4em"
+          css={{cursor: 'pointer'}}
+          onClick={openPicker}
+        />
       </InputAdornment>
     </FormControl>
   )
@@ -72,6 +87,7 @@ const DatePicker = ({
   placeholder,
   ...props
 }) => {
+  const pickerRef = useRef()
   const {
     field: {onChange, value, ref},
   } = useController({rules, control, name})
@@ -79,11 +95,21 @@ const DatePicker = ({
   const onDateChange = date => {
     onChange(date)
   }
+
+  const openPicker = () => {
+    pickerRef.current.setOpen(true)
+  }
+
   const typeDate = typeof value === 'string' ? parseISO(value) : value
 
   return (
     <FormControl className={className}>
       <ReactDatePicker
+        ref={pickerRef}
+        peekNextMonth
+        showMonthDropdown
+        showYearDropdown
+        dropdownMode="select"
         selected={typeDate}
         onChange={onDateChange}
         placeholderText={placeholder}
@@ -100,7 +126,11 @@ const DatePicker = ({
         }
       />
       <InputAdornment end>
-        <FiCalendar size="1.4em" />
+        <FiCalendar
+          size="1.4em"
+          css={{cursor: 'pointer'}}
+          onClick={openPicker}
+        />
       </InputAdornment>
     </FormControl>
   )

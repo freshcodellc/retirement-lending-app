@@ -2,7 +2,6 @@
 import * as React from 'react'
 import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
-import {useQueryClient} from 'react-query'
 
 import {
   Input,
@@ -18,21 +17,23 @@ import {
   CurrencyInput,
 } from '@solera/ui'
 import {
+  PlanRadio,
   DatePicker,
   ReturnLink,
   EntitySelect,
   NetWorthSelect,
   PropertySelect,
 } from 'components'
-import {useEditApplication, useEditFields} from 'hooks/use-edit-application'
+import {useUpdateApplication} from 'hooks/use-update-application'
+import {useEditApplicantDetails} from 'hooks/use-edit-applicant-details'
 
 export default function EditApplicantInfo() {
-  const queryClient = useQueryClient()
   const {
     mutate: saveEdit,
     isLoading: isSaving,
+    isSuccess: saveSucceed,
     isError: saveIsError,
-  } = useEditApplication()
+  } = useUpdateApplication()
   const {
     uuid,
     fields,
@@ -42,13 +43,10 @@ export default function EditApplicantInfo() {
     isSuccess,
     isLoading,
     defaultValues,
-  } = useEditFields({
-    onSuccess: () =>
-      queryClient.invalidateQueries('applications', {refetchInactive: true}),
-  })
+  } = useEditApplicantDetails()
   const {handleSubmit, register, reset, control, watch, formState} = useForm({
-    mode: 'onChange',
     defaultValues,
+    mode: 'onChange',
   })
   const mailingEqualPhysical = watch('mailing_equal_physical', false)
 
@@ -76,9 +74,6 @@ export default function EditApplicantInfo() {
     <div>
       <h1>Edit {heading}</h1>
       <ReturnLink to={`/applicants/${uuid}`}>Applicant details</ReturnLink>
-      {saveIsError ? (
-        <FormMessage variant="error">Failed to save!</FormMessage>
-      ) : null}
       <form
         name="edit-applicant-info"
         onSubmit={handleEdit}
@@ -136,19 +131,30 @@ export default function EditApplicantInfo() {
                 />
               )
             case 'radio':
-              return (
-                <RadioGroup key={field.name} text={field.label}>
-                  {field.options.map(o => (
-                    <RadioInput
-                      {...o}
-                      key={o.label}
-                      name={field.name}
-                      id={field.name + o.label}
+              switch (field.name) {
+                case 'plan_type':
+                  return (
+                    <PlanRadio
+                      key={field.name}
+                      {...field}
                       {...register(field.name)}
                     />
-                  ))}
-                </RadioGroup>
-              )
+                  )
+                default:
+                  return (
+                    <RadioGroup key={field.name} text={field.label}>
+                      {field.options.map(o => (
+                        <RadioInput
+                          {...o}
+                          key={o.label}
+                          name={field.name}
+                          id={field.name + o.label}
+                          {...register(field.name)}
+                        />
+                      ))}
+                    </RadioGroup>
+                  )
+              }
             case 'physical':
             case 'mailing':
             case 'property':
@@ -188,6 +194,12 @@ export default function EditApplicantInfo() {
           >
             Save
           </Button>
+          {saveSucceed && (
+            <FormMessage variant="success">Successfully Saved!</FormMessage>
+          )}
+          {saveIsError ? (
+            <FormMessage variant="error">Failed to save!</FormMessage>
+          ) : null}
         </div>
       </form>
     </div>

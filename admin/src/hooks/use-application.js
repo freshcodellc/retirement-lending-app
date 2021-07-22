@@ -20,7 +20,7 @@ function useApplication() {
   const {data: application = {}, ...result} = useQuery(
     queryKeys.application(uuid),
     () => applicationService.get(uuid),
-    {staleTime: 30000},
+    {staleTime: 0},
   )
 
   return {

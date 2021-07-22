@@ -32,9 +32,13 @@ function useApplications(filters = {}) {
     }
   }, [nextPage, totalPages, filters, queryClient])
 
+  // const setApplicationData = useCallback(
+  //   app => queryClient.setQueryData(queryKeys.application(app.uuid), app),
+  //   [queryClient],
+  // )
   const setApplicationData = useCallback(
-    app => queryClient.setQueryData(queryKeys.application(app.uuid), app),
-    [queryClient],
+    app => console.log('setApplicationData'),
+    [],
   )
 
   return {

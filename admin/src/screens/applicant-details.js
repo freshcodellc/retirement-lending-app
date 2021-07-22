@@ -142,7 +142,7 @@ function ActionsPanel({activeTab, application}) {
             isLoading={isLoading}
             disabled={!formState.isValid}
           >
-            Send terms sheet
+            Update
           </Button>
         </div>
       </div>

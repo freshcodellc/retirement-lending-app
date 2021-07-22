@@ -61,7 +61,7 @@ function PreScreenApplicationScreen() {
       window.scrollTo(0, 0)
     },
   })
-  const {register, handleSubmit, reset, watch, control, formState, getValues} = useForm({
+  const {register, handleSubmit, reset, watch, control, formState} = useForm({
     resolver,
     defaultValues,
     mode: 'onChange',

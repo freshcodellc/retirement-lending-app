@@ -49,7 +49,7 @@ const SECTIONS = [
     description:
       'To help us complete the loan and to help everything go smoothly, we’ll need to get some logistical details.',
     action: 'Start form',
-    route: 'form/1',
+    route: 'post-approval/1',
     statuses: [],
   },
 ]

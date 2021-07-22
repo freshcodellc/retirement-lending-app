@@ -7,6 +7,7 @@ import {ApplicationScreen} from './screens/application'
 import {ProfileUpdateScreen} from './screens/profile-update'
 import {TermsSheetScreen} from './screens/terms-sheet'
 import {FullApplicationScreen} from './screens/full-application'
+import {PostApprovalScreen} from './screens/post-approval'
 import {UserMenu} from './components/user-menu'
 import {Header} from '@solera/ui'
 
@@ -35,6 +36,10 @@ function AuthenticatedApp() {
           <Route
             path="application/:uuid/full/:step"
             element={<FullApplicationScreen />}
+          />
+          <Route
+            path="application/:uuid/post-approval/:step"
+            element={<PostApprovalScreen />}
           />
           <Route path="/profile/update" element={<ProfileUpdateScreen />} />
           <Route path="*" element={<NotFoundScreen />} />

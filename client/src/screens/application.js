@@ -26,7 +26,7 @@ const SECTIONS = [
       'Tell us about yourself and the property so we can determine eligibility.',
     action: 'Start application',
     route: 'prescreen/1',
-    statuses: ['started', 'pre_underwriting'],
+    statuses: ['started'],
   },
   {
     title: '2 Terms sheet',
@@ -34,7 +34,7 @@ const SECTIONS = [
       'To help us complete the loan and to help everything go smoothly, we’ll need to get some logistical details.',
     action: 'Start sheet',
     route: 'terms-sheet/1',
-    statuses: ['term_sheet_sent', 'term_sheet_accepted', 'terms_sheet_denied'],
+    statuses: ['term_sheet_sent', 'term_sheet_accepted'],
   },
   {
     title: '3 Application Form',

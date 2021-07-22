@@ -12,7 +12,7 @@ const TERMS_STATUSES = [
   'term_sheet_sent',
 ]
 
-const EDITABLE_STATUSES = ['started', 'term_sheet_accepted', 'approved']
+const EDITABLE_STATUSES = ['started', 'term_sheet_sent', 'term_sheet_accepted', 'approved']
 
 const TERMS_HELPER_TEXT_MAP = {
   denied: 'Your application was denied. Please contact us for more info.',

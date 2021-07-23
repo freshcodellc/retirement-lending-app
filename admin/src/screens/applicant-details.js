@@ -166,36 +166,31 @@ function ActionsPanel({activeTab, application}) {
         }}
       >
         <Input
-          step="any"
-          type="number"
+          type="text"
           placeholder="%"
           label="Floor rate"
           {...register('interest_rate_floor', {required: true})}
         />
         <Input
-          step="any"
-          type="number"
+          type="text"
           placeholder="%"
           label="Range low rate"
           {...register('interest_rate_range_low', {required: true})}
         />
         <Input
-          step="any"
-          type="number"
+          type="text"
           placeholder="%"
           label="Range high rate"
           {...register('interest_rate_range_high', {required: true})}
         />
         <Input
-          step="any"
-          type="number"
+          type="text"
           placeholder="%"
           label="Spread low rate"
           {...register('interest_rate_spread_low', {required: true})}
         />
         <Input
-          step="any"
-          type="number"
+          type="text"
           placeholder="%"
           label="Spread high rate"
           {...register('interest_rate_spread_high', {required: true})}

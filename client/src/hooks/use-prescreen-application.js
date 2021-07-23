@@ -202,7 +202,7 @@ const step2Fields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'property.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
@@ -348,7 +348,7 @@ const step2Resolver = yupResolver(
       address_2: yup.mixed().notRequired(),
       city: yup.string().required('Required'),
       state: yup.mixed().notOneOf(['empty'], 'Required'),
-      postal_code: yup.number().required('Required'),
+      postal_code: yup.string().required('Required'),
     }),
     property_type: yup.mixed().notOneOf(['empty'], 'Required'),
     lot_over_2_acres: yup.string().required('Required'),

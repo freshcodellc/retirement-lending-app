@@ -36,6 +36,7 @@ function FullApplicationScreen() {
   const navigate = useNavigate()
   const {
     uuid,
+    data,
     fields,
     heading,
     minStep,
@@ -76,7 +77,7 @@ function FullApplicationScreen() {
     }
   }, [idleStep, reset, defaultValues])
 
-  const handleSave = handleSubmit(form => saveEdit({...form, uuid}))
+  const handleSave = handleSubmit(form => saveEdit({...data, ...form, uuid}))
 
   const stepBack = () => {
     navigate(stepRoute(uuid, prevStep))

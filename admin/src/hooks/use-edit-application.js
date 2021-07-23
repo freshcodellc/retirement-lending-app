@@ -133,7 +133,7 @@ const applicantfields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'physical.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
@@ -195,7 +195,7 @@ const applicantfields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'mailing.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
@@ -252,7 +252,7 @@ const propertyFields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'property.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',

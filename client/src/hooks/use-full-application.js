@@ -145,7 +145,7 @@ const step1Fields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'physical.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
@@ -207,7 +207,7 @@ const step1Fields = [
         placeholder: 'State',
       },
       postal_code: {
-        type: 'number',
+        type: 'text',
         name: 'mailing.postal_code',
         label: 'ZIP code',
         placeholder: 'ZIP code',
@@ -223,7 +223,7 @@ const step1Resolver = yupResolver(
       address_2: yup.mixed().notRequired(),
       city: yup.string().required('Required'),
       state: yup.mixed().notOneOf(['empty'], 'Required'),
-      postal_code: yup.number().required('Required'),
+      postal_code: yup.string().required('Required'),
     }),
     years_at_address: yup.number().required('Required'),
     is_homeowner: yup.string().required('Required'),

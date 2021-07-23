@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import {useAdmins} from 'hooks/use-admins'
 import {join, initial} from 'utils/format'
+import {useWatch} from 'react-hook-form'
 import {
   Select,
   FormControl,
@@ -27,7 +28,7 @@ function AdminSelect({className, ...props}) {
             value={admin.uuid}
             css={{padding: '0.5rem'}}
           >
-            {join(admin.first_name, initial(admin.last_name))}
+            {join(admin.profile.first_name, initial(admin.profile.last_name))}
           </SelectOption>
         ))}
       </Select>
@@ -40,12 +41,12 @@ function NetWorthSelect(props) {
   return <ConstantSelect options={netWorths} {...props} />
 }
 
-function EntitySelect({planType, ...props}) {
+function EntitySelect({control, ...finalProps}) {
   const {entityTypes} = useConstants()
-  const matchBy = planType === 'IRA' ? planType : '401'
-  const types = entityTypes.filter(e => e.name.includes(matchBy))
+  const planType = useWatch({control, name: 'plan_type'})
+  const entities = entityTypes.filter(e => e.name.includes(planType))
 
-  return <ConstantSelect options={types} {...props} />
+  return <ConstantSelect options={entities} control={control} {...finalProps} />
 }
 
 function PropertySelect(props) {

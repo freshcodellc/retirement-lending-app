@@ -158,11 +158,15 @@ function ApplicantTable({filters}) {
           if (!value) {
             return <span>Unassigned</span>
           }
-          const {uuid, first_name, last_name} = value
+          const {uuid, profile, email} = value
           return user.uuid === uuid ? (
             <TextLink variant="secondary">Me</TextLink>
           ) : (
-            <span>{join(first_name, initial(last_name))}</span>
+            <span>
+              {profile
+                ? join(profile.first_name, initial(profile.last_name))
+                : email}
+            </span>
           )
         },
       },

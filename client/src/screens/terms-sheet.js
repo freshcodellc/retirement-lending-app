@@ -34,7 +34,7 @@ function TermsSheetScreen() {
   )
 
   const handleSave = handleSubmit(form => {
-    saveSignature({uuid: data.uuid, ...form})
+    saveSignature({uuid: data.uuid, ...form, status: 'term_sheet_accepted'})
   })
 
   if (isLoading) {

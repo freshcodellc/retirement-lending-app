@@ -29,14 +29,14 @@ function useAdminsTable() {
   }
 }
 
-function mapAdmin({email, status, first_name, last_name, inserted_at}) {
+function mapAdmin({email, profile, inserted_at}) {
   //TODO: determine invite pending state
-  const invitePending = status !== 'active'
+  const invitePending = false
   const invitedDate = invitePending ? format.date(new Date(), 'MM.dd.yy') : null
   const joinedDate = invitePending
     ? null
     : format.isoDate(inserted_at, 'MM.dd.yy')
-  const name = format.join(first_name, last_name)
+  const name = profile ? format.join(profile.first_name, profile.last_name) : ''
 
   return {
     name,

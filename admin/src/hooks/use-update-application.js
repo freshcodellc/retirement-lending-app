@@ -1,12 +1,15 @@
-import {useMutation} from 'react-query'
-import {queryClient} from 'context/index'
-import * as loanApplicationService from 'services/loan-application-service'
 import currency from 'currency.js'
+import {useMutation} from 'react-query'
+import applicationService from 'services/application-service'
+import {useQueryClient} from 'react-query'
+import {queryKeys} from 'utils/query-client'
 
-function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
+function useUpdateApplication() {
+  const queryClient = useQueryClient()
+
   return useMutation(
     ({uuid, ...fields}) => {
-      const cached = queryClient.getQueryData(['loan-application', uuid])
+      const cached = queryClient.getQueryData(queryKeys.application(uuid))
       const updated = adaptFields(fields)
       const updatedAddressTypes = (updated.addresses || []).map(a => a.type)
       const addresses = [
@@ -22,26 +25,14 @@ function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
           }
         : null
 
-      return loanApplicationService.update({
+      return applicationService.update({
         uuid,
         data: {loan_application: {...cached, ...updated, addresses, custodian}},
       })
     },
     {
-      onMutate: values => {
-        const previousData = queryClient.getQueryData('loan-application')
-
-        queryClient.setQueryData('loan-application', old => ({
-          ...old,
-          ...values,
-        }))
-
-        return () => queryClient.setQueryData('loan-application', previousData)
-      },
-      onError: (error, values, rollback) => rollback(),
       onSuccess: () => {
-        queryClient.invalidateQueries('loan-application')
-        onSuccess()
+        queryClient.invalidateQueries('applications', {refetchInactive: true})
       },
     },
   )

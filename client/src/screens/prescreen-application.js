@@ -76,7 +76,15 @@ function PreScreenApplicationScreen() {
     }
   }, [idleStep, reset, defaultValues])
 
-  const handleSave = handleSubmit(form => saveEdit({...data, ...form, uuid}))
+  const isLastStep = maxStep === currentStep
+
+  const handleSave = handleSubmit(form =>
+    saveEdit(
+      !isLastStep
+        ? {...data, ...form, uuid}
+        : {...data, ...form, uuid, status: 'pre_application_submitted'},
+    ),
+  )
 
   const stepBack = () => {
     navigate(stepRoute(uuid, prevStep))

@@ -24,5 +24,15 @@ function PropertySelect(props) {
   const {propertyTypes} = useConstants()
   return <ConstantSelect options={propertyTypes} {...props} />
 }
+//TODO: does this need to be a constants from the backend??
+function ClosingDeliverySelect(props) {
+  const options = [
+    {
+      name: 'Electronic Delivery',
+      humanized: 'Electronic Delivery',
+    },
+  ]
+  return <ConstantSelect options={options} {...props} />
+}
 
-export {NetWorthSelect, EntitySelect, PropertySelect}
+export {NetWorthSelect, EntitySelect, PropertySelect, ClosingDeliverySelect}

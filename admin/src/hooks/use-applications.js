@@ -1,6 +1,5 @@
 import {useState, useEffect, useCallback} from 'react'
 import {useQuery, useQueryClient} from 'react-query'
-// import {format} from 'date-fns'
 
 import applicationService from 'services/application-service'
 import {queryKeys} from 'utils/query-client'
@@ -20,7 +19,7 @@ function useApplications(filters = {}) {
   } = data
   const perPage = 50
   const prevPage = Math.max(page - 1, 0)
-  const nextPage = Math.max(page + 1, totalPages)
+  const nextPage = Math.min(page + 1, totalPages)
   const endCount = prevPage * perPage + applications.length
   const startCount = endCount - (applications.length - 1)
 
@@ -33,9 +32,13 @@ function useApplications(filters = {}) {
     }
   }, [nextPage, totalPages, filters, queryClient])
 
+  // const setApplicationData = useCallback(
+  //   app => queryClient.setQueryData(queryKeys.application(app.uuid), app),
+  //   [queryClient],
+  // )
   const setApplicationData = useCallback(
-    app => queryClient.setQueryData(queryKeys.application(app.uuid), app),
-    [queryClient],
+    app => console.log('setApplicationData'),
+    [],
   )
 
   return {

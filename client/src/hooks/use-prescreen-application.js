@@ -165,7 +165,7 @@ const step1Resolver = yupResolver(
     funding_institution_name: yup.string().required('Required'),
     funding_account_balance: yup.string().required('Required'),
     first_name: yup.string().required('Required'),
-    middle_name: yup.string(),
+    middle_name: yup.mixed().notRequired(),
     last_name: yup.string().required('Required'),
     phone_number: yup.string().required('Required'),
     email: yup.string().email().required('Required'),
@@ -396,7 +396,7 @@ const step3Fields = [
 const step3Resolver = yupResolver(
   yup.object().shape({
     number_rental_properties: yup.number().required('Required'),
-    estimated_net_worth_bracket: yup.mixed().notOneOf(['empty'], 'Required'),
+    estimated_net_worth_bracket: yup.mixed().notOneOf(['empty', null, undefined], 'Required'),
     referrer: yup.mixed().notRequired(),
   }),
 )

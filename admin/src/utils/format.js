@@ -1,11 +1,7 @@
 import {format, parseISO} from 'date-fns'
+import currencyjs from 'currency.js'
 
-const uSCurrency = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-})
-
-const currency = (str) => uSCurrency.format(str)
+const currency = str => currencyjs(str, {fromCents: true}).format()
 
 const empty =
   (fn, state = '-') =>
@@ -19,6 +15,7 @@ const empty =
       : state
 
 const phone = phone => {
+  if (typeof phone !== 'string') return ''
   const tenDigits = phone.replace(/^\+1/g, '')
   return tenDigits.replace(/(\d{3})(\d{3})(\d{4})/, '$1.$2.$3')
 }
@@ -38,7 +35,6 @@ const address = ({address, address_2, city, state, postal_code}) => {
 }
 
 const yesNo = val => (val ? 'Yes' : 'No')
-
 
 export {
   phone,

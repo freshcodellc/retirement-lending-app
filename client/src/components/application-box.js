@@ -2,6 +2,9 @@
 import {Button, colors, StatusBadge, TextLink} from '@solera/ui'
 import {Link} from 'react-router-dom'
 import get from 'lodash/get'
+import {format} from 'date-fns'
+import {parseISO} from 'date-fns'
+import isNull from 'lodash/isNull'
 
 const TERMS_STATUSES = [
   'started',
@@ -9,12 +12,19 @@ const TERMS_STATUSES = [
   'term_sheet_sent',
 ]
 
+const EDITABLE_STATUSES = [
+  'started',
+  'term_sheet_sent',
+  'term_sheet_accepted',
+  'approved',
+]
+
 const TERMS_HELPER_TEXT_MAP = {
   denied: 'Your application was denied. Please contact us for more info.',
   started: 'Pre-application incomplete',
   pre_application_submitted: 'Pre-application received',
   term_sheet_sent: 'Please review and sign your term sheet',
-  term_sheet_signed: 'Please complete full application',
+  term_sheet_accepted: 'Please complete full application',
   full_application_complete: 'Your loan is awaiting processing',
   underwriting: 'Your loan is being processed',
   under_review: 'Underwriting complete',
@@ -35,7 +45,19 @@ function ApplicationBox({data}) {
           borderBottom: `2px solid ${colors.secondary}`,
         }}
       >
-        <p css={{fontSize: '2rem', fontWeight: '500', lineHeight: '2.6rem', margin: 0}}>Application 1</p>
+        <p
+          css={{
+            fontSize: '2rem',
+            fontWeight: '500',
+            lineHeight: '2.6rem',
+            margin: 0,
+          }}
+        >
+          Application {data.uuid.split('-')[0]}
+        </p>
+        {typeof data.inserted_at === 'string' &&
+          <span css={{ fontSize: '1.2rem'}}>Started: {format(new Date(parseISO(data.inserted_at)), 'MM/dd/yyyy')}</span>
+        }
       </div>
       <div
         css={{
@@ -64,9 +86,11 @@ function ApplicationBox({data}) {
             <TextLink variant="secondary">Update property address</TextLink>
           </Link>
         )}
-        <Link to={`/application/${data.uuid}`} css={{marginTop: '2rem'}}>
-          <Button variant="secondary">Continue Loan Process</Button>
-        </Link>
+        {EDITABLE_STATUSES.includes(data.status) && (
+          <Link to={`/application/${data.uuid}`} css={{marginTop: '2rem'}}>
+            <Button variant="secondary">Continue Loan Process</Button>
+          </Link>
+        )}
       </div>
     </div>
   )

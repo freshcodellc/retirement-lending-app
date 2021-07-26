@@ -70,7 +70,6 @@ function logout() {
 function onTokensExpired() {
   logout()
   queryClient.clear()
-  window.location.replace('/')
 }
 
 const auth = {

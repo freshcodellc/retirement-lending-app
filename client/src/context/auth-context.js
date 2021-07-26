@@ -8,6 +8,7 @@ import {useAsync} from '../utils/hooks'
 import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
 
 async function bootstrapAppData() {
+  console.log('here!!')
   let user = null
 
   const token = await auth.getToken()
@@ -39,7 +40,9 @@ function AuthProvider(props) {
 
   React.useEffect(() => {
     const appDataPromise = bootstrapAppData()
-    run(appDataPromise)
+    if (appDataPromise) {
+      run(appDataPromise)
+    }
   }, [run])
 
   const login = React.useCallback(
@@ -95,10 +98,7 @@ function useAuth() {
 function useClient() {
   const {user} = useAuth()
   const token = user?.token
-  return React.useCallback(
-    (endpoint, config) => apiSecureClient(endpoint),
-    [],
-  )
+  return React.useCallback((endpoint, config) => apiSecureClient(endpoint), [])
 }
 
 export {AuthProvider, useAuth, useClient}

@@ -3,6 +3,7 @@ import {apiSecureClient} from '../utils/api-client'
 async function create(applicationData) {
   return await apiSecureClient('loan-applications', {
     data: {...applicationData},
+    method: 'POST',
   }).then(res => res)
 }
 

@@ -1,67 +1,111 @@
 import {apiBaseUrl, apiClient} from '../utils/api-client'
-import { queryClient } from "../context";
+import {queryClient} from '../context'
 
-const accessTokenKey = "SOLERA/__JWT__";
-const refreshTokenKey = "SOLERA/refresh_token";
+const accessTokenKey = 'SOLERA/__JWT__'
+const refreshTokenKey = 'SOLERA/__REFRESH__'
 
 function getToken() {
-  return window.localStorage.getItem(accessTokenKey);
+  return window.localStorage.getItem(accessTokenKey)
 }
 
 function getRefreshToken() {
-  return window.localStorage.getItem(refreshTokenKey);
+  return window.localStorage.getItem(refreshTokenKey)
+}
+
+async function fetchToken() {
+  const tokenFromStorage = getToken()
+  const refreshTokenFromStorage = getRefreshToken()
+
+  const tokenValid = await isTokenValid(tokenFromStorage)
+
+  if (!tokenValid) {
+    const refreshedTokens = await refreshAccessToken()
+    return refreshedTokens.token
+  }
+
+  return tokenFromStorage
+}
+
+async function isTokenValid(token) {
+  if (token) {
+    const payload = {token}
+    const response = await window.fetch(`${apiBaseUrl}/auth/tokens/check`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+      body: JSON.stringify(payload),
+    })
+
+    const result = await response.json()
+
+    return result.status
+  }
+  return false
 }
 
 async function refreshAccessToken() {
   try {
-    const refreshToken = getRefreshToken();
+    const refreshToken = getRefreshToken()
     if (!refreshToken) {
-      onTokensExpired();
+      throw Error('Could not find refresh token')
     }
-    const response = await window.fetch(`${apiBaseUrl}/auth/tokens`, {
-      method: "PUT",
-      body: JSON.stringify({
-        refresh_token: refreshToken,
-      }),
-    });
 
-    const result = await response.json();
+    const payload = {
+      refresh_token: refreshToken,
+    }
+
+    const response = await window.fetch(`${apiBaseUrl}/auth/tokens`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    })
+
+    const result = await response.json()
 
     if (response.ok) {
-      window.localStorage.setItem(accessTokenKey, result.token);
+      window.localStorage.setItem(accessTokenKey, result.token)
+      return {token: result.token}
     } else {
-      onTokensExpired();
+      throw Error('Error when refreshing token')
     }
   } catch (error) {
-    console.error(error);
-    onTokensExpired();
+    console.error(error)
+    onTokensExpired()
+    return {token: null}
   }
 }
 
-function handleUserResponse({ user }) {
-  window.localStorage.setItem(accessTokenKey, user.token);
-  return user;
+function setTokenInStorage({user}) {
+  window.localStorage.setItem(accessTokenKey, user.token)
+  window.localStorage.setItem(refreshTokenKey, user.refresh_token)
+  return user
 }
 
-function login({ email, password }) {
-  return apiClient("auth/login", { data: { email, password } }).then(handleUserResponse);
+function login({email, password}) {
+  return apiClient('auth/login', {
+    data: {email, password},
+    method: 'POST',
+  }).then(setTokenInStorage)
 }
 
 function register(applicantData) {
-  return apiClient("applicants/register", {
-    data: { user: { ...applicantData } }
-  }).then((res) => res);
+  return apiClient('applicants/register', {
+    data: {user: {...applicantData}, method: 'POST'},
+  }).then(res => res)
 }
 
 async function logout() {
-  window.localStorage.removeItem(accessTokenKey);
-  window.localStorage.removeItem(refreshTokenKey);
+  window.localStorage.removeItem(accessTokenKey)
+  window.localStorage.removeItem(refreshTokenKey)
 }
 
 function onTokensExpired() {
-  logout();
-  queryClient.clear();
-  // window.location.replace("/");
+  queryClient.clear()
+  logout()
 }
 
-export { getToken, refreshAccessToken, login, register, logout };
+export {getToken, fetchToken, refreshAccessToken, login, register, logout}

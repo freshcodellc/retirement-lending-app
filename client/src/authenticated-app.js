@@ -13,7 +13,6 @@ import {Header} from '@solera/ui'
 
 function AuthenticatedApp() {
   const navigate = useNavigate()
-
   const onLogoClick = () => navigate('/')
 
   return (

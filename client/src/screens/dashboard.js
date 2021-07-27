@@ -13,7 +13,7 @@ function DashboardScreen() {
   const {data} = useLoanApplications()
   const {
     data: {user},
-    isFetched
+    isFetched,
   } = useUser()
   const create = useCreateLoanApplication()
 
@@ -39,9 +39,12 @@ function DashboardScreen() {
       {data.map(app => (
         <ApplicationBox key={app.uuid} data={app} />
       ))}
-      {!data.length > 0 &&
-        <p>You have not yet started an application. Please click the "START NEW APPLICATION" button above to get started!</p>
-      }
+      {!data.length > 0 && (
+        <p>
+          You have not yet started an application. Please click the "START NEW
+          APPLICATION" button above to get started!
+        </p>
+      )}
     </Layout>
   )
 }

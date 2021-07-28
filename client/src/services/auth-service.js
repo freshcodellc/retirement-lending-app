@@ -91,7 +91,8 @@ function login({email, password}) {
 
 function register(applicantData) {
   return apiClient('applicants/register', {
-    data: {user: {...applicantData}, method: 'POST'},
+    data: {user: {...applicantData}},
+    method: 'POST',
   }).then(res => res)
 }
 

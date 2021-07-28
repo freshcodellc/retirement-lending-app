@@ -25,7 +25,7 @@ export default function SignUpScreen() {
   const hasNoInviteToken = !searchParams.has('token')
 
   const handleSignup = handleSubmit(form =>
-    run(signup({invite_token: inviteToken, user: form})),
+    run(signup({invite_token: inviteToken, ...form})),
   )
 
   if (hasNoInviteToken) {
@@ -59,7 +59,7 @@ export default function SignUpScreen() {
           hasError={isError}
           label="First name"
           placeholder="First name"
-          {...register('first_name', {required: true})}
+          {...register('profile.first_name', {required: true})}
         />
         <Input
           type="text"
@@ -68,21 +68,12 @@ export default function SignUpScreen() {
           hasError={isError}
           label="Last name"
           placeholder="Last name"
-          {...register('last_name', {required: true})}
-        />
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          hasError={isError}
-          label="Email address"
-          placeholder="Email address"
-          {...register('email', {required: true, pattern: /^\S+@\S+$/i})}
+          {...register('profile.last_name', {required: true})}
         />
         <PhoneInput
           hasError={isError}
           control={control}
-          name="phone_number"
+          name="profile.phone_number"
           label="Phone number"
           rules={{required: true}}
           placeholder="Phone number"
@@ -93,7 +84,7 @@ export default function SignUpScreen() {
           hasError={isError}
           label="Password"
           placeholder="Password"
-          {...register('password', {required: true})}
+          {...register('user.password', {required: true})}
         />
         <div
           css={{

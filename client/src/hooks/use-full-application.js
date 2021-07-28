@@ -1,4 +1,4 @@
-import {useMemo, useEffect} from 'react'
+import {useMemo} from 'react'
 import {useApplication} from 'hooks/use-application'
 import {useParams} from 'react-router-dom'
 import {yupResolver} from '@hookform/resolvers/yup'

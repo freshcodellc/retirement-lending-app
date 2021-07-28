@@ -27,14 +27,13 @@ export async function apiSecureClient(
   try {
     const token = await auth.fetchToken()
     if (!token) {
-      throw Error('Could not fetch auth token for api client')
+      Promise.reject('could not fetch token')
     }
     const authHeaders = buildAuthHeaders(token)
     const config = buildConfig({
-      customHeaders,
       body: data,
       customConfig,
-      customHeaders: authHeaders,
+      customHeaders: {...customHeaders, ...authHeaders},
     })
     return request(endpoint, config)
   } catch (error) {

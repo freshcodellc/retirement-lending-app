@@ -36,24 +36,24 @@ const schema = yup.object().shape({
 })
 
 function ProfileUpdateForm({onSubmit}) {
-  const {isLoading, isError, isSuccess, data, error, mutate} = useUpdateUser()
+  const {isError, isSuccess, mutate} = useUpdateUser()
   const {
     data: {user},
   } = useUser()
-  const { profile: profileFields } = user
+  const {profile: profileFields} = user
   const {control, formState, handleSubmit, register, reset} = useForm({
-    defaultValues: { email: user.email, ...profileFields },
+    defaultValues: {email: user.email, ...profileFields},
     mode: 'all',
     resolver: yupResolver(schema),
     submitFocusError: true,
   })
 
   function submitForm(formData) {
-    const { email, ...profile } = formData
+    const {email, ...profile} = formData
     mutate({
       ...user,
       email,
-      profile: { ...user.profile, ...profile },
+      profile: {...user.profile, ...profile},
     })
   }
 
@@ -332,11 +332,7 @@ function ProfileUpdateForm({onSubmit}) {
           </Button>
         </div>
         {isError ? <div>An error happened</div> : null}
-        {isSuccess ? (
-          <div>
-            Success! Your profile has been updated.
-          </div>
-        ) : null}
+        {isSuccess ? <div>Success! Your profile has been updated.</div> : null}
       </form>
     </Layout>
   )

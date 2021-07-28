@@ -1,5 +1,4 @@
 import {apiBaseUrl, apiClient} from '../utils/api-client'
-import {queryClient} from '../context'
 
 const accessTokenKey = 'SOLERA/__JWT__'
 const refreshTokenKey = 'SOLERA/__REFRESH__'
@@ -14,7 +13,6 @@ function getRefreshToken() {
 
 async function fetchToken() {
   const tokenFromStorage = getToken()
-  const refreshTokenFromStorage = getRefreshToken()
 
   const tokenValid = await isTokenValid(tokenFromStorage)
 
@@ -59,7 +57,6 @@ async function refreshAccessToken() {
       headers: {
         'Content-Type': 'application/json',
       },
-      method: 'post',
       method: 'PUT',
       body: JSON.stringify(payload),
     })
@@ -101,10 +98,10 @@ function register(applicantData) {
 async function logout() {
   window.localStorage.removeItem(accessTokenKey)
   window.localStorage.removeItem(refreshTokenKey)
+  window.location.replace('/')
 }
 
 function onTokensExpired() {
-  queryClient.clear()
   logout()
 }
 

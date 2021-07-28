@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom'
 import get from 'lodash/get'
 import {format} from 'date-fns'
 import {parseISO} from 'date-fns'
-import isNull from 'lodash/isNull'
 
 const TERMS_STATUSES = [
   'started',
@@ -55,9 +54,12 @@ function ApplicationBox({data}) {
         >
           Application {data.uuid.split('-')[0]}
         </p>
-        {typeof data.inserted_at === 'string' &&
-          <span css={{ fontSize: '1.2rem'}}>Started: {format(new Date(parseISO(data.inserted_at)), 'MM/dd/yyyy')}</span>
-        }
+        {typeof data.inserted_at === 'string' && (
+          <span css={{fontSize: '1.2rem'}}>
+            Started:{' '}
+            {format(new Date(parseISO(data.inserted_at)), 'MM/dd/yyyy')}
+          </span>
+        )}
       </div>
       <div
         css={{

@@ -3,12 +3,10 @@ import {queryClient} from '.'
 import * as auth from '../services/auth-service'
 import * as userService from '../services/user-service'
 import * as loanApplicationService from '../services/loan-application-service'
-import {apiSecureClient} from '../utils/api-client'
 import {useAsync} from '../utils/hooks'
 import {FullPageSpinner, FullPageErrorFallback} from '@solera/ui'
 
 async function bootstrapAppData() {
-  console.log('here!!')
   let user = null
 
   const token = await auth.getToken()
@@ -95,10 +93,4 @@ function useAuth() {
   return context
 }
 
-function useClient() {
-  const {user} = useAuth()
-  const token = user?.token
-  return React.useCallback((endpoint, config) => apiSecureClient(endpoint), [])
-}
-
-export {AuthProvider, useAuth, useClient}
+export {AuthProvider, useAuth}

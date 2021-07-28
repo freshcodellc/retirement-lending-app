@@ -1,8 +1,8 @@
 import {queryClient} from 'utils/query-client'
 import {apiClient, apiBaseUrl} from 'utils/api-client'
 
-const accessTokenKey = 'SOLERA_ADMIN/access_token'
-const refreshTokenKey = 'SOLERA_ADMIN/refresh_token'
+const accessTokenKey = 'SOLERA_ADMIN/__JWT__'
+const refreshTokenKey = 'SOLERA_ADMIN/__REFRESH__'
 
 function hasAuthTokens() {
   return !!getAccessToken() && !!getRefreshToken()

@@ -64,281 +64,271 @@ function ProfileUpdateForm({onSubmit}) {
   }, [isSuccess, reset])
 
   return (
-    <Layout css={{alignItems: 'center'}}>
-      <h1>Profile Update</h1>
-      <form
-        name="sign-up"
-        onSubmit={handleSubmit(d => submitForm(d))}
+    <form
+      name="sign-up"
+      onSubmit={handleSubmit(d => submitForm(d))}
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        width: '100%',
+      }}
+    >
+      <div
         css={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          width: '100%',
+          marginTop: '65px',
         }}
       >
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <RadioGroup text="Plan Type">
-            <RadioInput
-              name="IRA"
-              id="plan_type-IRA"
-              label="IRA"
-              value="IRA"
-              {...register('plan_type')}
-            />
-            <RadioInput
-              name="401K"
-              id="plan_type-401K"
-              label="401K"
-              value="401k"
-              {...register('plan_type')}
-            />
-          </RadioGroup>
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <EntitySelect
-            name="entity_type"
-            label="What entity type will the property be titled under?"
+        <RadioGroup text="Plan Type">
+          <RadioInput
+            name="IRA"
+            id="plan_type-IRA"
+            label="IRA"
+            value="IRA"
+            {...register('plan_type')}
+          />
+          <RadioInput
+            name="401K"
+            id="plan_type-401K"
+            label="401K"
+            value="401k"
+            {...register('plan_type')}
+          />
+        </RadioGroup>
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <EntitySelect
+          name="entity_type"
+          label="What entity type will the property be titled under?"
+          control={control}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="entity_type"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="entityName"
+          label="Name of entity"
+          name="entity_name"
+          type="text"
+          hasError={has(formState, 'errors.entity_name')}
+          {...register('entity_name')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="entity_name"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="fundingInstitutionName"
+          label="Where are the funds held to be used for this investment?"
+          name="funding_institution_name"
+          type="text"
+          hasError={has(formState, 'errors.funding_institution_name')}
+          {...register('funding_institution_name')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="funding_institution_name"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <FormControl id="fundingAccountBalance" name="funding_account_balance">
+          <CurrencyInput
             control={control}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="entity_type"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="entityName"
-            label="Name of entity"
-            name="entity_name"
-            type="text"
-            hasError={has(formState, 'errors.entity_name')}
-            {...register('entity_name')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="entity_name"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="fundingInstitutionName"
-            label="Where are the funds held to be used for this investment?"
-            name="funding_institution_name"
-            type="text"
-            hasError={has(formState, 'errors.funding_institution_name')}
-            {...register('funding_institution_name')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="funding_institution_name"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <FormControl
             id="fundingAccountBalance"
             name="funding_account_balance"
-          >
-            <CurrencyInput
-              control={control}
-              id="fundingAccountBalance"
-              name="funding_account_balance"
-              label="What is the cash balance in the account to be used for this investment?"
-              {...register('funding_account_balance')}
-            />
-          </FormControl>
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="firstName"
-            label="First name"
-            name="first_name"
-            type="text"
-            hasError={has(formState, 'errors.first_name')}
-            {...register('first_name')}
+            label="What is the cash balance in the account to be used for this investment?"
+            {...register('funding_account_balance')}
           />
-          <ErrorMessage
-            errors={formState.errors}
-            name="first_name"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="middleName"
-            label="Middle name"
-            name="middle_name"
-            type="text"
-            hasError={has(formState, 'errors.middle_name')}
-            {...register('middle_name')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="middle_name"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="lastName"
-            label="Last name"
-            name="last_name"
-            hasError={has(formState, 'errors.last_name')}
-            type="text"
-            {...register('last_name')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="last_name"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <PhoneInput
-            id="phone"
-            label="Phone"
-            name="phone_number"
-            hasError={has(formState, 'errors.phone_number')}
-            type="text"
-            control={control}
-            {...register('phone_number')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="phone_number"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="email"
-            label="Email"
-            name="email"
-            hasError={has(formState, 'errors.email')}
-            type="text"
-            {...register('email')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="email"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="numberRentalProperties"
-            label="How many rental properties do you own?"
-            name="number_rental_properties"
-            hasError={has(formState, 'errors.number_rental_properties')}
-            type="number"
-            {...register('number_rental_properties')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="number_rental_properties"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <NetWorthSelect
-            name="estimated_net_worth_bracket"
-            label="Estimated net worth?"
-            control={control}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '65px',
-          }}
-        >
-          <Input
-            id="referrer"
-            label="Who referred you to Solera National Bank?"
-            name="referrer"
-            type="text"
-            hasError={has(formState, 'errors.referrer')}
-            {...register('referrer')}
-          />
-          <ErrorMessage
-            errors={formState.errors}
-            name="referrer"
-            render={({message}) => <InputError>{message}</InputError>}
-          />
-        </div>
-        <div
-          css={{
-            marginTop: '75px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Button
-            variant="secondary"
-            type="submit"
-            disabled={!formState.isValid}
-          >
-            Submit
-          </Button>
-        </div>
-        {isError ? <div>An error happened</div> : null}
-        {isSuccess ? <div>Success! Your profile has been updated.</div> : null}
-      </form>
-    </Layout>
+        </FormControl>
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="firstName"
+          label="First name"
+          name="first_name"
+          type="text"
+          hasError={has(formState, 'errors.first_name')}
+          {...register('first_name')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="first_name"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="middleName"
+          label="Middle name"
+          name="middle_name"
+          type="text"
+          hasError={has(formState, 'errors.middle_name')}
+          {...register('middle_name')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="middle_name"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="lastName"
+          label="Last name"
+          name="last_name"
+          hasError={has(formState, 'errors.last_name')}
+          type="text"
+          {...register('last_name')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="last_name"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <PhoneInput
+          id="phone"
+          label="Phone"
+          name="phone_number"
+          hasError={has(formState, 'errors.phone_number')}
+          type="text"
+          control={control}
+          {...register('phone_number')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="phone_number"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="email"
+          label="Email"
+          name="email"
+          hasError={has(formState, 'errors.email')}
+          type="text"
+          {...register('email')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="email"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="numberRentalProperties"
+          label="How many rental properties do you own?"
+          name="number_rental_properties"
+          hasError={has(formState, 'errors.number_rental_properties')}
+          type="number"
+          {...register('number_rental_properties')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="number_rental_properties"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <NetWorthSelect
+          name="estimated_net_worth_bracket"
+          label="Estimated net worth?"
+          control={control}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '65px',
+        }}
+      >
+        <Input
+          id="referrer"
+          label="Who referred you to Solera National Bank?"
+          name="referrer"
+          type="text"
+          hasError={has(formState, 'errors.referrer')}
+          {...register('referrer')}
+        />
+        <ErrorMessage
+          errors={formState.errors}
+          name="referrer"
+          render={({message}) => <InputError>{message}</InputError>}
+        />
+      </div>
+      <div
+        css={{
+          marginTop: '75px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Button variant="secondary" type="submit" disabled={!formState.isValid}>
+          Submit
+        </Button>
+      </div>
+      {isError ? <div>An error happened</div> : null}
+      {isSuccess ? <div>Success! Your profile has been updated.</div> : null}
+    </form>
   )
 }
 
-function ProfileUpdateScreen() {
+function ProfileUpdateScreen({prompt = ''}) {
   const {register} = useUpdateUser()
   return (
     <div
@@ -349,7 +339,11 @@ function ProfileUpdateScreen() {
         justifyContent: 'center',
       }}
     >
-      <ProfileUpdateForm onSubmit={register} />
+      <Layout css={{alignItems: 'center'}}>
+        <h1>Profile Update</h1>
+        {prompt && <h3 css={{textAlign: 'center'}}>{prompt}</h3>}
+        <ProfileUpdateForm onSubmit={register} />
+      </Layout>
     </div>
   )
 }

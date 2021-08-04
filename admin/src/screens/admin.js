@@ -94,12 +94,13 @@ export default function Admin() {
 function InviteModal() {
   const [, openModal] = useModal()
   const queryClient = useQueryClient()
-  const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
+  const {register, handleSubmit, formState, reset} = useForm({mode: 'onChange'})
   const {mutate, isLoading, isError, isSuccess, error} = useSendInvite({
     onSuccess() {
       setTimeout(() => {
         queryClient.invalidateQueries(queryKeys.admin_invites)
         openModal(false)
+        reset()
       }, 2000)
     },
   })
@@ -136,6 +137,7 @@ function InviteModal() {
           }}
         >
           <Input
+            autoFocus
             type="email"
             label="Email"
             id="invite-email"
@@ -208,7 +210,7 @@ function AdminTable({
 
 function ActionsCell({value: invitePending, row}) {
   const queryClient = useQueryClient()
-  const {mutate: sendInvite, isLoading: resending} = useSendInvite()
+  // const {mutate: sendInvite} = useSendInvite()
   const {mutate: removeInvite, isLoading: removing} = useRemoveInvite({
     onSettled() {
       queryClient.invalidateQueries(queryKeys.admin_invites)
@@ -217,11 +219,11 @@ function ActionsCell({value: invitePending, row}) {
 
   if (!invitePending) return ''
 
-  const {uuid, email} = row.original
+  const {uuid} = row.original
 
-  const resendInvite = () => {
-    sendInvite({email})
-  }
+  // const resendInvite = () => {
+  //   sendInvite({email})
+  // }
 
   const cancelInvite = () => {
     removeInvite(uuid)
@@ -233,12 +235,14 @@ function ActionsCell({value: invitePending, row}) {
         display: 'flex',
         flexWrap: 'nowrap',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
       }}
     >
-      <TextLink variant="secondary" disabled={resending} onClick={resendInvite}>
-        {resending ? 'Resending...' : 'Resend invite'}
-      </TextLink>
+      {/* NOTE: hide for now until resend is handled form backend
+        <TextLink variant="secondary" disabled={resending} onClick={resendInvite}>
+          {resending ? 'Resending...' : 'Resend invite'}
+        </TextLink>
+      */}
       <IconButton onClick={cancelInvite} disabled={removing}>
         {removing ? (
           <Spinner css={{fontSize: '1.5em'}} />

@@ -3,6 +3,8 @@ import * as React from 'react'
 import {FiTrash2} from 'react-icons/fi'
 import {useTable, useGlobalFilter, useAsyncDebounce} from 'react-table'
 import {useForm} from 'react-hook-form'
+import {useQueryClient} from 'react-query'
+import {queryKeys} from 'utils/query-client'
 
 import {
   Button,
@@ -21,9 +23,11 @@ import {
   Td,
   TextLink,
   colors,
+  Spinner,
 } from '@solera/ui'
 import {useAdminsTable} from 'hooks/use-admins'
 import {useSendInvite} from 'hooks/use-send-invite'
+import {useRemoveInvite} from 'hooks/use-remove-invite'
 import {useTableFilters} from 'hooks/use-table-filters'
 export default function Admin() {
   const columns = React.useMemo(
@@ -89,11 +93,12 @@ export default function Admin() {
 
 function InviteModal() {
   const [, openModal] = useModal()
+  const queryClient = useQueryClient()
   const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
-  //TODO: optimistic update invite row
   const {mutate, isLoading, isError, isSuccess, error} = useSendInvite({
     onSuccess() {
       setTimeout(() => {
+        queryClient.invalidateQueries(queryKeys.admin_invites)
         openModal(false)
       }, 2000)
     },
@@ -201,17 +206,25 @@ function AdminTable({
   )
 }
 
-function ActionsCell({value: invitePending}) {
-  const {mutate} = useSendInvite()
+function ActionsCell({value: invitePending, row}) {
+  const queryClient = useQueryClient()
+  const {mutate: sendInvite, isLoading: resending} = useSendInvite()
+  const {mutate: removeInvite, isLoading: removing} = useRemoveInvite({
+    onSettled() {
+      queryClient.invalidateQueries(queryKeys.admin_invites)
+    },
+  })
+
   if (!invitePending) return ''
 
+  const {uuid, email} = row.original
+
   const resendInvite = () => {
-    //TODO: get email and send invite
-    mutate()
+    sendInvite({email})
   }
 
   const cancelInvite = () => {
-    //TODO: mutation cancel invite
+    removeInvite(uuid)
   }
 
   return (
@@ -223,11 +236,15 @@ function ActionsCell({value: invitePending}) {
         justifyContent: 'space-between',
       }}
     >
-      <TextLink variant="secondary" onClick={resendInvite}>
-        Resend invite
+      <TextLink variant="secondary" disabled={resending} onClick={resendInvite}>
+        {resending ? 'Resending...' : 'Resend invite'}
       </TextLink>
-      <IconButton onClick={cancelInvite}>
-        <FiTrash2 size="1.5em" color={colors.danger} />
+      <IconButton onClick={cancelInvite} disabled={removing}>
+        {removing ? (
+          <Spinner css={{fontSize: '1.5em'}} />
+        ) : (
+          <FiTrash2 size="1.5em" color={colors.danger} />
+        )}
       </IconButton>
     </div>
   )

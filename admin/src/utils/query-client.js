@@ -3,7 +3,8 @@ import {QueryClient} from 'react-query'
 const queryClient = new QueryClient()
 
 const queryKeys = {
-  users: 'users',
+  admins: 'admins',
+  admin_invites: 'admin_invites',
   constants: 'constants',
   login_user: 'login_user',
   application: uuid => ['applications', uuid],

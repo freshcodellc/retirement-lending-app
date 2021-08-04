@@ -8,6 +8,14 @@ function getAdmins() {
   return apiSecureClient('admins')
 }
 
+function getAdminInvites() {
+  return apiSecureClient('admin-invites')
+}
+
+function removeAdminInvites(inviteUUid) {
+  return apiSecureClient(`admin-invites/${inviteUUid}`, {method: 'DELETE'})
+}
+
 function sendInvite({email}) {
   return apiSecureClient('admin-invites', {data: {email}})
 }
@@ -36,6 +44,8 @@ const userService = {
   sendInvite,
   confirmInvite,
   resetPassword,
+  getAdminInvites,
+  removeAdminInvites,
   confirmResetPassword,
 }
 export default userService

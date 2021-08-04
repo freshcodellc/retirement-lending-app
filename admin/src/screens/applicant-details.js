@@ -3,7 +3,8 @@ import * as React from 'react'
 import {useTable} from 'react-table'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
-import {FiPhone, FiSend} from 'react-icons/fi'
+import {FiPhone, FiSend, FiTrash2, FiEdit2} from 'react-icons/fi'
+import {useQueryClient} from 'react-query'
 
 import {
   colors,
@@ -23,7 +24,12 @@ import {
   Input,
   FormMessage,
 } from '@solera/ui'
-import {useSaveNote} from 'hooks/use-save-note'
+import * as format from 'utils/format'
+import {useAuth} from 'context/auth-context'
+import {queryKeys} from 'utils/query-client'
+import {useAddNote} from 'hooks/use-add-note'
+import {useEditNote} from 'hooks/use-edit-note'
+import {useRemoveNote} from 'hooks/use-remove-note'
 import {useUpdateApplication} from 'hooks/use-update-application'
 import {useApplication, useInfoSections} from 'hooks/use-application'
 
@@ -264,16 +270,50 @@ function ApplicationInfo({application}) {
   )
 }
 
-function NotesTab() {
-  const {mutate: saveNote, isLoading} = useSaveNote()
-  const {handleSubmit, register, formState} = useForm({
+function NotesTab({application}) {
+  const {user} = useAuth()
+  const queryClient = useQueryClient()
+  const [noteInEdit, setNoteInEdit] = React.useState()
+  const {handleSubmit, register, formState, setValue, reset} = useForm({
     mode: 'onChange',
   })
-
-  const handleTakeNote = handleSubmit(form => {
-    //TODO: save note
-    saveNote(form)
+  const {mutate: addNote, isLoading: adding} = useAddNote({
+    onSuccess() {
+      queryClient.invalidateQueries(queryKeys.application(application.uuid))
+      reset()
+    },
   })
+  const {mutate: editNote} = useEditNote({
+    onSuccess() {
+      queryClient.invalidateQueries(queryKeys.application(application.uuid))
+      reset()
+      setNoteInEdit()
+    },
+  })
+  const {mutate: removeNote} = useRemoveNote({
+    onSettled() {
+      queryClient.invalidateQueries(queryKeys.application(application.uuid))
+    },
+  })
+
+  const handleSaveNote = handleSubmit(({body}) => {
+    if (noteInEdit) {
+      editNote({uuid: noteInEdit, body})
+    } else {
+      addNote({body, loan_application_uuid: application.uuid})
+    }
+  })
+
+  const handleEditNote =
+    ({uuid, body}) =>
+    () => {
+      setNoteInEdit(uuid)
+      setValue('body', body, {shouldValidate: true})
+    }
+
+  const handleRemoveNote = noteUuid => () => {
+    removeNote(noteUuid)
+  }
 
   return (
     <div
@@ -288,10 +328,10 @@ function NotesTab() {
         },
       }}
     >
-      <div css={{border: `1px solid ${colors.gray}`}}>
+      <div css={{border: `1px solid ${colors.gray20}`}}>
         <form
           name="notes"
-          onSubmit={handleTakeNote}
+          onSubmit={handleSaveNote}
           css={{
             margin: 0,
             height: '100%',
@@ -303,70 +343,74 @@ function NotesTab() {
         >
           <Textarea
             rows="21"
-            id="app-note"
-            name="app-note"
+            id="body"
+            name="body"
             placeholder="Start typing your note here..."
-            {...register('note', {required: true})}
+            {...register('body', {required: true})}
           />
           <Button
             type="submit"
-            isLoading={isLoading}
+            isLoading={adding}
             css={{margin: '1rem auto'}}
             disabled={!formState.isValid}
           >
-            Save
+            {noteInEdit ? 'Update' : 'Save'}
           </Button>
         </form>
       </div>
       <div
         css={{
-          border: `1px solid ${colors.gray}`,
+          border: `1px solid ${colors.gray20}`,
           maxHeight: '500px',
           minHeight: '500px',
           height: '100%',
           overflowY: 'auto',
         }}
       >
-        {[
-          {
-            id: 1,
-            createdDate: '4.13.21',
-            createdBy: 'Tom S.',
-            body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-          },
-          {
-            id: 2,
-            createdDate: '4.13.21',
-            createdBy: 'Tom S.',
-            body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-          },
-          {
-            id: 3,
-            createdDate: '4.13.21',
-            createdBy: 'Tom S.',
-            body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-          },
-        ].map(note => (
-          <div
-            key={note.id}
-            css={{
-              margin: '1rem',
-              padding: '1rem',
-              border: `1px solid ${colors.text}`,
-            }}
-          >
+        {(application.notes || []).map(note => {
+          //TODO: check admin is preload form backend for this to work
+          const {first_name, last_name, uuid} = note?.admin?.profile ?? {}
+          const adminName = format.join(first_name, format.initial(last_name))
+          const notedDate = format.isoDate(note.updated_at, 'MM.dd.yy')
+          const yourNotes = user.uuid === uuid
+
+          return (
             <div
-              css={{fontWeight: 500}}
-            >{`${note.createdDate}—${note.createdBy}`}</div>
-            <p>{note.body}</p>
-          </div>
-        ))}
+              key={note.uuid}
+              css={{
+                margin: '1rem',
+                padding: '1rem',
+                border: `1px solid ${colors.text}`,
+              }}
+            >
+              <div
+                css={{
+                  fontWeight: 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <div>{`${notedDate}—${adminName}`}</div>
+                {yourNotes ? (
+                  <div css={{display: 'flex', gap: '1rem'}}>
+                    <FiEdit2
+                      onClick={handleEditNote(note)}
+                      title="Edit your note"
+                      css={{cursor: 'pointer'}}
+                    />
+                    <FiTrash2
+                      onClick={handleRemoveNote(note.uuid)}
+                      title="Remove your note"
+                      css={{cursor: 'pointer'}}
+                    />
+                  </div>
+                ) : null}
+              </div>
+              <p>{note.body}</p>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

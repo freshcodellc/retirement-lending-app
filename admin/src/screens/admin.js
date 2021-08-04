@@ -21,7 +21,7 @@ import {
   Th,
   Tr,
   Td,
-  TextLink,
+  // TextLink,
   colors,
   Spinner,
 } from '@solera/ui'

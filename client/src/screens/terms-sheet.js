@@ -78,9 +78,7 @@ function TermsSheetScreen() {
           </p>
         </div>
         <div>
-          <h3>
-            Borrower(s): {data.first_name} {data.last_name}
-          </h3>
+          <h3>Borrower(s): {data.entity_name}</h3>
           <h3>Loan Amount: {loanAmount}</h3>
         </div>
         <div>
@@ -99,7 +97,8 @@ function TermsSheetScreen() {
             each annual rate adjustment, and by no more than a cumulative 6.0%
             over the life of the loan. The minimum rate to be charged will not
             be below {data.minimum_chargeable_interest_rate}% and the maximum
-            rate charged will not exceed the initial rate plus 6.0%.
+            rate charged will not exceed the initial rate plus{' '}
+            {data.interest_rate_floor}%.
           </p>
         </div>
         <div>
@@ -122,8 +121,8 @@ function TermsSheetScreen() {
         <div>
           <h3>Collateral:</h3>
           <p>
-            1 st Deed of Trust and Assignment of Rents (or equivalent) on
-            property commonly known as ____________________
+            1st Deed of Trust and Assignment of Rents (or equivalent) on
+            property commonly known as {address} {address_2}
           </p>
           <p>
             The maximum Loan amount will be restricted to 60% of the lesser of
@@ -131,7 +130,7 @@ function TermsSheetScreen() {
           </p>
         </div>
         <div>
-          <h3>Prepayment:</h3>
+          <h3>Prepayment Fee:</h3>
           <p>The loan may be prepaid at any time without penalty.</p>
         </div>
         <div>
@@ -323,14 +322,14 @@ function TermsSheetScreen() {
             {...register('entity_name')}
           />
           <Input
-            label="By"
-            placeholder="By"
+            label="Signature"
+            placeholder="Signature"
             name="signature"
             {...register('signature')}
           />
           <Input
-            label="Name"
-            placeholder="Name"
+            label={`Name of ${name}`}
+            placeholder={`Name of ${name}`}
             name="full_name"
             {...register('full_name')}
           />

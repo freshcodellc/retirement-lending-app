@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import {Fragment} from 'react'
+import {Fragment, useLayoutEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import {useNavigate} from 'react-router-dom'
 import {Button, Input} from '@solera/ui'
@@ -23,6 +23,9 @@ function TermsSheetScreen() {
     mode: 'onChange',
     resolver: validationResolver,
   })
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const name = data.plan_type === 'IRA' ? 'Manager' : 'Trustee'
   const signedDate = format(new Date(), `do 'day of' MMMM, yyyy`)

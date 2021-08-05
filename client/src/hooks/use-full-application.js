@@ -145,7 +145,7 @@ const step1Fields = [
   {
     type: 'number',
     name: 'years_at_address',
-    label: 'How long have you lived at this address?',
+    label: 'How many years have you lived at this address?',
     placeholder: 'Number of years lived at address',
   },
   {
@@ -325,6 +325,7 @@ const step5Fields = [
     type: 'date',
     label: 'Date',
     name: 'signature_date',
+    disabled: true
   },
 ]
 const step5Resolver = yupResolver(

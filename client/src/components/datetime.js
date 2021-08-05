@@ -85,6 +85,7 @@ const DatePicker = ({
   rules,
   className,
   placeholder,
+  disabled = false,
   ...props
 }) => {
   const pickerRef = useRef()
@@ -109,6 +110,7 @@ const DatePicker = ({
         peekNextMonth
         showMonthDropdown
         showYearDropdown
+        disabled={disabled}
         dropdownMode="select"
         selected={typeDate}
         onChange={onDateChange}
@@ -119,6 +121,7 @@ const DatePicker = ({
             ref={ref}
             id={name}
             name={name}
+            disabled={disabled}
             css={{paddingRight: '20px'}}
             {...props}
             type="text"

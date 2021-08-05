@@ -128,7 +128,7 @@ const applicantfields = [
   {
     type: 'number',
     name: 'years_at_address',
-    label: 'How long have you lived at this address?',
+    label: 'How many years have you lived at this address?',
     placeholder: 'Number of years lived at address',
   },
   {

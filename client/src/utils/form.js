@@ -29,6 +29,8 @@ function setApplicationDefaultValues(app) {
       } else {
         if (cur.type === 'select') {
           value = 'empty'
+        } else if (cur.name === 'signature_date') {
+          value = new Date()
         }
       }
       acc[key] = value

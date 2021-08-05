@@ -81,8 +81,8 @@ function PreScreenApplicationScreen() {
   const handleSave = handleSubmit(form =>
     saveEdit(
       !isLastStep
-        ? {...data, ...form, uuid}
-        : {...data, ...form, uuid, status: 'pre_application_submitted'},
+        ? {...form, uuid}
+        : {...form, uuid, status: 'pre_application_submitted'},
     ),
   )
 

@@ -86,8 +86,8 @@ function FullApplicationScreen() {
   const handleSave = handleSubmit(form =>
     saveEdit(
       !isLastStep
-        ? {...data, ...form, uuid}
-        : {...data, ...form, uuid, status: 'full_application_complete'},
+        ? {...form, uuid}
+        : {...form, uuid, status: 'full_application_complete'},
     ),
   )
 

@@ -30,11 +30,20 @@ function useEditApplicantDetails() {
       }[section] || {}),
     [section],
   )
-  const defaultValues = useMemo(
-    () =>
-      editSection.fields.reduce(setApplicationDefaultValues(application), {}),
-    [application, editSection],
-  )
+  const defaultValues = useMemo(() => {
+    const values = editSection.fields.reduce(
+      setApplicationDefaultValues(application),
+      {},
+    )
+
+    console.log(application)
+    return {
+      ...values,
+      assigned_admin_user_uuid:
+        application.assigned_admin?.uuid ||
+        application.assigned_admin_user_uuid,
+    }
+  }, [application, editSection])
 
   return {
     uuid,

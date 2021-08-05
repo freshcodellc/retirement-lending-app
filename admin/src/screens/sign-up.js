@@ -18,9 +18,10 @@ export default function SignUpScreen() {
   const {signup} = useAuth()
   const [searchParams] = useSearchParams()
   const {isLoading, isSuccess, isError, run} = useAsync()
-  const {register, handleSubmit, formState, control} = useForm({
+  const {register, handleSubmit, formState, control, watch} = useForm({
     mode: 'onChange',
   })
+
   const inviteToken = searchParams.get('token')
   const hasNoInviteToken = !searchParams.has('token')
 
@@ -85,6 +86,17 @@ export default function SignUpScreen() {
           label="Password"
           placeholder="Password"
           {...register('user.password', {required: true})}
+        />
+        <PasswordInput
+          id="passwordConfirm"
+          name="passwordConfirm"
+          hasError={isError}
+          label="Confirm Password"
+          placeholder="Confirm Password"
+          {...register('user.passwordConfirm', {
+            required: true,
+            validate: value => value === watch('user.password'),
+          })}
         />
         <div
           css={{

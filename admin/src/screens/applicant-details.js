@@ -180,25 +180,25 @@ function ActionsPanel({activeTab, application}) {
         <Input
           type="text"
           placeholder="%"
-          label="Range low rate"
+          label="Low rate"
           {...register('interest_rate_range_low', {required: true})}
         />
         <Input
           type="text"
           placeholder="%"
-          label="Range high rate"
+          label="Ligh rate"
           {...register('interest_rate_range_high', {required: true})}
         />
         <Input
           type="text"
           placeholder="%"
-          label="Spread low rate"
+          label="Margin low rate"
           {...register('interest_rate_spread_low', {required: true})}
         />
         <Input
           type="text"
           placeholder="%"
-          label="Spread high rate"
+          label="Margin high rate"
           {...register('interest_rate_spread_high', {required: true})}
         />
       </div>

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {useTable} from 'react-table'
 import {useForm} from 'react-hook-form'
 
@@ -120,6 +120,7 @@ function FiltersPanel({setFilters}) {
 
 function ApplicantTable({filters}) {
   const {user} = useAuth()
+  const navigate = useNavigate()
   const {
     page,
     total,
@@ -137,6 +138,18 @@ function ApplicantTable({filters}) {
 
   const columns = React.useMemo(
     () => [
+      {
+        Header: '',
+        accessor: 'uuid',
+        Cell: ({value: uuid, row}) => {
+          const routingToApp = () => setApplicationData(row.original)
+          return (
+            <Link onMouseEnter={routingToApp} to={`/applicants/${uuid}`}>
+              <TextLink variant="secondary">View</TextLink>
+            </Link>
+          )
+        },
+      },
       {Header: 'Applicant name', accessor: 'first_name'},
       {Header: 'Email', accessor: 'email'},
       {
@@ -165,20 +178,8 @@ function ApplicantTable({filters}) {
             <span>
               {profile
                 ? join(profile.first_name, initial(profile.last_name))
-                : email}
+                : email.split('@')[0]}
             </span>
-          )
-        },
-      },
-      {
-        Header: '',
-        accessor: 'uuid',
-        Cell: ({value: uuid, row}) => {
-          const routingToApp = () => setApplicationData(row.original)
-          return (
-            <Link onMouseEnter={routingToApp} to={`/applicants/${uuid}`}>
-              <TextLink variant="secondary">View</TextLink>
-            </Link>
           )
         },
       },
@@ -231,27 +232,27 @@ function ApplicantTable({filters}) {
             {rows.map((row, i) => {
               prepareRow(row)
               return (
-                <Tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    const mineStyle =
-                      user.uuid === cell.row.original.assigned_admin?.uuid
-                        ? {
-                            color: colors.secondary,
-                            fontWeight: 500,
-                          }
-                        : {}
-                    return (
-                      <Td
-                        css={{
-                          padding: '1.9rem 2rem',
-                          ...mineStyle,
-                        }}
-                        {...cell.getCellProps()}
-                      >
-                        {cell.render('Cell')}
-                      </Td>
-                    )
-                  })}
+                <Tr {...row.getRowProps()} css={{'&:hover': {cursor: 'pointer', backgroundColor: 'rgba(118,74,243,0.2)'}}} role="button" onClick={() => navigate(`/applicants/${row.values.uuid}`)}>
+                    {row.cells.map(cell => {
+                      const mineStyle =
+                        user.uuid === cell.row.original.assigned_admin?.uuid
+                          ? {
+                              color: colors.secondary,
+                              fontWeight: 500,
+                            }
+                          : {}
+                      return (
+                        <Td
+                          css={{
+                            padding: '1.9rem 1rem',
+                            ...mineStyle,
+                          }}
+                          {...cell.getCellProps()}
+                        >
+                          {cell.render('Cell')}
+                        </Td>
+                      )
+                    })}
                 </Tr>
               )
             })}

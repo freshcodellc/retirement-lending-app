@@ -186,7 +186,7 @@ function ActionsPanel({activeTab, application}) {
         <Input
           type="text"
           placeholder="%"
-          label="Ligh rate"
+          label="High rate"
           {...register('interest_rate_range_high', {required: true})}
         />
         <Input

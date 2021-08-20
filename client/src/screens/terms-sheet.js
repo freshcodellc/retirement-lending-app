@@ -96,7 +96,7 @@ function TermsSheetScreen() {
             Interest rates will not adjust, up or down, by more than 2.0% at
             each annual rate adjustment, and by no more than a cumulative 6.0%
             over the life of the loan. The minimum rate to be charged will not
-            be below {data.minimum_chargeable_interest_rate}% and the maximum
+            be below {data.interest_rate_floor}% and the maximum
             rate charged will not exceed the initial rate plus{' '}
             {data.interest_rate_floor}%.
           </p>

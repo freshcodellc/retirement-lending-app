@@ -35,7 +35,10 @@ function setApplicationDefaultValues(app) {
       }
       acc[key] = value
     }
-    return acc
+    return {
+      ...acc,
+      assigned_admin_user_uuid: app.assigned_admin?.uuid
+    }
   }
 }
 

@@ -50,6 +50,10 @@ const sections = {
     route: 'custodian-ira',
     heading: 'custodian and IRA information',
   },
+  postApproval: {
+    route: 'post-approval',
+    heading: 'post-approval information',
+  },
   sign: {
     route: 'sign-certify',
     heading: 'sign and certify',
@@ -84,6 +88,10 @@ function useInfoSections(app) {
       {
         ...sections.custodian,
         fields: custodianFields(app),
+      },
+      {
+        ...sections.postApproval,
+        fields: postApprovalFields(app),
       },
       {
         ...sections.sign,
@@ -294,6 +302,47 @@ function custodianFields(app) {
     {
       label: 'What is the IRA account number?',
       value: empty()(),
+    },
+  ]
+}
+
+function postApprovalFields(app) {
+  return [
+    {
+      label: 'Appraisal Contact Name',
+      value: empty()(app?.appraisal_contact_name),
+    },
+    {
+      label: 'Appraisal Contact Email',
+      value: empty()(app?.appraisal_contact_email),
+    },
+    {
+      label: 'Appraisal Contact Phone',
+      value: empty()(app?.appraisal_contact_phone_number),
+    },
+    {
+      label: 'Insurance Company Email',
+      value: empty()(app?.insurance_company_email),
+    },
+    {
+      label: 'Insurance Company Name',
+      value: empty()(app?.insurance_company_name),
+    },
+    {
+      label: 'Insurance Company Phone Number',
+      value: empty()(app?.insurance_company_phone_number),
+    },
+    {
+      label: 'Title Company or Law Firm Email',
+      value: empty()(app?.title_company_or_law_firm_email),
+    },
+    {
+      label: 'Title Company or Law Firm Name',
+      value: empty()(app?.title_company_or_law_firm_name),
+    },
+    {
+      label: 'Title Company or Law Firm Phone Number',
+      value: empty()(app?.title_company_or_law_firm_phone_number),
     },
   ]
 }

@@ -23,6 +23,10 @@ function useEditApplicantDetails() {
           ...sections.property,
           fields: eraFields,
         },
+        [sections.postApproval.route]: {
+          ...sections.postApproval,
+          fields: postApprovalFields,
+        },
         [sections.sign.route]: {
           ...sections.sign,
           fields: signCertifyFields,
@@ -363,6 +367,54 @@ const propertyFields = [
     type: 'currency',
     label: 'Estimated value of the property',
     name: 'estimated_value',
+  },
+]
+
+const postApprovalFields = [
+  {
+    type: 'text',
+    label: 'Appraisal Contact Name',
+    name: 'appraisal_contact_name',
+  },
+  {
+    type: 'text',
+    label: 'Appraisal Contact Email',
+    name: 'appraisal_contact_email',
+  },
+  {
+    type: 'phone',
+    label: 'Appraisal Contact Phone',
+    name: 'appraisal_contact_phone_number',
+  },
+  {
+    type: 'text',
+    label: 'Insurance Company Email',
+    name: 'insurance_company_email',
+  },
+  {
+    type: 'text',
+    label: 'Insurance Company Name',
+    name: 'insurance_company_name',
+  },
+  {
+    type: 'phone',
+    label: 'Insurance Company Phone Number',
+    name: 'insurance_company_phone_number',
+  },
+  {
+    type: 'text',
+    label: 'Title Company or Law Firm Email',
+    name: 'title_company_or_law_firm_email',
+  },
+  {
+    type: 'text',
+    label: 'Title Company or Law Firm Name',
+    name: 'title_company_or_law_firm_name',
+  },
+  {
+    type: 'phone',
+    label: 'Title Company or Law Firm Phone Number',
+    name: 'title_company_or_law_firm_phone_number',
   },
 ]
 

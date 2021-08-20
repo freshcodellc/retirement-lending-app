@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {useQuery} from 'react-query'
 import * as applicationService from 'services/loan-application-service'
 
@@ -21,6 +22,7 @@ function useConstants() {
   const propertyTypesMap = mapTypes(data.property_types)
   const netWorthsMap = mapTypes(data.estimated_net_worth_brackets)
   const documentTypesMap = mapTypes(data.document_types)
+  const statusesMap = useMemo(() => mapTypes(data.statuses), [data.statuses])
 
   return {
     statuses,
@@ -28,6 +30,7 @@ function useConstants() {
     netWorths,
     entityTypes,
     propertyTypes,
+    statusesMap,
     planTypesMap,
     entityTypesMap,
     propertyTypesMap,

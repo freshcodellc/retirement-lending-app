@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import get from 'lodash/get'
 import {format} from 'date-fns'
 import {parseISO} from 'date-fns'
+import {useConstants} from 'hooks/use-constants'
 
 const TERMS_STATUSES = [
   'started',
@@ -31,6 +32,8 @@ const TERMS_HELPER_TEXT_MAP = {
 }
 
 function ApplicationBox({data}) {
+  const {statusesMap} = useConstants()
+
   return (
     <div
       css={{
@@ -71,7 +74,11 @@ function ApplicationBox({data}) {
         }}
       >
         <div css={{alignSelf: 'stretch'}}>
-          <StatusBadge status={data.status} css={{width: '100%'}} />
+          <StatusBadge
+            status={data.status}
+            css={{width: '100%'}}
+            label={get(statusesMap, data.status, 'unknown')}
+          />
           <p>
             {get(
               TERMS_HELPER_TEXT_MAP,

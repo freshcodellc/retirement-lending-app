@@ -1,11 +1,13 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useState } from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useApplication} from 'hooks/use-application'
 import {colors, TextLink, StatusBadge} from '@solera/ui'
 import {FiArrowRight} from 'react-icons/fi'
 import {Layout} from 'components'
+import {useConstants} from 'hooks/use-constants'
 import get from 'lodash/get'
+import { useEffect } from 'react'
 
 const STATUS_STEPS_MAP = {
   denied: 0,
@@ -57,6 +59,7 @@ const SECTIONS = [
 function ApplicationScreen() {
   const navigate = useNavigate()
   const {data} = useApplication()
+  const { statusesMap } = useConstants()
 
   return (
     <Layout css={{alignItems: 'center'}}>
@@ -94,7 +97,9 @@ function ApplicationScreen() {
               <div css={{padding: '4rem'}}>
                 <StatusBadge
                   status={completed ? 'approved' : status}
-                  label={completed ? 'Completed' : statusLabel[status]}
+                  label={
+                    completed ? 'Completed' : get(statusesMap, status, 'unknown')
+                  }
                 />
                 <p css={{margin: '4rem 0'}}>{section.description}</p>
                 {!completed && (

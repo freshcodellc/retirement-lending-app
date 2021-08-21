@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import React, {useMemo} from 'react'
 import {useQuery} from 'react-query'
 
 import applicationService from 'services/application-service'
@@ -13,7 +13,12 @@ function useConstants() {
     applicationService.constants,
     {staleTime: Infinity},
   )
-  const statuses = data.statuses || []
+
+  const humanizedTextFor = React.memo(
+    (list, key) => list.find(element => element.name === key)?.humanized,
+  )
+
+  const statuses = useMemo(() => data.statuses || [], [data.statuses])
   const planTypes = data.plan_types || []
   const entityTypes = data.entity_types || []
   const propertyTypes = data.property_types || []
@@ -39,6 +44,7 @@ function useConstants() {
     netWorthsMap,
     documentTypes,
     documentTypesMap,
+    humanizedTextFor,
     ...result,
   }
 }

@@ -1,28 +1,31 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
 import {useTable} from 'react-table'
+import {isSameDay, parseISO} from 'date-fns'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
 import {FiPhone, FiSend, FiTrash2, FiEdit2} from 'react-icons/fi'
 import {useQueryClient} from 'react-query'
+import {useConstants} from 'hooks/use-constants'
 
 import {
+  Button,
   colors,
-  Tabs,
+  DatePicker,
+  FormMessage,
+  Input,
   Tab,
+  Table,
+  TableWrapper,
   TabList,
   TabPanel,
   TabPanels,
-  Textarea,
-  TableWrapper,
-  Table,
-  Tr,
-  Th,
+  Tabs,
   Td,
+  Textarea,
   TextLink,
-  Button,
-  Input,
-  FormMessage,
+  Th,
+  Tr,
 } from '@solera/ui'
 import * as format from 'utils/format'
 import {useAuth} from 'context/auth-context'
@@ -76,10 +79,16 @@ export default function ApplicantDetails() {
 }
 
 function ActionsPanel({activeTab, application}) {
+  const [updateWarning, setUpdateWarning] = React.useState('')
   const {mutate, isError, isSuccess, isLoading} = useUpdateApplication()
-  const {handleSubmit, control, register, formState} = useForm({
+  const {statuses, humanizedTextFor} = useConstants()
+
+  const {handleSubmit, watch, control, register, formState} = useForm({
     mode: 'onChange',
     defaultValues: {
+      estimated_closing_date: application.estimated_closing_date,
+      estimated_appraisal_delivery_date:
+        application.estimated_appraisal_delivery_date,
       status: application.status,
       admin: application.assigned_admin?.uuid,
       interest_rate_floor: application.interest_rate_floor,
@@ -89,6 +98,66 @@ function ActionsPanel({activeTab, application}) {
       interest_rate_spread_high: application.interest_rate_spread_high,
     },
   })
+
+  const statusWatcher = watch('status')
+  const estimatedClosingDateWatcher = watch('estimated_closing_date')
+  const estimatedAppraisalDeliverDateWatcher = watch(
+    'estimated_appraisal_delivery_date',
+  )
+
+  React.useEffect(() => {
+    const emailWarningStatuses = [
+      'pre_application_submitted',
+      'term_sheet_sent',
+      'term_sheet_accepted',
+      'full_application_complete',
+      'under_review',
+      'approved',
+      'denied',
+      'estimated_appraisal_delivery_date_set',
+      'estimated_closing_date_set',
+    ]
+
+    if (
+      application.status !== statusWatcher &&
+      emailWarningStatuses.includes(statusWatcher)
+    ) {
+      setUpdateWarning(
+        `Warning: Changing the status of the application to '${humanizedTextFor(
+          statuses,
+          statusWatcher,
+        )}' will email the customer.`,
+      )
+    } else {
+      setUpdateWarning('')
+    }
+  }, [statusWatcher, application.status])
+
+  React.useEffect(() => {
+    const oldDate = parseISO(application.estimated_appraisal_delivery_date)
+    const newDate = new Date(estimatedAppraisalDeliverDateWatcher)
+
+    if (!isSameDay(oldDate, newDate)) {
+      setUpdateWarning(
+        'Warning: Updating the estimated appraisal delivery date will email the customer.',
+      )
+    } else {
+      setUpdateWarning('')
+    }
+  }, [estimatedAppraisalDeliverDateWatcher])
+
+  React.useEffect(() => {
+    const oldDate = parseISO(application.estimated_closing_date)
+    const newDate = new Date(estimatedClosingDateWatcher)
+
+    if (!isSameDay(oldDate, newDate)) {
+      setUpdateWarning(
+        'Warning: Updating the estimated closing date will email the customer.',
+      )
+    } else {
+      setUpdateWarning('')
+    }
+  }, [estimatedClosingDateWatcher])
 
   const handleTermSheet = handleSubmit(({status, admin, ...rates}) => {
     mutate({
@@ -150,6 +219,7 @@ function ActionsPanel({activeTab, application}) {
           >
             Update
           </Button>
+          {updateWarning && <FormMessage>{updateWarning}</FormMessage>}
           {isSuccess && (
             <FormMessage variant="success">Successfully Updated!</FormMessage>
           )}
@@ -164,6 +234,7 @@ function ActionsPanel({activeTab, application}) {
           gap: '2rem',
           flexWrap: 'wrap',
           flexDirection: 'row',
+          marginBottom: '2rem',
           '&>*': {
             width: '100%',
             maxWidth: '200px',
@@ -201,6 +272,65 @@ function ActionsPanel({activeTab, application}) {
           label="Margin high rate"
           {...register('interest_rate_spread_high', {required: true})}
         />
+      </div>
+      <div
+        css={{
+          display: 'flex',
+          gap: '2rem',
+          flexWrap: 'wrap',
+          flexDirection: 'row',
+          '&>*': {
+            width: '100%',
+            maxWidth: '350px',
+          },
+        }}
+      >
+        <div
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+          }}
+        >
+          <label
+            css={{
+              fontWeight: '300',
+              fontSize: '20px',
+              lineHeight: '26px',
+              marginBottom: '0.5rem',
+            }}
+          >
+            Estimated Closing Date
+          </label>
+          <DatePicker
+            name="estimated_closing_date"
+            placeholder="Estimated Closing Date"
+            control={control}
+          />
+        </div>
+        <div
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+          }}
+        >
+          <label
+            css={{
+              fontWeight: '300',
+              fontSize: '20px',
+              lineHeight: '26px',
+              marginBottom: '0.5rem',
+            }}
+          >
+            Estimated Appraisal Delivery Date
+          </label>
+          <DatePicker
+            name="estimated_appraisal_delivery_date"
+            placeholder="Estimated Appraisal Delivery Date"
+            control={control}
+          />
+        </div>
       </div>
     </form>
   )

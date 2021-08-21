@@ -94,7 +94,14 @@ function adaptFields(fields) {
       value = currency(value).multiply(100)
     }
     // date fields
-    if (['date_of_birth', 'signature_date'].includes(key)) {
+    if (
+      [
+        'date_of_birth',
+        'signature_date',
+        'estimated_closing_date',
+        'estimated_appraisal_delivery_date',
+      ].includes(key)
+    ) {
       value = new Date(value).toISOString()
     }
 

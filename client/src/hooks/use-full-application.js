@@ -50,7 +50,7 @@ function useFullApplication() {
         },
         [isIraCustodian ? 6 : 5]: {
           heading: `Thank you for your application`,
-          subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within x — x business days.`,
+          subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within 2 — 5 business days.`,
           fields: [],
           resolver: emptyResolver,
         },

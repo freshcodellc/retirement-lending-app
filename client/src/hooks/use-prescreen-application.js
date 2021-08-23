@@ -30,7 +30,7 @@ function usePrescreenApplication() {
         },
         4: {
           heading: `Thank you for your application`,
-          subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within x — x business days.`,
+          subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within 1 — 2 business days.`,
           fields: [],
           resolver: emptyResolver,
         },

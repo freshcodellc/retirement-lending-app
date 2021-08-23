@@ -82,6 +82,12 @@ function PostApprovalScreen() {
             }
 
             switch (field.type) {
+              case 'h2':
+                return (
+                  <h2 css={{margin: '90px 0 0'}} key={field.text}>
+                    {field.text}
+                  </h2>
+                )
               case 'text':
                 return <Input {...props} {...register(field.name)} />
               case 'phone':

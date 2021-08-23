@@ -54,61 +54,73 @@ const emptyResolver = yupResolver(yup.object().shape({}))
 
 // step 1
 const step1Fields = [
+  // appraisal contact section
+  {
+    type: 'h2',
+    text: 'Appraisal Contact Information',
+  },
   {
     type: 'text',
-    label: 'Contact person for the appraisal inspection',
+    label: 'Name',
     placeholder: 'Contact name',
     name: 'appraisal_contact_name',
   },
   {
     type: 'phone',
-    label: 'What is the best phone number to reach them?',
+    label: 'Phone number',
     placeholder: 'Phone number',
     name: 'appraisal_contact_phone_number',
   },
   {
     type: 'email',
-    label: 'What is the best email address to reach them?',
+    label: 'Email address',
     placeholder: 'Email address',
     name: 'appraisal_contact_email',
   },
+  // Insurance company section
+  {
+    type: 'h2',
+    text: 'Insurance Company Information',
+  },
   {
     type: 'text',
-    label:
-      'What is the name of the insurance company who will insure the property?',
+    label: 'Company name',
     placeholder: 'Company name',
     name: 'insurance_company_name',
   },
   {
     type: 'phone',
-    label:
-      'What is the phone number for the insurance company insuring the property?',
+    label: 'Company phone number',
     placeholder: 'Phone number',
     name: 'insurance_company_phone_number',
   },
   {
     type: 'email',
-    label:
-      'What is the email address for the insurance company insuring the property?',
+    label: 'Company email address',
     placeholder: 'Email address',
     name: 'insurance_company_email',
+  },
+  // Title company section
+  {
+    type: 'h2',
+    text: 'Title Company or Law Firm Information',
   },
   {
     type: 'text',
     label:
-      'What is the name of the title company or law firm that is handling the closing?',
+      'Company name',
     placeholder: 'Company name',
     name: 'title_company_or_law_firm_name',
   },
   {
     type: 'phone',
-    label: 'What is the phone number for the title company or law firm?',
+    label: 'Company phone number',
     placeholder: 'Phone number',
     name: 'title_company_or_law_firm_phone_number',
   },
   {
     type: 'email',
-    label: 'What is the email address for the title company or law firm?',
+    label: 'Company email address',
     placeholder: 'Email address',
     name: 'title_company_or_law_firm_email',
   },

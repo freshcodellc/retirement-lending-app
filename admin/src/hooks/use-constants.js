@@ -14,9 +14,9 @@ function useConstants() {
     {staleTime: Infinity},
   )
 
-  const humanizedTextFor = React.memo(
-    (list, key) => list.find(element => element.name === key)?.humanized,
-  )
+  const humanizedTextFor =
+    (list, key) => list.find(element => element.name === key)?.humanized
+
 
   const statuses = useMemo(() => data.statuses || [], [data.statuses])
   const planTypes = data.plan_types || []

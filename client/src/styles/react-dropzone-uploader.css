@@ -4,7 +4,7 @@
   align-items: center;
   width: 100%;
   padding: 4rem 0;
-  overflow: scroll;
+  overflow: hidden;
   margin: 0 auto;
   position: relative;
   box-sizing: border-box;

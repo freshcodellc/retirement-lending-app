@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
 import {useAuth} from '../context/auth-context'
@@ -8,6 +9,7 @@ import has from 'lodash/has'
 import {ErrorMessage} from '@hookform/error-message'
 import * as yup from 'yup'
 import {Button, Input, InputError, TextLink} from '@solera/ui'
+import toast, {Toaster} from 'react-hot-toast'
 import {Layout} from 'components'
 
 const schema = yup.object().shape({
@@ -15,13 +17,25 @@ const schema = yup.object().shape({
   password: yup.string().min(8).required('Required'),
 })
 
+const notifyError = message => toast.error(message)
+
 function LoginForm({onSubmit}) {
-  const {isError, run} = useAsync()
+  const {run, error} = useAsync()
   const {formState, handleSubmit, register} = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
     submitFocusError: true,
   })
+
+  useEffect(() => {
+    if (error?.error === 'Unauthorized') {
+      notifyError(
+        'Whoops! The email or password is incorrect. Please try again.',
+      )
+    } else {
+      notifyError('An unhandled error occurred. Please try again.')
+    }
+  }, [error])
 
   function submitForm(formData) {
     const {email, password} = formData
@@ -118,7 +132,7 @@ function LoginForm({onSubmit}) {
             <TextLink variant="secondary">Sign up</TextLink>
           </Link>
         </div>
-        {isError ? <div>An error happened</div> : null}
+        <Toaster />
       </form>
     </Layout>
   )

@@ -3,12 +3,15 @@ import {useApplication} from 'hooks/use-application'
 import {useParams} from 'react-router-dom'
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import filter from 'lodash/filter'
 import {setApplicationDefaultValues} from 'utils/form'
 
 function useFullApplication() {
+  const LLC_TYPES = ['401k_LLC', 'IRA_LLC']
   const {uuid, step} = useParams()
   const {data, isSuccess, isLoading, isError, error} = useApplication(uuid)
   const isIraCustodian = data.entity_type === 'IRA_custodial'
+  const isLLC = LLC_TYPES.includes(data.entity_type)
 
   const section = useMemo(
     () =>
@@ -21,8 +24,8 @@ function useFullApplication() {
         },
         2: {
           heading: `Entity Information`,
-          fields: step2Fields,
-          resolver: step2Resolver,
+          fields: getStep2Fields(isLLC),
+          resolver: getStep2Resolver(isLLC),
         },
         ...(isIraCustodian
           ? {
@@ -248,11 +251,12 @@ const step2Fields = [
     name: 'entity_state_of_formation',
   },
 ]
-const step2Resolver = yupResolver(
+const getStep2Fields = (entityIsLLC) => entityIsLLC ? step2Fields : filter(step2Fields, (field) => field.name !== 'entity_state_of_formation')
+const getStep2Resolver = (entityIsLLC) => yupResolver(
   yup.object().shape({
     entity_name: yup.string().required('Required'),
     ein: yup.string().required('Required'),
-    entity_state_of_formation: yup.mixed().notOneOf(['empty'], 'Required'),
+    entity_state_of_formation: entityIsLLC ? yup.mixed().notOneOf(['empty'], 'Required') : yup.mixed(),
   }),
 )
 // step 3

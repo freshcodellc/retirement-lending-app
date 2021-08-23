@@ -70,7 +70,7 @@ function ProfileUpdateForm({onSubmit}) {
   }, [isSuccess])
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isError) {
       notifyError()
     }
   }, [isError])

@@ -11,7 +11,8 @@ function useTermsSheet() {
   const defaultValues = useMemo(
     () => ({
       entity_name: data.entity_name,
-      signature: '',
+      term_sheet_signature: '',
+      term_sheet_signature_date: new Date(),
       full_name: [data.first_name, data.middle_name, data.last_name]
         .filter(Boolean)
         .join(' '),
@@ -32,7 +33,7 @@ function useTermsSheet() {
 
 const schema = yup.object().shape({
   entity_name: yup.string().required('Required'),
-  signature: yup.string().required('Required'),
+  term_sheet_signature: yup.string().required('Required'),
   full_name: yup.string().required('Required'),
 })
 

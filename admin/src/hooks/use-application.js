@@ -55,8 +55,12 @@ const sections = {
     heading: 'post-approval information',
   },
   sign: {
-    route: 'sign-certify',
-    heading: 'sign and certify',
+    route: 'full-application-sign-certify',
+    heading: 'full application sign and certify',
+  },
+  termsSign: {
+    route: 'term-sheet-sign-certify',
+    heading: 'term sheet sign and certify',
   },
   files: {
     heading: 'applicant files',
@@ -92,6 +96,10 @@ function useInfoSections(app) {
       {
         ...sections.postApproval,
         fields: postApprovalFields(app),
+      },
+      {
+        ...sections.termsSign,
+        fields: termSheetSignCertifyFields(app),
       },
       {
         ...sections.sign,
@@ -364,6 +372,27 @@ function signCertifyFields(app) {
     {
       label: 'Date',
       value: empty(formatDate)(app.signature_date),
+    },
+  ]
+}
+
+function termSheetSignCertifyFields(app) {
+  return [
+    {
+      label: 'Name of entity',
+      value: empty()(app.entity_name),
+    },
+    {
+      label: 'Legal name and title of authorized signer',
+      value: empty()(app.signature_title),
+    },
+    {
+      label: 'Signature of authorized signer',
+      value: empty()(app.term_sheet_signature),
+    },
+    {
+      label: 'Date',
+      value: empty(formatDate)(app.term_sheet_signature_date),
     },
   ]
 }

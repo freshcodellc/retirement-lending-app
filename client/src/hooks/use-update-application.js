@@ -7,6 +7,7 @@ function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
   return useMutation(
     ({uuid, ...fields}) => {
       const cached = queryClient.getQueryData(['loan-application', uuid])
+
       const updated = adaptFields(fields)
       const updatedAddressTypes = (updated.addresses || []).map(a => a.type)
       const addresses = [
@@ -24,7 +25,15 @@ function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
 
       return loanApplicationService.update({
         uuid,
-        data: {loan_application: {...cached, ...updated, addresses, custodian}},
+        data: {
+          loan_application: {
+            ...cached,
+            ...updated,
+            addresses,
+            custodian,
+            assigned_admin_user_uuid: cached.assigned_admin?.uuid,
+          },
+        },
       })
     },
     {

@@ -31,6 +31,10 @@ function useEditApplicantDetails() {
           ...sections.sign,
           fields: signCertifyFields,
         },
+        [sections.termsSign.route]: {
+          ...sections.termsSign,
+          fields: termSheetSignCertifyFields,
+        },
       }[section] || {}),
     [section],
   )
@@ -499,6 +503,36 @@ const signCertifyFields = [
     type: 'date',
     label: 'Date',
     name: 'signature_date',
+  },
+]
+
+const termSheetSignCertifyFields = [
+  {
+    type: 'p',
+    text: 'I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.',
+  },
+  {
+    type: 'text',
+    name: 'entity_name',
+    label: 'Name of entity',
+    placeholder: 'Name of entity',
+  },
+  {
+    type: 'text',
+    name: 'signature_title',
+    label: 'Legal name and title of authorized signer',
+    placeholder: 'Legal name and title',
+  },
+  {
+    type: 'text',
+    name: 'term_sheet_signature',
+    label: 'Signature of authorized signer',
+    placeholder: 'Enter legal name',
+  },
+  {
+    type: 'date',
+    label: 'Date',
+    name: 'term_sheet_signature_date',
   },
 ]
 

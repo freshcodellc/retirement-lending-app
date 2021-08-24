@@ -29,7 +29,10 @@ function setApplicationDefaultValues(app) {
       } else {
         if (cur.type === 'select') {
           value = 'empty'
-        } else if (cur.name === 'signature_date') {
+        } else if (
+          cur.name === 'signature_date' ||
+          cur.name === 'term_sheet_signature_date'
+        ) {
           value = new Date()
         }
       }
@@ -37,7 +40,7 @@ function setApplicationDefaultValues(app) {
     }
     return {
       ...acc,
-      assigned_admin_user_uuid: app.assigned_admin?.uuid
+      assigned_admin_user_uuid: app.assigned_admin?.uuid,
     }
   }
 }

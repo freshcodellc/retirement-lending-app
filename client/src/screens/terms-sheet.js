@@ -96,9 +96,8 @@ function TermsSheetScreen() {
             Interest rates will not adjust, up or down, by more than 2.0% at
             each annual rate adjustment, and by no more than a cumulative 6.0%
             over the life of the loan. The minimum rate to be charged will not
-            be below {data.interest_rate_floor}% and the maximum
-            rate charged will not exceed the initial rate plus{' '}
-            {data.interest_rate_floor}%.
+            be below {data.interest_rate_floor}% and the maximum rate charged
+            will not exceed the initial rate plus {data.interest_rate_floor}%.
           </p>
         </div>
         <div>
@@ -324,9 +323,17 @@ function TermsSheetScreen() {
           <Input
             label="Signature"
             placeholder="Signature"
-            name="signature"
-            {...register('signature')}
+            name="term_sheet_signature"
+            {...register('term_sheet_signature')}
           />
+          <div css={{display: 'none'}}>
+            <Input
+              label="Signature Date"
+              placeholder="Signature Date"
+              name="term_sheet_signature_date"
+              {...register('term_sheet_signature_date')}
+            />
+          </div>
           <Input
             label={`Name of ${name}`}
             placeholder={`Name of ${name}`}

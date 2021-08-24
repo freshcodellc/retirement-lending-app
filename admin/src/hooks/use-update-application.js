@@ -27,7 +27,15 @@ function useUpdateApplication() {
 
       return applicationService.update({
         uuid,
-        data: {loan_application: {...cached, ...updated, addresses, custodian}},
+        data: {
+          loan_application: {
+            ...cached,
+            ...updated,
+            addresses,
+            custodian,
+            assigned_admin_user_uuid: cached.assigned_admin?.uuid,
+          },
+        },
       })
     },
     {
@@ -98,6 +106,7 @@ function adaptFields(fields) {
       [
         'date_of_birth',
         'signature_date',
+        'term_sheet_signature_date',
         'estimated_closing_date',
         'estimated_appraisal_delivery_date',
       ].includes(key)

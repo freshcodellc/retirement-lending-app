@@ -25,6 +25,8 @@ function useUpdateApplication() {
           }
         : null
 
+      debugger
+
       return applicationService.update({
         uuid,
         data: {
@@ -33,7 +35,8 @@ function useUpdateApplication() {
             ...updated,
             addresses,
             custodian,
-            assigned_admin_user_uuid: cached.assigned_admin?.uuid,
+            assigned_admin_user_uuid:
+              updated.assigned_admin_user_uuid || cached.assigned_admin?.uuid,
           },
         },
       })

@@ -31,7 +31,7 @@ function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
             ...updated,
             addresses,
             custodian,
-            assigned_admin_user_uuid: cached.assigned_admin?.uuid,
+            updated.assigned_admin_user_uuid || cached.assigned_admin?.uuid,
           },
         },
       })

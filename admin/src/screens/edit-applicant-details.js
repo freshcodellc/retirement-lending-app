@@ -2,6 +2,16 @@
 import * as React from 'react'
 import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
+import toast, {Toaster} from 'react-hot-toast'
+
+/*
+{saveSucceed && (
+  <FormMessage variant="success">Successfully Saved!</FormMessage>
+)}
+{saveIsError ? (
+  <FormMessage variant="error">Failed to save!</FormMessage>
+) : null}
+*/
 
 import {
   Input,
@@ -31,7 +41,7 @@ export default function EditApplicantInfo() {
   const {
     mutate: saveEdit,
     isLoading: isSaving,
-    isSuccess: saveSucceed,
+    isSuccess: saveIsSuccess,
     isError: saveIsError,
   } = useUpdateApplication()
   const {
@@ -48,6 +58,7 @@ export default function EditApplicantInfo() {
     defaultValues,
     mode: 'onChange',
   })
+
   const mailingEqualPhysical = watch('mailing_equal_physical', false)
 
   React.useEffect(() => {
@@ -55,6 +66,18 @@ export default function EditApplicantInfo() {
       reset(defaultValues)
     }
   }, [isSuccess, reset, defaultValues])
+
+  React.useEffect(() => {
+    if (saveIsSuccess) {
+      toast.success('Successfully saved!')
+    }
+  }, [saveIsSuccess])
+
+  React.useEffect(() => {
+    if (saveIsError) {
+      toast.error('Failed to save. Please try again.')
+    }
+  }, [saveIsError])
 
   const handleEdit = handleSubmit(form => saveEdit({...form, uuid}))
 
@@ -194,12 +217,7 @@ export default function EditApplicantInfo() {
           >
             Save
           </Button>
-          {saveSucceed && (
-            <FormMessage variant="success">Successfully Saved!</FormMessage>
-          )}
-          {saveIsError ? (
-            <FormMessage variant="error">Failed to save!</FormMessage>
-          ) : null}
+          <Toaster />
         </div>
       </form>
     </div>

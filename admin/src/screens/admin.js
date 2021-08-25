@@ -5,6 +5,7 @@ import {useTable, useGlobalFilter, useAsyncDebounce} from 'react-table'
 import {useForm} from 'react-hook-form'
 import {useQueryClient} from 'react-query'
 import {queryKeys} from 'utils/query-client'
+import toast, {Toaster} from 'react-hot-toast'
 
 import {
   Button,
@@ -101,9 +102,21 @@ function InviteModal() {
         queryClient.invalidateQueries(queryKeys.admin_invites)
         openModal(false)
         reset()
-      }, 2000)
+      }, 500)
     },
   })
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      toast.success('Invite successfully sent!')
+    }
+  }, [isSuccess])
+
+  React.useEffect(() => {
+    if (isError) {
+      toast.error('Failed to send invite. Please try again')
+    }
+  }, [isError])
 
   const handleSendInvite = handleSubmit(mutate)
 
@@ -115,16 +128,6 @@ function InviteModal() {
         </Button>
       </ModalOpenButton>
       <ModalContents id="invite-modal" title="Invite">
-        <div css={{textAlign: 'center'}}>
-          {isError ? (
-            <FormMessage variant="error">{error.message}</FormMessage>
-          ) : null}
-          {isSuccess ? (
-            <FormMessage variant="success">
-              Your invite is on its way!
-            </FormMessage>
-          ) : null}
-        </div>
         <form
           name="send-invite"
           onSubmit={handleSendInvite}
@@ -156,6 +159,7 @@ function InviteModal() {
           </div>
         </form>
       </ModalContents>
+      <Toaster />
     </React.Fragment>
   )
 }

@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
 import {useTable} from 'react-table'
-import {isSameDay, parseISO} from 'date-fns'
+import {isValid, isSameDay, parseISO} from 'date-fns'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
 import {FiPhone, FiSend, FiTrash2, FiEdit2} from 'react-icons/fi'
 import {useQueryClient} from 'react-query'
 import {useConstants} from 'hooks/use-constants'
+import toast, {Toaster} from 'react-hot-toast'
 
 import {
   Button,
@@ -83,6 +84,18 @@ function ActionsPanel({activeTab, application}) {
   const {mutate, isError, isSuccess, isLoading} = useUpdateApplication()
   const {statuses, humanizedTextFor} = useConstants()
 
+  React.useEffect(() => {
+    if (isError) {
+      toast.error('Failed to Update. Please try again.')
+    }
+  }, [isError])
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      toast.success('Successfully updated!')
+    }
+  }, [isSuccess])
+
   const {handleSubmit, watch, control, register, formState} = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -134,28 +147,32 @@ function ActionsPanel({activeTab, application}) {
   }, [statusWatcher, application.status])
 
   React.useEffect(() => {
-    const oldDate = parseISO(application.estimated_appraisal_delivery_date)
-    const newDate = new Date(estimatedAppraisalDeliverDateWatcher)
+    if (estimatedAppraisalDeliverDateWatcher) {
+      const oldDate = parseISO(application.estimated_appraisal_delivery_date)
+      const newDate = new Date(estimatedAppraisalDeliverDateWatcher)
 
-    if (!isSameDay(oldDate, newDate)) {
-      setUpdateWarning(
-        'Warning: Updating the estimated appraisal delivery date will email the customer.',
-      )
-    } else {
-      setUpdateWarning('')
+      if (!isSameDay(oldDate, newDate)) {
+        setUpdateWarning(
+          'Warning: Updating the estimated appraisal delivery date will email the customer.',
+        )
+      } else {
+        setUpdateWarning('')
+      }
     }
   }, [estimatedAppraisalDeliverDateWatcher])
 
   React.useEffect(() => {
-    const oldDate = parseISO(application.estimated_closing_date)
-    const newDate = new Date(estimatedClosingDateWatcher)
+    if (estimatedClosingDateWatcher) {
+      const oldDate = parseISO(application.estimated_closing_date)
+      const newDate = parseISO(new Date(estimatedClosingDateWatcher))
 
-    if (!isSameDay(oldDate, newDate)) {
-      setUpdateWarning(
-        'Warning: Updating the estimated closing date will email the customer.',
-      )
-    } else {
-      setUpdateWarning('')
+      if (!isSameDay(oldDate, newDate)) {
+        setUpdateWarning(
+          'Warning: Updating the estimated closing date will email the customer.',
+        )
+      } else {
+        setUpdateWarning('')
+      }
     }
   }, [estimatedClosingDateWatcher])
 
@@ -220,12 +237,7 @@ function ActionsPanel({activeTab, application}) {
             Update
           </Button>
           {updateWarning && <FormMessage>{updateWarning}</FormMessage>}
-          {isSuccess && (
-            <FormMessage variant="success">Successfully Updated!</FormMessage>
-          )}
-          {isError ? (
-            <FormMessage variant="error">Failed to Update!</FormMessage>
-          ) : null}
+          <Toaster />
         </div>
       </div>
       <div

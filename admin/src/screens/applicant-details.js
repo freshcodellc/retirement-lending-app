@@ -436,7 +436,6 @@ function ApplicationInfo({application}) {
           }}
         >
           {application.documents.map(document => {
-            console.log(document)
             return (
               <div key={document.uuid}>
                 <div css={{fontWeight: 600, marginBottom: '0.4rem'}}>
@@ -446,12 +445,6 @@ function ApplicationInfo({application}) {
                   {document.name}
                 </a>
               </div>
-              // <div key={'wow nice'}>
-              //   <div css={{fontWeight: 600, marginBottom: '0.4rem'}}>
-              //     {field.label}
-              //   </div>
-              //   <div>{field.value}</div>
-              // </div>
             )
           })}
         </div>

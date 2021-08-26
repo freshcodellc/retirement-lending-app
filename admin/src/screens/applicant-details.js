@@ -38,6 +38,15 @@ import {useUpdateApplication} from 'hooks/use-update-application'
 import {useApplication, useInfoSections} from 'hooks/use-application'
 
 import {ReturnLink, StatusSelect, AdminSelect} from 'components'
+
+function snakeCaseToHumanized(field) {
+  const parts = field.split('_')
+  const capitalizedParts = parts.map(
+    part => part.charAt(0).toUpperCase() + part.slice(1),
+  )
+  return capitalizedParts.join(' ')
+}
+
 export default function ApplicantDetails() {
   const {application, isLoading, isError, error} = useApplication()
   const [activeTab, setActiveTab] = React.useState(0)
@@ -408,6 +417,45 @@ function ApplicationInfo({application}) {
           </div>
         </div>
       ))}
+      <div key="applicant files" css={{border: `1px solid ${colors.gray}`}}>
+        <div
+          css={{
+            fontWeight: 500,
+            fontSize: '20px',
+            padding: '1.2rem',
+            background: colors.gray,
+          }}
+        >
+          Applicant Files
+        </div>
+        <div
+          css={{
+            padding: '1.2rem',
+            position: 'relative',
+            '& > *:not(:last-child)': {marginBottom: '1.2rem'},
+          }}
+        >
+          {application.documents.map(document => {
+            console.log(document)
+            return (
+              <div key={document.uuid}>
+                <div css={{fontWeight: 600, marginBottom: '0.4rem'}}>
+                  {snakeCaseToHumanized(document.document_type)}
+                </div>
+                <a href={document.presigned_url} target="blank">
+                  {document.name}
+                </a>
+              </div>
+              // <div key={'wow nice'}>
+              //   <div css={{fontWeight: 600, marginBottom: '0.4rem'}}>
+              //     {field.label}
+              //   </div>
+              //   <div>{field.value}</div>
+              // </div>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

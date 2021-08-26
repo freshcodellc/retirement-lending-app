@@ -62,9 +62,6 @@ const sections = {
     route: 'term-sheet-sign-certify',
     heading: 'term sheet sign and certify',
   },
-  files: {
-    heading: 'applicant files',
-  },
 }
 
 function useInfoSections(app) {
@@ -104,10 +101,6 @@ function useInfoSections(app) {
       {
         ...sections.sign,
         fields: signCertifyFields(app),
-      },
-      {
-        ...sections.files,
-        fields: filesFields(app),
       },
     ],
     [app, planTypesMap, entityTypesMap, propertyTypesMap, netWorthsMap],
@@ -393,19 +386,6 @@ function termSheetSignCertifyFields(app) {
     {
       label: 'Date',
       value: empty(formatDate)(app.term_sheet_signature_date),
-    },
-  ]
-}
-
-function filesFields(app) {
-  return [
-    {
-      label: "Driver's license",
-      value: empty()(),
-    },
-    {
-      label: 'Articles of organization',
-      value: empty()(),
     },
   ]
 }

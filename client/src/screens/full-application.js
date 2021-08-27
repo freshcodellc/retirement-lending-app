@@ -8,6 +8,7 @@ import {
   Input,
   colors,
   TextLink,
+  Textarea,
   Checkbox,
   SsnInput,
   RadioInput,
@@ -130,6 +131,7 @@ function FullApplicationScreen() {
             const props = {
               ...field,
               key: field.name,
+              maxLength: field?.maxLength || 'default',
               hasError: saveIsError,
             }
 
@@ -192,6 +194,33 @@ function FullApplicationScreen() {
               case 'text':
               case 'number':
                 return <Input {...props} {...register(field.name)} />
+              case 'textArea':
+                return (
+                  <div>
+                    <label
+                      htmlFor={field.name}
+                      css={{
+                        fontWeight: '300',
+                        fontSize: '20px',
+                        lineHeight: '26px',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      {field.label}
+                    </label>
+                    <Textarea
+                      css={{
+                        display: 'block',
+                        border: `2px solid ${colors.gray40}`,
+                        marginTop: '15px',
+                        width: '100%',
+                      }}
+                      rows="6"
+                      {...props}
+                      {...register(field.name)}
+                    />
+                  </div>
+                )
               case 'phone':
                 return <PhoneInput control={control} {...props} />
               case 'currency':
@@ -316,7 +345,7 @@ function FullApplicationScreen() {
               type="submit"
               isLoading={isSaving}
               disabled={
-                !formState.isValid || (currentStep === 4 && !hasAddDocs)
+                !formState.isValid || (currentStep === 5 && !hasAddDocs)
               }
             >
               {currentStep === maxStep ? 'Submit application' : 'Continue'}

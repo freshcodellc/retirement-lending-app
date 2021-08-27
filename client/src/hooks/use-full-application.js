@@ -37,12 +37,17 @@ function useFullApplication() {
       resolver: emptyResolver,
     },
     5: {
+      heading: 'Compliance and Disclosures',
+      fields: disclosureFields,
+      resolver: disclosureResolver,
+    },
+    6: {
       heading: `Sign and certify`,
       subHeading: `I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.`,
       fields: signatureFields,
       resolver: signatureFieldsResolver,
     },
-    6: {
+    7: {
       heading: `Thank you for your application`,
       subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within 2 — 5 business days.`,
       fields: [],
@@ -69,12 +74,17 @@ function useFullApplication() {
       resolver: emptyResolver,
     },
     4: {
+      heading: 'Compliance and Disclosures',
+      fields: disclosureFields,
+      resolver: disclosureResolver,
+    },
+    5: {
       heading: `Sign and certify`,
       subHeading: `I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.`,
       fields: signatureFields,
       resolver: signatureFieldsResolver,
     },
-    5: {
+    6: {
       heading: `Thank you for your application`,
       subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within 2 — 5 business days.`,
       fields: [],
@@ -96,12 +106,12 @@ function useFullApplication() {
   )
 
   const minStep = 1
-  const maxStep = isIraCustodian ? 5 : 4
+  const maxStep = isIraCustodian ? 6 : 5
 
   const currentStep = Number(step)
   const prevStep = Math.max(currentStep - 1, minStep)
   const nextStep = Math.min(currentStep + 1, maxStep + 1)
-  const isThankYouStep = currentStep === (isIraCustodian ? 6 : 5)
+  const isThankYouStep = currentStep === (isIraCustodian ? 7 : 6)
 
   return {
     uuid,
@@ -125,7 +135,6 @@ export {useFullApplication}
 
 const emptyResolver = yupResolver(yup.object().shape({}))
 
-// step 1
 const personalInfoFields = [
   {
     type: 'property',
@@ -262,7 +271,6 @@ const personalInfoFieldsResolver = yupResolver(
   }),
 )
 
-// step 2
 const entityFields = [
   {
     type: 'text',
@@ -299,7 +307,6 @@ const getStep2Resolver = entityIsLLC =>
     }),
   )
 
-// step 3
 const custodianFields = [
   {
     type: 'custodian',
@@ -340,7 +347,6 @@ const custodianFieldsResolver = yupResolver(
   }),
 )
 
-// step 4
 const uploadFields = [
   {
     type: 'upload',
@@ -348,7 +354,139 @@ const uploadFields = [
   },
 ]
 
-// step 5
+const disclosureFields = [
+  {
+    type: 'radio',
+    name: 'is_in_marijuana_industry',
+    label: (
+      <>
+        <p>
+          Federal laws and regulations currently prevent banks from actively
+          engaging in providing financial services to clients involved in the
+          marijuana industry. Please review the following questions and provide
+          your answers.
+          <br />
+          <br />
+        </p>
+        <p>
+          1. Are any of the funds currently in the IRA or 401k, or to be
+          contributed to the IRA or 401k, directly or indirectly sourced from
+          the marijuana industry?
+        </p>
+        <p>
+          1.1 In addition, are any of the following entities or individuals
+          associated with the loan request - IRA Custodian/401k Trustee, the LLC
+          under the IRA or 401k, the authorized signer for, or manager of the
+          LLC, or the title holder of the property - directly or indirectly
+          associated with, or related to, the marijuana industry (growing,
+          producing, manufacturing, processing, selling (wholesale or retail) or
+          any other connection?
+        </p>
+      </>
+    ),
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'p',
+    text: 'If you answered no to question 1, do not proceed as we cannot provide financing to entities involved in the marijuana industry.',
+  },
+  {
+    type: 'radio',
+    name: 'is_us_citizen',
+    label:
+      '2. Is the individual IRA Custodian, 401k Trustee, or IRA or Trust Beneficiary a US Citizen?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'radio',
+    name: 'is_resident_non_us_citizen',
+    label:
+      '3. If no, is the individual referenced in the question above a resident non-US Citizen?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'p',
+    text: 'If you answered no to both questions 2 and 3, do not proceed as we cannot provide financing to non-resident aliens.',
+  },
+  {
+    type: 'radio',
+    name: 'has_tax_liens',
+    label:
+      '4. Are there any judgments or tax liens filed against the IRA or 401k or the individuals in Question #1 above?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'radio',
+    name: 'has_past_foreclosures',
+    label:
+      '5. Has the IRA LLC, 401k Trust/401k LLC or individuals named above ever had any real estate foreclosed or property repossessed?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'radio',
+    name: 'has_legal_action',
+    label:
+      '6. Is the IRA/IRA LLC, the 401k Trust/401k LLC, the 401k Trustee or the IRA or 401k Trust beneficiary involved in pending or ongoing legal actions?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'radio',
+    name: 'has_contingent_liabilities',
+    label:
+      '7. Does the IRA LLC or 401k Trust/401k LLC have any contingent liabilities as an endorser, co-maker or guarantor of any other debt?',
+    options: [
+      {label: 'Yes', value: true},
+      {label: 'No', value: false},
+    ],
+  },
+  {
+    type: 'textArea',
+    name: 'disclosure_explanation',
+    label:
+      "If you answered 'YES' to any of questions 3 - 7, please provide a detailed explanation for each question you answered 'YES' to:",
+  },
+  {
+    type: 'text',
+    name: 'appraisal_initials',
+    label:
+      'We may order an appraisal to determine the property’s value and charge you for the appraisal. We will promptly give you a copy of the appraisal, even if your loan does not close. Please initial here to agree to these terms',
+    placeholder: 'Your initals here',
+    maxLength: 3,
+  },
+]
+
+const disclosureResolver = yupResolver(
+  yup.object().shape({
+    is_in_marijuana_industry: yup.string().required('Required'),
+    is_us_citizen: yup.string().required('Required'),
+    is_resident_non_us_citizen: yup.string().required('Required'),
+    has_tax_liens: yup.string().required('Required'),
+    has_past_foreclosures: yup.string().required('Required'),
+    has_legal_action: yup.string().required('Required'),
+    has_contingent_liabilities: yup.string().required('Required'),
+    disclosure_explanation: yup.string().nullable(),
+    appraisal_initials: yup.string().required('Required'),
+  }),
+)
+
 const signatureFields = [
   {
     type: 'text',

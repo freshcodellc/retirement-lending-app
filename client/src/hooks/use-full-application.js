@@ -411,6 +411,7 @@ const disclosureFields = [
     options: [
       {label: 'Yes', value: true},
       {label: 'No', value: false},
+      {label: 'N/A', value: null},
     ],
   },
   {
@@ -477,7 +478,7 @@ const disclosureResolver = yupResolver(
   yup.object().shape({
     is_in_marijuana_industry: yup.string().required('Required'),
     is_us_citizen: yup.string().required('Required'),
-    is_resident_non_us_citizen: yup.string().required('Required'),
+    is_resident_non_us_citizen: yup.string(),
     has_tax_liens: yup.string().required('Required'),
     has_past_foreclosures: yup.string().required('Required'),
     has_legal_action: yup.string().required('Required'),

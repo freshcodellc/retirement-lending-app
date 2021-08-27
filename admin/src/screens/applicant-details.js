@@ -729,7 +729,7 @@ function WorksheetFields({application}) {
         }}
       >
         <div>
-          Property value -{' '}
+          <strong>Property value -</strong>{' '}
           {currency(application.estimated_value, {fromCents: true}).format()}
           <CopyToClipboard
             onCopy={() => setIsCopied(true)}
@@ -743,7 +743,7 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
         <div>
-          Requested loan amount -{' '}
+          <strong>Requested loan amount -</strong>{' '}
           {currency(application.requested_loan_amount, {
             fromCents: true,
           }).format()}
@@ -759,7 +759,7 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
         <div>
-          Funding account balance -{' '}
+          <strong>Funding account balance -</strong>{' '}
           {currency(application.funding_account_balance, {
             fromCents: true,
           }).format()}
@@ -775,7 +775,7 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
         <div>
-          Monthly rent -{' '}
+          <strong>Monthly rent -</strong>{' '}
           {currency(application.monthly_current_rent, {
             fromCents: true,
           }).format()}
@@ -791,7 +791,7 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
         <div>
-          Annual taxes -{' '}
+          <strong>Annual taxes -</strong>{' '}
           {currency(application.annual_taxes, {fromCents: true}).format()}
           <CopyToClipboard
             onCopy={() => setIsCopied(true)}
@@ -803,7 +803,7 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
         <div>
-          Annual insurance premium -{' '}
+          <strong>Annual insurance premium -</strong>{' '}
           {currency(application.annual_insurance_premium, {
             fromCents: true,
           }).format()}
@@ -819,7 +819,7 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
         <div>
-          Annual HOA fees -{' '}
+          <strong>Annual HOA fees -</strong>{' '}
           {currency(application.monthly_hoa_dues * 12, {
             fromCents: true,
           }).format()}
@@ -835,7 +835,7 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
         <div>
-          Anual property management fees -{' '}
+          <strong>Anual property management fees -</strong>{' '}
           {currency(application.monthly_mgmt_fee * 12, {
             fromCents: true,
           }).format()}

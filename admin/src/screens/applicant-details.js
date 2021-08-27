@@ -2,12 +2,15 @@
 import * as React from 'react'
 import {useTable} from 'react-table'
 import {isValid, isSameDay, parseISO} from 'date-fns'
+import {CopyToClipboard} from 'react-copy-to-clipboard'
+import currency from 'currency.js'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
 import {FiPhone, FiSend, FiTrash2, FiEdit2} from 'react-icons/fi'
 import {useQueryClient} from 'react-query'
 import {useConstants} from 'hooks/use-constants'
 import toast, {Toaster} from 'react-hot-toast'
+import {FaRegCopy} from 'react-icons/fa'
 
 import {
   Button,
@@ -71,6 +74,7 @@ export default function ApplicantDetails() {
           <Tab>Applicant information</Tab>
           <Tab>Notes</Tab>
           <Tab>Communication history</Tab>
+          <Tab>Non-Recourse Worksheet Fields</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -81,6 +85,9 @@ export default function ApplicantDetails() {
           </TabPanel>
           <TabPanel>
             <CommHistoryTab application={application} />
+          </TabPanel>
+          <TabPanel>
+            <WorksheetFields application={application} />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -246,7 +253,6 @@ function ActionsPanel({activeTab, application}) {
             Update
           </Button>
           {updateWarning && <FormMessage>{updateWarning}</FormMessage>}
-          <Toaster />
         </div>
       </div>
       <div
@@ -695,5 +701,155 @@ function CommHistoryTab() {
         </tbody>
       </Table>
     </TableWrapper>
+  )
+}
+
+function WorksheetFields({application}) {
+  const [isCopied, setIsCopied] = React.useState(false)
+
+  React.useEffect(() => {
+    if (isCopied) {
+      toast.success('Copied value to clipboard!')
+      setIsCopied(false)
+    }
+  }, [isCopied])
+
+  return (
+    <>
+      <div
+        css={{
+          display: 'flex',
+          gap: '1rem',
+          flexWrap: 'wrap',
+          '&>div': {
+            width: '100%',
+            minWidth: '300px',
+            maxWidth: 'calc((100% - 1rem)/2)',
+          },
+        }}
+      >
+        <div>
+          Property value -{' '}
+          {currency(application.estimated_value, {fromCents: true}).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.estimated_value, {
+              fromCents: true,
+            }).format({symbol: ''})}
+          >
+            <span>
+              <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+            </span>
+          </CopyToClipboard>
+        </div>
+        <div>
+          Requested loan amount -{' '}
+          {currency(application.requested_loan_amount, {
+            fromCents: true,
+          }).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.requested_loan_amount, {
+              fromCents: true,
+            }).format({
+              symbol: '',
+            })}
+          >
+            <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+          </CopyToClipboard>
+        </div>
+        <div>
+          Funding account balance -{' '}
+          {currency(application.funding_account_balance, {
+            fromCents: true,
+          }).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.funding_account_balance, {
+              fromCents: true,
+            }).format({
+              symbol: '',
+            })}
+          >
+            <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+          </CopyToClipboard>
+        </div>
+        <div>
+          Monthly rent -{' '}
+          {currency(application.monthly_current_rent, {
+            fromCents: true,
+          }).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.monthly_current_rent, {
+              fromCents: true,
+            }).format({
+              symbol: '',
+            })}
+          >
+            <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+          </CopyToClipboard>
+        </div>
+        <div>
+          Annual taxes -{' '}
+          {currency(application.annual_taxes, {fromCents: true}).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.annual_taxes, {fromCents: true}).format({
+              symbol: '',
+            })}
+          >
+            <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+          </CopyToClipboard>
+        </div>
+        <div>
+          Annual insurance premium -{' '}
+          {currency(application.annual_insurance_premium, {
+            fromCents: true,
+          }).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.annual_insurance_premium, {
+              fromCents: true,
+            }).format({
+              symbol: '',
+            })}
+          >
+            <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+          </CopyToClipboard>
+        </div>
+        <div>
+          Annual HOA fees -{' '}
+          {currency(application.monthly_hoa_dues * 12, {
+            fromCents: true,
+          }).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.monthly_hoa_dues * 12, {
+              fromCents: true,
+            }).format({
+              symbol: '',
+            })}
+          >
+            <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+          </CopyToClipboard>
+        </div>
+        <div>
+          Anual property management fees -{' '}
+          {currency(application.monthly_mgmt_fee * 12, {
+            fromCents: true,
+          }).format()}
+          <CopyToClipboard
+            onCopy={() => setIsCopied(true)}
+            text={currency(application.monthly_mgmt_fee * 12).format({
+              symbol: '',
+            })}
+          >
+            <FaRegCopy css={{marginLeft: '6px'}} size="15px" />
+          </CopyToClipboard>
+        </div>
+      </div>
+      <Toaster />
+    </>
   )
 }

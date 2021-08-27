@@ -13,50 +13,79 @@ function useFullApplication() {
   const isIraCustodian = data.entity_type === 'IRA_custodial'
   const isLLC = LLC_TYPES.includes(data.entity_type)
 
-  const section = useMemo(
-    () =>
-      ({
-        1: {
-          heading: `Welcome back ${data.first_name}!`,
-          subHeading: `We're excited to have you continue the application.`,
-          fields: step1Fields,
-          resolver: step1Resolver,
-        },
-        2: {
-          heading: `Entity Information`,
-          fields: getStep2Fields(isLLC),
-          resolver: getStep2Resolver(isLLC),
-        },
-        ...(isIraCustodian
-          ? {
-              3: {
-                heading: `Custodian and IRA Information`,
-                fields: step3Fields,
-                resolver: step3Resolver,
-              },
-            }
-          : {}),
-        [isIraCustodian ? 4 : 3]: {
-          heading: `Please attach the following documents`,
-          subHeading: `Files should be pfd, jpg, or png`,
-          fields: steps4Fields,
-          resolver: emptyResolver,
-        },
-        [isIraCustodian ? 5 : 4]: {
-          heading: `Sign and certify`,
-          subHeading: `I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.`,
-          fields: step5Fields,
-          resolver: step5Resolver,
-        },
-        [isIraCustodian ? 6 : 5]: {
-          heading: `Thank you for your application`,
-          subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within 2 — 5 business days.`,
-          fields: [],
-          resolver: emptyResolver,
-        },
-      }[step] || {fields: []}),
-    [step, data, isIraCustodian],
-  )
+  const hasCustodianSteps = {
+    1: {
+      heading: `Welcome back ${data.first_name}!`,
+      subHeading: `We're excited to have you continue the application.`,
+      fields: personalInfoFields,
+      resolver: personalInfoFieldsResolver,
+    },
+    2: {
+      heading: `Entity Information`,
+      fields: getEntityFields(isLLC),
+      resolver: getStep2Resolver(isLLC),
+    },
+    3: {
+      heading: `Custodian and IRA Information`,
+      fields: custodianFields,
+      resolver: custodianFieldsResolver,
+    },
+    4: {
+      heading: `Please attach the following documents`,
+      subHeading: `Files should be pfd, jpg, or png`,
+      fields: uploadFields,
+      resolver: emptyResolver,
+    },
+    5: {
+      heading: `Sign and certify`,
+      subHeading: `I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.`,
+      fields: signatureFields,
+      resolver: signatureFieldsResolver,
+    },
+    6: {
+      heading: `Thank you for your application`,
+      subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within 2 — 5 business days.`,
+      fields: [],
+      resolver: emptyResolver,
+    },
+  }
+
+  const defaultSteps = {
+    1: {
+      heading: `Welcome back ${data.first_name}!`,
+      subHeading: `We're excited to have you continue the application.`,
+      fields: personalInfoFields,
+      resolver: personalInfoFieldsResolver,
+    },
+    2: {
+      heading: `Entity Information`,
+      fields: getEntityFields(isLLC),
+      resolver: getStep2Resolver(isLLC),
+    },
+    3: {
+      heading: `Please attach the following documents`,
+      subHeading: `Files should be pfd, jpg, or png`,
+      fields: uploadFields,
+      resolver: emptyResolver,
+    },
+    4: {
+      heading: `Sign and certify`,
+      subHeading: `I certify the information I provide on and in connection with this form is true and correct to the best of my knowledge.`,
+      fields: signatureFields,
+      resolver: signatureFieldsResolver,
+    },
+    5: {
+      heading: `Thank you for your application`,
+      subHeading: `We appreciate your interest in Solera's IRA lending program. We will review your application and contact you within 2 — 5 business days.`,
+      fields: [],
+      resolver: emptyResolver,
+    },
+  }
+
+  const section = useMemo(() => {
+    const steps = isIraCustodian ? hasCustodianSteps : defaultSteps
+    return steps[step] || {fields: []}
+  }, [step, data, isIraCustodian])
 
   const defaultValues = useMemo(
     () =>
@@ -97,7 +126,7 @@ export {useFullApplication}
 const emptyResolver = yupResolver(yup.object().shape({}))
 
 // step 1
-const step1Fields = [
+const personalInfoFields = [
   {
     type: 'property',
     label: 'Property address',
@@ -208,7 +237,8 @@ const step1Fields = [
     },
   },
 ]
-const step1Resolver = yupResolver(
+
+const personalInfoFieldsResolver = yupResolver(
   yup.object().shape({
     date_of_birth: yup.string().required('Required'),
     physical: yup.object().shape({
@@ -231,8 +261,9 @@ const step1Resolver = yupResolver(
     }),
   }),
 )
+
 // step 2
-const step2Fields = [
+const entityFields = [
   {
     type: 'text',
     label: 'Name of entity',
@@ -251,16 +282,25 @@ const step2Fields = [
     name: 'entity_state_of_formation',
   },
 ]
-const getStep2Fields = (entityIsLLC) => entityIsLLC ? step2Fields : filter(step2Fields, (field) => field.name !== 'entity_state_of_formation')
-const getStep2Resolver = (entityIsLLC) => yupResolver(
-  yup.object().shape({
-    entity_name: yup.string().required('Required'),
-    ein: yup.string().required('Required'),
-    entity_state_of_formation: entityIsLLC ? yup.mixed().notOneOf(['empty'], 'Required') : yup.mixed(),
-  }),
-)
+
+const getEntityFields = entityIsLLC =>
+  entityIsLLC
+    ? entityFields
+    : filter(entityFields, field => field.name !== 'entity_state_of_formation')
+
+const getStep2Resolver = entityIsLLC =>
+  yupResolver(
+    yup.object().shape({
+      entity_name: yup.string().required('Required'),
+      ein: yup.string().required('Required'),
+      entity_state_of_formation: entityIsLLC
+        ? yup.mixed().notOneOf(['empty'], 'Required')
+        : yup.mixed(),
+    }),
+  )
+
 // step 3
-const step3Fields = [
+const custodianFields = [
   {
     type: 'custodian',
     name: 'custodian',
@@ -289,7 +329,8 @@ const step3Fields = [
     },
   },
 ]
-const step3Resolver = yupResolver(
+
+const custodianFieldsResolver = yupResolver(
   yup.object().shape({
     custodian: yup.object().shape({
       name: yup.string().required('Required'),
@@ -298,15 +339,17 @@ const step3Resolver = yupResolver(
     }),
   }),
 )
+
 // step 4
-const steps4Fields = [
+const uploadFields = [
   {
     type: 'upload',
     name: 'documents-uploads',
   },
 ]
+
 // step 5
-const step5Fields = [
+const signatureFields = [
   {
     type: 'text',
     name: 'signature_entity_name',
@@ -329,10 +372,11 @@ const step5Fields = [
     type: 'date',
     label: 'Date',
     name: 'signature_date',
-    disabled: true
+    disabled: true,
   },
 ]
-const step5Resolver = yupResolver(
+
+const signatureFieldsResolver = yupResolver(
   yup.object().shape({
     signature_entity_name: yup.string().required('Required'),
     signature_title: yup.string().required('Required'),

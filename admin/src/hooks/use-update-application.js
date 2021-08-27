@@ -25,8 +25,6 @@ function useUpdateApplication() {
           }
         : null
 
-      debugger
-
       return applicationService.update({
         uuid,
         data: {

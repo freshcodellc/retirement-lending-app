@@ -36,8 +36,10 @@ const schema = yup.object().shape({
   referrer: yup.string().nullable(true),
 })
 
-const notifySuccess = () => toast('Success! Your profile has been updated.')
-const notifyError = () => toast('Whoops! There was an error. Please try again.')
+const notifySuccess = () =>
+  toast.success('Success! Your profile has been updated.')
+const notifyError = () =>
+  toast.error('Whoops! There was an error. Please try again.')
 
 function ProfileUpdateForm({onSubmit}) {
   const {isError, isSuccess, mutate} = useUpdateUser()

@@ -163,32 +163,46 @@ function ActionsPanel({activeTab, application}) {
   }, [statusWatcher, application.status])
 
   React.useEffect(() => {
-    if (estimatedAppraisalDeliverDateWatcher) {
-      const oldDate = parseISO(application.estimated_appraisal_delivery_date)
-      const newDate = new Date(estimatedAppraisalDeliverDateWatcher)
+    const oldDate = parseISO(application.estimated_appraisal_delivery_date)
 
-      if (!isSameDay(oldDate, newDate)) {
-        setUpdateWarning(
-          'Warning: Updating the estimated appraisal delivery date will email the customer.',
-        )
-      } else {
-        setUpdateWarning('')
-      }
+    let newDate
+    if (
+      estimatedAppraisalDeliverDateWatcher &&
+      typeof estimatedAppraisalDeliverDateWatcher === 'string'
+    ) {
+      newDate = parseISO(estimatedAppraisalDeliverDateWatcher)
+    } else {
+      newDate = estimatedAppraisalDeliverDateWatcher
+    }
+
+    if (!isSameDay(oldDate, newDate)) {
+      setUpdateWarning(
+        'Warning: Updating the estimated appraisal delivery date will email the customer.',
+      )
+    } else {
+      setUpdateWarning('')
     }
   }, [estimatedAppraisalDeliverDateWatcher])
 
   React.useEffect(() => {
-    if (estimatedClosingDateWatcher) {
-      const oldDate = parseISO(application.estimated_closing_date)
-      const newDate = parseISO(new Date(estimatedClosingDateWatcher))
+    const oldDate = parseISO(application.estimated_closing_date)
 
-      if (!isSameDay(oldDate, newDate)) {
-        setUpdateWarning(
-          'Warning: Updating the estimated closing date will email the customer.',
-        )
-      } else {
-        setUpdateWarning('')
-      }
+    let newDate
+    if (
+      estimatedClosingDateWatcher &&
+      typeof estimatedClosingDateWatcher === 'string'
+    ) {
+      newDate = parseISO(estimatedClosingDateWatcher)
+    } else {
+      newDate = estimatedClosingDateWatcher
+    }
+
+    if (!isSameDay(oldDate, newDate)) {
+      setUpdateWarning(
+        'Warning: Updating the estimated closing date will email the customer.',
+      )
+    } else {
+      setUpdateWarning('')
     }
   }, [estimatedClosingDateWatcher])
 

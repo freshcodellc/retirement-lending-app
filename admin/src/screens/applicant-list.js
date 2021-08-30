@@ -96,7 +96,7 @@ function FiltersPanel({setFilters}) {
           <Checkbox
             variant="primary"
             control={control}
-            label="Assinged to me"
+            label="Assigned to me"
             id="only_assigned_to_me"
             name="only_assigned_to_me"
           />
@@ -107,7 +107,7 @@ function FiltersPanel({setFilters}) {
             css={{marginBottom: '2rem'}}
             disabled={!formState.isDirty}
           >
-            Update list
+            Filter applicants
           </Button>
           <Button disabled={!formState.isDirty} onClick={clearFilters}>
             Clear
@@ -232,27 +232,37 @@ function ApplicantTable({filters}) {
             {rows.map((row, i) => {
               prepareRow(row)
               return (
-                <Tr {...row.getRowProps()} css={{'&:hover': {cursor: 'pointer', backgroundColor: 'rgba(118,74,243,0.2)'}}} role="button" onClick={() => navigate(`/applicants/${row.values.uuid}`)}>
-                    {row.cells.map(cell => {
-                      const mineStyle =
-                        user.uuid === cell.row.original.assigned_admin?.uuid
-                          ? {
-                              color: colors.secondary,
-                              fontWeight: 500,
-                            }
-                          : {}
-                      return (
-                        <Td
-                          css={{
-                            padding: '1.9rem 1rem',
-                            ...mineStyle,
-                          }}
-                          {...cell.getCellProps()}
-                        >
-                          {cell.render('Cell')}
-                        </Td>
-                      )
-                    })}
+                <Tr
+                  {...row.getRowProps()}
+                  css={{
+                    '&:hover': {
+                      cursor: 'pointer',
+                      backgroundColor: 'rgba(118,74,243,0.2)',
+                    },
+                  }}
+                  role="button"
+                  onClick={() => navigate(`/applicants/${row.values.uuid}`)}
+                >
+                  {row.cells.map(cell => {
+                    const mineStyle =
+                      user.uuid === cell.row.original.assigned_admin?.uuid
+                        ? {
+                            color: colors.secondary,
+                            fontWeight: 500,
+                          }
+                        : {}
+                    return (
+                      <Td
+                        css={{
+                          padding: '1.9rem 1rem',
+                          ...mineStyle,
+                        }}
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render('Cell')}
+                      </Td>
+                    )
+                  })}
                 </Tr>
               )
             })}

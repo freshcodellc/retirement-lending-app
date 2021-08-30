@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useApplication} from 'hooks/use-application'
 import {colors, TextLink, StatusBadge} from '@solera/ui'
@@ -7,7 +7,7 @@ import {FiArrowRight} from 'react-icons/fi'
 import {Layout} from 'components'
 import {useConstants} from 'hooks/use-constants'
 import get from 'lodash/get'
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 
 const STATUS_STEPS_MAP = {
   denied: 0,
@@ -23,7 +23,7 @@ const STATUS_STEPS_MAP = {
 
 const SECTIONS = [
   {
-    title: '1 Pre-screen Application',
+    title: '1. Pre-screen Application',
     description:
       'Tell us about yourself and the property so we can determine eligibility.',
     action: 'Start application',
@@ -31,7 +31,7 @@ const SECTIONS = [
     statuses: ['started'],
   },
   {
-    title: '2 Terms sheet',
+    title: '2. Terms sheet',
     description:
       'To help us complete the loan and to help everything go smoothly, we’ll need to get some logistical details.',
     action: 'Start sheet',
@@ -39,7 +39,7 @@ const SECTIONS = [
     statuses: ['term_sheet_sent', 'term_sheet_accepted'],
   },
   {
-    title: '3 Application Form',
+    title: '3. Application Form',
     description:
       'Tell us a little more about yourself, the entity, custodian/IRA, provide documents, sign, and certify.',
     action: 'Start application',
@@ -47,7 +47,7 @@ const SECTIONS = [
     statuses: ['full_application_requested', 'full_application_received'],
   },
   {
-    title: '4 Post-Approval Form',
+    title: '4. Post-Approval Form',
     description:
       'To help us complete the loan and to help everything go smoothly, we’ll need to get some logistical details.',
     action: 'Start form',
@@ -59,11 +59,16 @@ const SECTIONS = [
 function ApplicationScreen() {
   const navigate = useNavigate()
   const {data} = useApplication()
-  const { statusesMap } = useConstants()
+  const {statusesMap} = useConstants()
 
   return (
     <Layout css={{alignItems: 'center'}}>
-      <h1 css={{marginBottom: '7rem'}}>{data.entity_name}</h1>
+      <h1 css={{textAlign: 'center', fontSize: '35px', marginBottom: '7rem'}}>
+        {data.entity_name
+          ? `Loan Application for ${data.entity_name}`
+          : 'New Loan Application'}
+      </h1>
+      <h1>Application Steps</h1>
       <div
         css={{
           display: 'flex',
@@ -93,15 +98,26 @@ function ApplicationScreen() {
                 }}
               >
                 <h3>{section.title}</h3>
+                {!current && (
+                  <p>
+                    Please complete preceding steps to unlock this step in the
+                    application
+                  </p>
+                )}
+                {completed && <p>This step has been completed</p>}
               </div>
               <div css={{padding: '4rem'}}>
                 <StatusBadge
                   status={completed ? 'approved' : status}
                   label={
-                    completed ? 'Completed' : get(statusesMap, status, 'unknown')
+                    completed
+                      ? 'Completed'
+                      : get(statusesMap, status, 'unknown')
                   }
                 />
-                <p css={{margin: '4rem 0'}}>{section.description}</p>
+                <p css={{color: highLightColor, margin: '4rem 0'}}>
+                  {section.description}
+                </p>
                 {!completed && (
                   <TextLink
                     onClick={() => navigate(section.route)}

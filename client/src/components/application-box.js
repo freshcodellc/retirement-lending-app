@@ -87,17 +87,17 @@ function ApplicationBox({data}) {
             )}
           </p>
         </div>
+        {EDITABLE_STATUSES.includes(data.status) && (
+          <Link to={`/application/${data.uuid}`} css={{marginTop: '2rem'}}>
+            <Button variant="secondary">Continue Loan Process</Button>
+          </Link>
+        )}
         {TERMS_STATUSES.includes(data.status) && (
           <Link
             to={`/application/${data.uuid}/prescreen/2`}
             css={{marginTop: '2.5rem'}}
           >
             <TextLink variant="secondary">Update property address</TextLink>
-          </Link>
-        )}
-        {EDITABLE_STATUSES.includes(data.status) && (
-          <Link to={`/application/${data.uuid}`} css={{marginTop: '2rem'}}>
-            <Button variant="secondary">Continue Loan Process</Button>
           </Link>
         )}
       </div>

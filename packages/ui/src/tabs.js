@@ -23,7 +23,7 @@ const Tab = styled(ReachTab)({
   fontWeight: 500,
   fontSize: '20px',
   color: colors.secondary,
-  minWidth: '250px',
+  minWidth: '200px',
   position: 'relative',
   border: `5px solid ${colors.gray}`,
   borderBottom: 'none',

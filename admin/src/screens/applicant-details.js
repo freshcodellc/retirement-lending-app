@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import * as React from 'react'
 import {useTable} from 'react-table'
-import {isValid, isSameDay, parseISO} from 'date-fns'
+import {isValid, isSameDay, parseISO, format} from 'date-fns'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 import currency from 'currency.js'
 import {useForm} from 'react-hook-form'
-import {Link} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import {FiPhone, FiSend, FiTrash2, FiEdit2} from 'react-icons/fi'
 import {useQueryClient} from 'react-query'
 import {useConstants} from 'hooks/use-constants'
@@ -31,7 +31,7 @@ import {
   Th,
   Tr,
 } from '@solera/ui'
-import * as format from 'utils/format'
+import {join, initial, isoDate} from 'utils/format'
 import {useAuth} from 'context/auth-context'
 import {queryKeys} from 'utils/query-client'
 import {useAddNote} from 'hooks/use-add-note'
@@ -39,6 +39,7 @@ import {useEditNote} from 'hooks/use-edit-note'
 import {useRemoveNote} from 'hooks/use-remove-note'
 import {useUpdateApplication} from 'hooks/use-update-application'
 import {useApplication, useInfoSections} from 'hooks/use-application'
+import {useChangeHistories} from 'hooks/use-change-histories'
 
 import {ReturnLink, StatusSelect, AdminSelect} from 'components'
 
@@ -51,7 +52,9 @@ function snakeCaseToHumanized(field) {
 }
 
 export default function ApplicantDetails() {
+  const {uuid} = useParams()
   const {application, isLoading, isError, error} = useApplication()
+  const {changeHistories, changeHistoriesLoading} = useChangeHistories(uuid)
   const [activeTab, setActiveTab] = React.useState(0)
 
   if (isLoading) {
@@ -74,6 +77,7 @@ export default function ApplicantDetails() {
           <Tab>Applicant information</Tab>
           <Tab>Notes</Tab>
           <Tab>Communication history</Tab>
+          <Tab>Change history</Tab>
           <Tab>Non-Recourse Worksheet Fields</Tab>
         </TabList>
         <TabPanels>
@@ -85,6 +89,12 @@ export default function ApplicantDetails() {
           </TabPanel>
           <TabPanel>
             <CommHistoryTab application={application} />
+          </TabPanel>
+          <TabPanel>
+            <ChangeHistoryTab
+              changeHistories={changeHistories}
+              application={application}
+            />
           </TabPanel>
           <TabPanel>
             <WorksheetFields application={application} />
@@ -573,8 +583,8 @@ function NotesTab({application}) {
         {(application.notes || []).map(note => {
           //TODO: check admin is preload form backend for this to work
           const {first_name, last_name, uuid} = note?.admin?.profile ?? {}
-          const adminName = format.join(first_name, format.initial(last_name))
-          const notedDate = format.isoDate(note.updated_at, 'MM.dd.yy')
+          const adminName = join(first_name, initial(last_name))
+          const notedDate = isoDate(note.updated_at, 'MM.dd.yy')
           const yourNotes = user.uuid === uuid
 
           return (
@@ -674,6 +684,89 @@ function CommHistoryTab() {
     ],
     [],
   )
+  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
+    useTable({columns, data})
+
+  return (
+    <TableWrapper>
+      <Table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <Th
+                  css={{
+                    paddingTop: '1.2rem',
+                    paddingBottom: '1.2rem',
+                    borderBottom: `3px solid ${colors.gray40}`,
+                    '&:last-child': {
+                      minWidth: '250px',
+                    },
+                  }}
+                  {...column.getHeaderProps()}
+                >
+                  {column.render('Header')}
+                </Th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row)
+            return (
+              <Tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                })}
+              </Tr>
+            )
+          })}
+        </tbody>
+      </Table>
+    </TableWrapper>
+  )
+}
+
+function ChangeHistoryTab({application, changeHistories}) {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Date',
+        accessor: 'date',
+      },
+      {
+        Header: 'Changed by',
+        accessor: 'changedBy',
+      },
+      {
+        Header: 'What changed',
+        accessor: 'changedFields',
+      },
+    ],
+    [],
+  )
+  const data = React.useMemo(() => {
+    console.log(Object.keys(changeHistories[0].changes))
+    return changeHistories.map(changeHistory => ({
+      date: format(
+        new Date(parseISO(changeHistory.inserted_at)),
+        "MM/dd/yyyy 'at' h:mm a",
+      ),
+      changedBy: `${changeHistory.user.profile.first_name} ${changeHistory.user.profile.last_name}`,
+      changedFields: (
+        <div>
+          {Object.keys(changeHistory.changes).map((key, index) => (
+            <div>
+              <strong>{snakeCaseToHumanized(key)}</strong> was changed from{' '}
+              <strong>{changeHistory.changes[key][0]}</strong> to{' '}
+              <strong>{changeHistory.changes[key][1]}</strong>
+            </div>
+          ))}
+        </div>
+      ),
+    }))
+  }, [])
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
     useTable({columns, data})
 

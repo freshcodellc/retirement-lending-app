@@ -7,6 +7,7 @@ const queryKeys = {
   admin_invites: 'admin_invites',
   constants: 'constants',
   login_user: 'login_user',
+  change_histories: 'change_histories',
   application: uuid => ['applications', uuid],
   applications: (page, filters) => ['applications', filters, page],
 }

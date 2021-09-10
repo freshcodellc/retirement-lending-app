@@ -729,6 +729,25 @@ function CommHistoryTab() {
 }
 
 function ChangeHistoryTab({application, changeHistories}) {
+  const interpolateValue = value => {
+    let interpolated = ''
+
+    switch (value) {
+      case true:
+        interpolated = 'true'
+        break
+      case false:
+        interpolated = 'false'
+        break
+      case null:
+        interpolated = 'blank'
+      default:
+        interpolated = value
+    }
+
+    return interpolated
+  }
+
   const columns = React.useMemo(
     () => [
       {
@@ -746,27 +765,27 @@ function ChangeHistoryTab({application, changeHistories}) {
     ],
     [],
   )
-  const data = React.useMemo(() => {
-    console.log(Object.keys(changeHistories[0].changes))
-    return changeHistories.map(changeHistory => ({
-      date: format(
-        new Date(parseISO(changeHistory.inserted_at)),
-        "MM/dd/yyyy 'at' h:mm a",
-      ),
-      changedBy: `${changeHistory.user.profile.first_name} ${changeHistory.user.profile.last_name}`,
-      changedFields: (
-        <div>
-          {Object.keys(changeHistory.changes).map((key, index) => (
-            <div>
-              <strong>{snakeCaseToHumanized(key)}</strong> was changed from{' '}
-              <strong>{changeHistory.changes[key][0]}</strong> to{' '}
-              <strong>{changeHistory.changes[key][1]}</strong>
-            </div>
-          ))}
-        </div>
-      ),
-    }))
-  }, [])
+
+  console.log(changeHistories)
+  const data = changeHistories.map(changeHistory => ({
+    date: format(
+      new Date(parseISO(changeHistory.inserted_at)),
+      "MM/dd/yyyy 'at' h:mm a",
+    ),
+    changedBy: `${changeHistory.user.profile.first_name} ${changeHistory.user.profile.last_name}`,
+    changedFields: (
+      <div key={changeHistory.uuid}>
+        {Object.keys(changeHistory.changes).map((key, index) => (
+          <div>
+            <strong>{snakeCaseToHumanized(key)}</strong> was changed from{' '}
+            <strong>{interpolateValue(changeHistory.changes[key][0])}</strong>{' '}
+            to{' '}
+            <strong>{interpolateValue(changeHistory.changes[key][1])}</strong>
+          </div>
+        ))}
+      </div>
+    ),
+  }))
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
     useTable({columns, data})
 

@@ -1,10 +1,10 @@
 import {apiSecureClient} from 'utils/api-client'
 
-async function listChangeHistories(uuid) {
+async function listAdminChangeHistories(uuid) {
   return await apiSecureClient(
-    `loan-applications/${uuid}/change-histories`,
+    `loan-applications/${uuid}/admin-change-histories`,
   ).then(res => res)
 }
 
-const changeHistoryService = {listChangeHistories}
+const changeHistoryService = {listAdminChangeHistories}
 export default changeHistoryService

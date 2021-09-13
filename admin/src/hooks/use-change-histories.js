@@ -7,7 +7,7 @@ import changeHistoryService from 'services/change-history-service'
 function useChangeHistories(uuid) {
   const {data, ...restResult} = useQuery(
     queryKeys.change_histories,
-    () => changeHistoryService.listChangeHistories(uuid),
+    () => changeHistoryService.listAdminChangeHistories(uuid),
     {staleTime: 10000},
   )
 

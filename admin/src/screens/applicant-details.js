@@ -135,6 +135,7 @@ function ActionsPanel({activeTab, application}) {
       interest_rate_range_high: application.interest_rate_range_high,
       interest_rate_spread_low: application.interest_rate_spread_low,
       interest_rate_spread_high: application.interest_rate_spread_high,
+      loan_to_value_percentage: application.loan_to_value_percentage,
     },
   })
 
@@ -216,7 +217,8 @@ function ActionsPanel({activeTab, application}) {
     }
   }, [estimatedClosingDateWatcher])
 
-  const handleTermSheet = handleSubmit(({status, admin, ...rates}) => {
+  const handleSaveActionsPanel = handleSubmit(({status, admin, ...rates}) => {
+    console.log(rates)
     mutate({
       ...rates,
       status,
@@ -228,7 +230,7 @@ function ActionsPanel({activeTab, application}) {
   return (
     <form
       name="terms-sheet"
-      onSubmit={handleTermSheet}
+      onSubmit={handleSaveActionsPanel}
       css={{
         flexDirection: 'column',
         border: `5px solid ${colors.gray40}`,
@@ -288,8 +290,8 @@ function ActionsPanel({activeTab, application}) {
           marginBottom: '2rem',
           '&>*': {
             width: '100%',
-            maxWidth: '200px',
-            minWidth: '200px',
+            maxWidth: '160px',
+            minWidth: '160px',
           },
         }}
       >
@@ -322,6 +324,12 @@ function ActionsPanel({activeTab, application}) {
           placeholder="%"
           label="Margin high rate"
           {...register('interest_rate_spread_high', {required: true})}
+        />
+        <Input
+          type="text"
+          placeholder="%"
+          label="Loan to Value"
+          {...register('loan_to_value_percentage', {required: true})}
         />
       </div>
       <div
@@ -766,7 +774,6 @@ function ChangeHistoryTab({application, changeHistories}) {
     [],
   )
 
-  console.log(changeHistories)
   const data = changeHistories.map(changeHistory => ({
     date: format(
       new Date(parseISO(changeHistory.inserted_at)),

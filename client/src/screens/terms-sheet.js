@@ -124,8 +124,9 @@ function TermsSheetScreen() {
             property commonly known as {address} {address_2}
           </p>
           <p>
-            The maximum Loan amount will be restricted to 60% of the lesser of
-            the purchase price or appraised value.
+            The maximum Loan amount will be restricted to{' '}
+            {data.loan_to_value_percentage}% of the lesser of the purchase price
+            or appraised value.
           </p>
         </div>
         <div>

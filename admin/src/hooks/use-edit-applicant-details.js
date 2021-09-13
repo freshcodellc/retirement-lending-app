@@ -44,7 +44,6 @@ function useEditApplicantDetails() {
       {},
     )
 
-    console.log(application)
     return {
       ...values,
       assigned_admin_user_uuid:

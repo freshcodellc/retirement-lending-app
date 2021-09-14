@@ -8,37 +8,44 @@ import * as colors from './styles/colors'
 import { IconButton } from './button'
 import { FormControl } from './form'
 
-const Input = forwardRef(({ hasError, helperText, ...props }, ref) => (
-  <div
-    css={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%'
-    }}
-  >
-    <label
-      htmlFor={props.name}
+const Input = forwardRef(
+  (
+    { hasError, helperText, labelStyles = {}, inputStyles = {}, ...props },
+    ref
+  ) => (
+    <div
       css={{
-        fontWeight: '300',
-        fontSize: '20px',
-        lineHeight: '26px',
-        marginBottom: '0.5rem'
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%'
       }}
     >
-      {props.label}
-    </label>
-    <input
-      css={{
-        border: 'none',
-        alignSelf: 'stretch',
-        padding: '6px 0',
-        borderBottom: `2px solid ${hasError ? colors.danger : colors.text}`
-      }}
-      ref={ref}
-      {...props}
-    />
-  </div>
-))
+      <label
+        htmlFor={props.name}
+        css={{
+          fontWeight: '300',
+          fontSize: '20px',
+          lineHeight: '26px',
+          marginBottom: '0.5rem',
+          ...labelStyles
+        }}
+      >
+        {props.label}
+      </label>
+      <input
+        css={{
+          border: 'none',
+          alignSelf: 'stretch',
+          padding: '6px 0',
+          borderBottom: `2px solid ${hasError ? colors.danger : colors.text}`,
+          ...inputStyles
+        }}
+        ref={ref}
+        {...props}
+      />
+    </div>
+  )
+)
 
 function InputAdornment({ children, end = false, ...props }) {
   const posStyles = end

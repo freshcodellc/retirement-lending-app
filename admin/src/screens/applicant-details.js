@@ -18,6 +18,7 @@ import {
   DatePicker,
   FormMessage,
   Input,
+  CurrencyInput,
   Tab,
   Table,
   TableWrapper,
@@ -101,6 +102,7 @@ export default function ApplicantDetails() {
           </TabPanel>
         </TabPanels>
       </Tabs>
+      <Toaster />
     </div>
   )
 }
@@ -136,6 +138,7 @@ function ActionsPanel({activeTab, application}) {
       interest_rate_spread_low: application.interest_rate_spread_low,
       interest_rate_spread_high: application.interest_rate_spread_high,
       loan_to_value_percentage: application.loan_to_value_percentage,
+      estimated_appraisal_cost: application.estimated_appraisal_cost,
     },
   })
 
@@ -186,7 +189,7 @@ function ActionsPanel({activeTab, application}) {
       newDate = estimatedAppraisalDeliverDateWatcher
     }
 
-    if (!isSameDay(oldDate, newDate)) {
+    if (newDate && !isSameDay(oldDate, newDate)) {
       setUpdateWarning(
         'Warning: Updating the estimated appraisal delivery date will email the customer.',
       )
@@ -208,7 +211,7 @@ function ActionsPanel({activeTab, application}) {
       newDate = estimatedClosingDateWatcher
     }
 
-    if (!isSameDay(oldDate, newDate)) {
+    if (newDate && !isSameDay(oldDate, newDate)) {
       setUpdateWarning(
         'Warning: Updating the estimated closing date will email the customer.',
       )
@@ -218,7 +221,6 @@ function ActionsPanel({activeTab, application}) {
   }, [estimatedClosingDateWatcher])
 
   const handleSaveActionsPanel = handleSubmit(({status, admin, ...rates}) => {
-    console.log(rates)
     mutate({
       ...rates,
       status,
@@ -351,6 +353,24 @@ function ActionsPanel({activeTab, application}) {
             width: '100%',
           }}
         >
+          <CurrencyInput
+            control={control}
+            labelStyles={{
+              marginBottom: '1.9rem',
+            }}
+            type="text"
+            placeholder="$"
+            label="Estimated Appraisal Cost"
+            {...register('estimated_appraisal_cost', {required: false})}
+          />
+        </div>
+        <div
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+          }}
+        >
           <label
             css={{
               fontWeight: '300',
@@ -391,6 +411,17 @@ function ActionsPanel({activeTab, application}) {
           />
         </div>
       </div>
+      <p
+        css={{
+          fontSize: '14px',
+          width: '30%',
+          margin: '10px 0 0 0',
+          padding: '0',
+        }}
+      >
+        Note: When setting the estimated closing date or appraisal delivery
+        date, the estimated appraisal cost is also required
+      </p>
     </form>
   )
 }
@@ -982,7 +1013,6 @@ function WorksheetFields({application}) {
           </CopyToClipboard>
         </div>
       </div>
-      <Toaster />
     </>
   )
 }

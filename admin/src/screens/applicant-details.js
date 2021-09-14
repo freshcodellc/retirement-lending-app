@@ -138,7 +138,9 @@ function ActionsPanel({activeTab, application}) {
       interest_rate_spread_low: application.interest_rate_spread_low,
       interest_rate_spread_high: application.interest_rate_spread_high,
       loan_to_value_percentage: application.loan_to_value_percentage,
-      estimated_appraisal_cost: application.estimated_appraisal_cost,
+      estimated_appraisal_cost: currency(application.estimated_appraisal_cost, {
+        fromCents: true,
+      }).format({symbol: ''}),
     },
   })
 
@@ -223,6 +225,7 @@ function ActionsPanel({activeTab, application}) {
   const handleSaveActionsPanel = handleSubmit(({status, admin, ...rates}) => {
     mutate({
       ...rates,
+      estimated_appraisal_cost: rates.estimated_appraisal_cost * 100,
       status,
       assigned_admin_user_uuid: admin,
       uuid: application.uuid,

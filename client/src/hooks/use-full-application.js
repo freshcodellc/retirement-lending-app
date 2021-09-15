@@ -300,7 +300,7 @@ const getStep2Resolver = entityIsLLC =>
   yupResolver(
     yup.object().shape({
       entity_name: yup.string().required('Required'),
-      ein: yup.string().required('Required'),
+      ein: yup.string().min(9).max(10).required('Required'),
       entity_state_of_formation: entityIsLLC
         ? yup.mixed().notOneOf(['empty'], 'Required')
         : yup.mixed(),
@@ -391,7 +391,10 @@ const disclosureFields = [
   },
   {
     type: 'p',
-    text: 'If you answered no to question 1, do not proceed as we cannot provide financing to entities involved in the marijuana industry.',
+    text: 'If you answered yes to question 1, do not proceed as we cannot provide financing to entities involved in the marijuana industry.',
+    styles: {
+      color: 'rgb(225, 64, 56)',
+    },
   },
   {
     type: 'radio',

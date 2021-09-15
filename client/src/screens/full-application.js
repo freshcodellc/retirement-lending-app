@@ -127,7 +127,7 @@ function FullApplicationScreen() {
             },
           }}
         >
-          {fields.map(field => {
+          {fields.map((field, idx) => {
             const props = {
               ...field,
               key: field.name,
@@ -144,7 +144,7 @@ function FullApplicationScreen() {
                 )
               case 'p':
                 return (
-                  <p css={{fontWeight: 500}} key={field.type}>
+                  <p css={{fontWeight: 500, ...field.styles}} key={`${field.type}-${idx}-${currentStep}`}>
                     {field.text}
                   </p>
                 )

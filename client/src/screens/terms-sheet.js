@@ -79,7 +79,7 @@ function TermsSheetScreen() {
         </div>
         <div>
           <h3>Borrower(s): {data.entity_name}</h3>
-          <h3>Loan Amount: {loanAmount}</h3>
+          <h3>Loan Amount: {loanAmount} - Estimated</h3>
         </div>
         <div>
           <h3>Interest Rate:</h3>
@@ -97,7 +97,7 @@ function TermsSheetScreen() {
             each annual rate adjustment, and by no more than a cumulative 6.0%
             over the life of the loan. The minimum rate to be charged will not
             be below {data.interest_rate_floor}% and the maximum rate charged
-            will not exceed the initial rate plus {data.interest_rate_floor}%.
+            will not exceed the initial rate plus 6.0%.
           </p>
         </div>
         <div>
@@ -131,15 +131,21 @@ function TermsSheetScreen() {
         </div>
         <div>
           <h3>Prepayment Fee:</h3>
-          <p>The loan may be prepaid at any time without penalty.</p>
+          <p>
+            A fee equal to{' '}
+            <span css={{fontWeight: 600}}>three percent (3.0%)</span> of the
+            original principal balance of the Note shall be collected if the
+            Note is, for any reason whatsoever, paid in full prior to the 19th
+            month following inception of the Note.{' '}
+          </p>
         </div>
         <div>
           <h3>Reserve Account:</h3>
           <p>
             The borrower is required to maintain a reserve account at Solera
             National Bank with a collected balance of not less than{' '}
-            {data.piti_reserve_months} months of PITI plus Property Management
-            Fee payments. Failure to maintain balances may result in the
+            {data.piti_reserve_months} months of PITI plus Homeowners
+            Association Fee. Failure to maintain balances may result in the
             imposition of fees.
           </p>
         </div>

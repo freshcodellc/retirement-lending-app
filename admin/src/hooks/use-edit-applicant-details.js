@@ -451,7 +451,7 @@ const eraFields = [
     name: 'entity_name',
   },
   {
-    type: 'text',
+    type: 'ein',
     label: 'EIN',
     name: 'ein',
   },

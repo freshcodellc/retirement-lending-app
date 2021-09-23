@@ -279,7 +279,7 @@ const entityFields = [
     name: 'entity_name',
   },
   {
-    type: 'text',
+    type: 'ein',
     label: 'EIN',
     placeholder: 'EIN',
     name: 'ein',
@@ -503,6 +503,7 @@ const signatureFields = [
     name: 'signature_title',
     label: 'Legal name and title of authorized signer',
     placeholder: 'Legal name and title',
+    disabled: true,
   },
   {
     type: 'text',

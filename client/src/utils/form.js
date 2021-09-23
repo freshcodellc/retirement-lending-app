@@ -1,5 +1,15 @@
 import currency from 'currency.js'
 
+function setTitle(entity_type) {
+  if (["IRA_LLC", "401k_LLC"].includes(entity_type)) {
+  return "Manager"
+  } else if (["IRA_trust", "401k_trust"].includes(entity_type)) {
+    return "Trustee"
+  } else {
+    return "Custodian"
+  }
+}
+
 function setApplicationDefaultValues(app) {
   return (acc, cur) => {
     if (cur.name in app) {
@@ -34,6 +44,8 @@ function setApplicationDefaultValues(app) {
           cur.name === 'term_sheet_signature_date'
         ) {
           value = new Date()
+        } else if (cur.name === 'signature_title') {
+          value = `${app.first_name} ${app.last_name}, ${setTitle(app.entity_type)}`
         }
       }
       acc[key] = value

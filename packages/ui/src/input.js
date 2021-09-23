@@ -175,6 +175,30 @@ const SsnInput = forwardRef(
   }
 )
 
+
+const EinInput = forwardRef(
+  ({ name, control, rules, format = '00{-}0000000', ...props }, ref) => {
+    const {
+      field: { onChange, value }
+    } = useController({
+      name,
+      control,
+      rules
+    })
+    return (
+      <MaskedInput
+        unmask
+        id={name}
+        name={name}
+        value={value}
+        mask={format}
+        onAccept={onChange}
+        {...props}
+      />
+    )
+  }
+)
+
 const CurrencyInput = forwardRef(
   ({ name, control, rules, format = '$num', ...props }, ref) => {
     const {
@@ -221,6 +245,7 @@ export {
   SearchInput,
   PhoneInput,
   SsnInput,
+  EinInput,
   CurrencyInput,
   InputError
 }

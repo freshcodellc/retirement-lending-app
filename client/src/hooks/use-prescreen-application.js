@@ -91,10 +91,6 @@ const step1Fields = [
     ],
   },
   {
-    type: 'alert',
-    text: 'Currently not accepting applications for properties in New York or New Jersey.',
-  },
-  {
     type: 'h1',
     text: 'Retirement Account Information',
   },

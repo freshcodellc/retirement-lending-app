@@ -10,6 +10,7 @@ import {
   TextLink,
   Textarea,
   Checkbox,
+  EinInput,
   SsnInput,
   RadioInput,
   RadioGroup,
@@ -229,6 +230,9 @@ function FullApplicationScreen() {
                 return <DatePicker control={control} {...props} />
               case 'ssn':
                 return <SsnInput control={control} {...props} />
+              case 'ein':
+                return <EinInput control={control} {...props} />
+                
               case 'checkbox':
                 return <Checkbox control={control} {...props} />
               case 'email':

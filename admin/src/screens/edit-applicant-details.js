@@ -20,6 +20,7 @@ import {
   Button,
   Checkbox,
   SsnInput,
+  EinInput,
   PhoneInput,
   FormMessage,
   FormControl,
@@ -144,6 +145,8 @@ export default function EditApplicantInfo() {
               return <DatePicker control={control} {...props} />
             case 'ssn':
               return <SsnInput control={control} {...props} />
+            case 'ein':
+              return <EinInput control={control} {...props} />
             case 'checkbox':
               return <Checkbox control={control} {...props} />
             case 'email':

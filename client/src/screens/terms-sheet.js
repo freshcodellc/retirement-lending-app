@@ -121,7 +121,8 @@ function TermsSheetScreen() {
           <h3>Collateral:</h3>
           <p>
             1st Deed of Trust and Assignment of Rents (or equivalent) on
-            property commonly known as {address} {address_2}
+            property commonly known as {address} {address_2} {city}, {state}{' '}
+            {postal_code}
           </p>
           <p>
             The maximum Loan amount will be restricted to{' '}

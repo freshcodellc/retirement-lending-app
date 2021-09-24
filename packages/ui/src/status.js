@@ -8,6 +8,7 @@ const statusColors = {
   notStarted: colors.gray10,
   started: '#C5006E',
   approved: '#8CCF6A',
+  complete: '#00B5B5',
   denied: '#E14038',
   full_application_requested: '#FF7B00',
   term_sheet_accepted: '#FFD43B',

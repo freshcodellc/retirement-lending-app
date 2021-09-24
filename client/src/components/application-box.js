@@ -29,6 +29,7 @@ const TERMS_HELPER_TEXT_MAP = {
   underwriting: 'Your loan is being processed',
   under_review: 'Underwriting complete',
   approved: 'Your loan has been approved',
+  complete: 'Your loan has been funded and is now complete.',
 }
 
 function ApplicationBox({data}) {

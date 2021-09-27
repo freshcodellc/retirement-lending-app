@@ -535,8 +535,8 @@ const signatureFields = [
 const signatureFieldsResolver = yupResolver(
   yup.object().shape({
     signature_entity_name: yup.string().required('Required'),
-    signature_title: yup.string().required('Required'),
+    signature_title: yup.string(),
     signature: yup.string().required('Required'),
-    signature_date: yup.string().required('Required'),
+    signature_date: yup.string(),
   }),
 )

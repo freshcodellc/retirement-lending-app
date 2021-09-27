@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {FiUser} from 'react-icons/fi'
 import {Link} from 'react-router-dom'
 import {Button, colors} from '@solera/ui'
-import { useAuth } from '../context/auth-context'
+import {useAuth} from '../context/auth-context'
 
 function UserMenu() {
   const [open, setOpen] = useState(false)
@@ -23,7 +23,6 @@ function UserMenu() {
           height: '100vh',
           backgroundColor: '#EEEEEE',
           opacity: open ? `0.95` : '0',
-          transition: 'all 0.3s ease-in-out',
         }}
         onClick={() => setOpen(false)}
       />
@@ -52,10 +51,8 @@ function UserMenu() {
             opacity: open ? 1 : 0,
             position: 'absolute',
             zIndex: open ? '10' : '0',
-            bottom: '-50px',
+            top: '40px',
             right: 0,
-            transform: `translateY(${open ? '100%' : '90%'})`,
-            transition: 'all 0.3s ease-in-out',
             padding: '50px',
             border: `2px solid ${colors.primary}`,
             backgroundColor: 'white',
@@ -74,7 +71,11 @@ function UserMenu() {
             Account
           </p>
           <Link to="/profile/update">
-            <Button variant="secondary" css={{width: '250px', marginTop: '35px'}} onClick={() => setOpen(false)}>
+            <Button
+              variant="secondary"
+              css={{width: '250px', marginTop: '35px'}}
+              onClick={() => setOpen(false)}
+            >
               Update Profile
             </Button>
           </Link>

@@ -7,7 +7,7 @@ const Header = ({ children, onLogoClick }) => (
   <header
     css={{
       top: 0,
-      zIndex: 1,
+      zIndex: 2,
       width: '100%',
       position: 'sticky'
     }}

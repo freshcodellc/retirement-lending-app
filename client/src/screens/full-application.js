@@ -38,7 +38,7 @@ import {useUpdateApplication} from 'hooks/use-update-application'
 const stepRoute = (uuid, step) => `/application/${uuid}/full/${step}`
 
 function FullApplicationScreen() {
-  const [hasAddDocs, setHasAddDocs] = useState(false)
+  const [allRequiredDocsUploaded, setAllRequiredDocsUploaded] = useState(false)
   const navigate = useNavigate()
   const {
     uuid,
@@ -55,6 +55,7 @@ function FullApplicationScreen() {
     currentStep,
     defaultValues,
     isThankYouStep,
+    stepSlug,
   } = useFullApplication()
   const {
     reset: resetSave,
@@ -74,6 +75,16 @@ function FullApplicationScreen() {
       defaultValues,
       resolver,
     })
+
+  const currentStepIsValid = (data, stepSlug) => {
+    switch (stepSlug) {
+      case 'uploads':
+        return allRequiredDocsUploaded ? true : false
+      default:
+        return true
+    }
+  }
+
   const idleStep = watch('idleStep')
   const mailingEqualPhysical = watch('mailing_equal_physical', false)
 
@@ -145,7 +156,10 @@ function FullApplicationScreen() {
                 )
               case 'p':
                 return (
-                  <p css={{fontWeight: 500, ...field.styles}} key={`${field.type}-${idx}-${currentStep}`}>
+                  <p
+                    css={{fontWeight: 500, ...field.styles}}
+                    key={`${field.type}-${idx}-${currentStep}`}
+                  >
                     {field.text}
                   </p>
                 )
@@ -155,7 +169,7 @@ function FullApplicationScreen() {
                     uuid={uuid}
                     key={field.name}
                     documents={data.documents}
-                    setHasAddDocs={setHasAddDocs}
+                    setAllRequiredDocsUploaded={setAllRequiredDocsUploaded}
                     entityType={data.entity_type}
                   />
                 )
@@ -232,7 +246,7 @@ function FullApplicationScreen() {
                 return <SsnInput control={control} {...props} />
               case 'ein':
                 return <EinInput control={control} {...props} />
-                
+
               case 'checkbox':
                 return <Checkbox control={control} {...props} />
               case 'email':
@@ -349,7 +363,7 @@ function FullApplicationScreen() {
               type="submit"
               isLoading={isSaving}
               disabled={
-                !formState.isValid || (currentStep === 5 && !hasAddDocs)
+                !formState.isValid || !currentStepIsValid(data, stepSlug)
               }
             >
               {currentStep === maxStep ? 'Submit application' : 'Continue'}
@@ -378,7 +392,12 @@ function FullApplicationScreen() {
 }
 export {FullApplicationScreen}
 
-function DocumentUploads({uuid, entityType, documents, setHasAddDocs}) {
+function DocumentUploads({
+  uuid,
+  entityType,
+  documents,
+  setAllRequiredDocsUploaded,
+}) {
   const {documentTypes} = useConstants()
 
   let selectedTypes = []
@@ -428,8 +447,8 @@ function DocumentUploads({uuid, entityType, documents, setHasAddDocs}) {
   const hasAllDocs = selectedTypes.every(t => existingTypes.includes(t))
 
   useEffect(() => {
-    setHasAddDocs(hasAllDocs)
-  }, [hasAllDocs, setHasAddDocs])
+    setAllRequiredDocsUploaded(hasAllDocs)
+  }, [hasAllDocs, setAllRequiredDocsUploaded])
 
   return filteredTypes.map(d => (
     <div

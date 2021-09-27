@@ -121,12 +121,12 @@ function TermsSheetScreen() {
           <h3>Collateral:</h3>
           <p>
             1st Deed of Trust and Assignment of Rents (or equivalent) on
-            property commonly known as {address} {address_2} {city}, {state}{' '}
-            {postal_code}
+            property commonly known as <strong>{address} {address_2} {city}, {state}{' '}
+            {postal_code}</strong>
           </p>
           <p>
             The maximum Loan amount will be restricted to{' '}
-            {data.loan_to_value_percentage}% of the lesser of the purchase price
+            <strong>{data.loan_to_value_percentage}%</strong> of the lesser of the purchase price
             or appraised value.
           </p>
         </div>

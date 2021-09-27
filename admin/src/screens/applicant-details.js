@@ -295,8 +295,8 @@ function ActionsPanel({activeTab, application}) {
           marginBottom: '2rem',
           '&>*': {
             width: '100%',
-            maxWidth: '160px',
-            minWidth: '160px',
+            maxWidth: '200px',
+            minWidth: '200px',
           },
         }}
       >
@@ -335,6 +335,12 @@ function ActionsPanel({activeTab, application}) {
           placeholder="%"
           label="Loan to Value"
           {...register('loan_to_value_percentage', {required: true})}
+        />
+        <Input
+          type="text"
+          placeholder="Number of months"
+          label="PITI Reserve Months"
+          {...register('piti_reserve_months', {required: true})}
         />
       </div>
       <div

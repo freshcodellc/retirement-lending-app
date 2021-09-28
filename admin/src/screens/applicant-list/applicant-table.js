@@ -2,7 +2,6 @@
 import * as React from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import {useTable} from 'react-table'
-import {useForm} from 'react-hook-form'
 
 import {
   Th,
@@ -10,115 +9,16 @@ import {
   Td,
   Table,
   colors,
-  Button,
   TextLink,
   TableWrapper,
-  Checkbox,
   StatusBadge,
-  SearchInput,
 } from '@solera/ui'
-import {StatusSelect, DateRangePicker} from 'components'
 import {useAuth} from 'context/auth-context'
 import {join, initial, phone} from 'utils/format'
 import {useApplications} from 'hooks/use-applications'
 import {useConstants} from 'hooks/use-constants'
 
-export default function ApplicantList() {
-  const [filters, setFilters] = React.useState()
-
-  return (
-    <div>
-      <h1>Applicant List</h1>
-      <FiltersPanel setFilters={setFilters} />
-      <ApplicantTable filters={filters} />
-    </div>
-  )
-}
-
-function FiltersPanel({setFilters}) {
-  const {register, handleSubmit, reset, formState, control} = useForm()
-
-  const handleFilter = handleSubmit(setFilters)
-
-  const clearFilters = e => {
-    e.preventDefault()
-    reset()
-  }
-
-  const {statuses} = useConstants()
-
-  return (
-    <React.Fragment>
-      <form
-        name="filters"
-        onSubmit={handleFilter}
-        css={{
-          gap: '2rem',
-          display: 'flex',
-          flexWrap: 'wrap',
-          padding: '2rem',
-          marginBottom: '2rem',
-          alignItems: 'flex-end',
-          border: `5px solid ${colors.gray40}`,
-          '&>div': {
-            width: '100%',
-            minWidth: '200px',
-            maxWidth: 'calc((100% - 6rem)/4)',
-          },
-        }}
-      >
-        <div>
-          <SearchInput
-            id="search_query"
-            name="search_query"
-            placeholder="Search"
-            {...register('search_query')}
-          />
-          <DateRangePicker
-            start_name="date_start"
-            end_name="date_end"
-            control={control}
-            placeholder="mm/dd/yy"
-            label="Application date"
-            css={{marginTop: '2rem'}}
-          />
-        </div>
-        <div>
-          <StatusSelect
-            id="status"
-            options={statuses}
-            name="status"
-            control={control}
-            label="Application status"
-          />
-        </div>
-        <div>
-          <Checkbox
-            variant="primary"
-            control={control}
-            label="Assigned to me"
-            id="only_assigned_to_me"
-            name="only_assigned_to_me"
-          />
-        </div>
-        <div>
-          <Button
-            type="submit"
-            css={{marginBottom: '2rem'}}
-            disabled={!formState.isDirty}
-          >
-            Filter applicants
-          </Button>
-          <Button disabled={!formState.isDirty} onClick={clearFilters}>
-            Clear
-          </Button>
-        </div>
-      </form>
-    </React.Fragment>
-  )
-}
-
-function ApplicantTable({filters}) {
+export function ApplicantTable({filters}) {
   const {user} = useAuth()
   const navigate = useNavigate()
   const {

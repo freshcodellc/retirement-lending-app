@@ -35,6 +35,20 @@ const TERMS_HELPER_TEXT_MAP = {
 function ApplicationBox({data}) {
   const {statusesMap} = useConstants()
 
+  const applicationTitle = addresses => {
+    if (!addresses || !addresses.length) {
+      return 'New Application'
+    }
+
+    const propertyAddress = addresses.find(
+      address => address.type === 'property',
+    )
+
+    return propertyAddress
+      ? `Application for ${propertyAddress.address}`
+      : 'New Application'
+  }
+
   return (
     <div
       css={{
@@ -56,7 +70,7 @@ function ApplicationBox({data}) {
             margin: 0,
           }}
         >
-          Application {data.uuid.split('-')[0]}
+          {applicationTitle(data.addresses)}
         </p>
         {typeof data.inserted_at === 'string' && (
           <span css={{fontSize: '1.2rem'}}>

@@ -8,13 +8,13 @@ import {
 } from 'react-router-dom'
 import {ErrorBoundary} from 'react-error-boundary'
 
-import AdminScreen from './screens/admin'
+import AdminScreen from './screens/admin/admin'
 import {useAuth} from './context/auth-context'
 import NotFoundScreen from './screens/not-found'
-import ApplicantListScreen from './screens/applicant-list'
+import ApplicantListScreen from './screens/applicant-list/applicant-list'
 import {Header, ErrorFallback} from './components'
-import ApplicantDetailsScreen from './screens/applicant-details'
-import EditApplicantDetails from './screens/edit-applicant-details'
+import ApplicantDetailsScreen from './screens/applicant-details/applicant-details'
+import EditApplicantDetails from './screens/edit-applicant-details/edit-applicant-details'
 import {FullPageErrorFallback, TextLink, colors} from '@solera/ui'
 
 export default function AuthenticatedApp() {

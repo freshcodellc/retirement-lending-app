@@ -4,15 +4,6 @@ import {Navigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
 import toast, {Toaster} from 'react-hot-toast'
 
-/*
-{saveSucceed && (
-  <FormMessage variant="success">Successfully Saved!</FormMessage>
-)}
-{saveIsError ? (
-  <FormMessage variant="error">Failed to save!</FormMessage>
-) : null}
-*/
-
 import {
   Input,
   RadioGroup,
@@ -22,7 +13,6 @@ import {
   SsnInput,
   EinInput,
   PhoneInput,
-  FormMessage,
   FormControl,
   UsStateSelect,
   CurrencyInput,
@@ -37,6 +27,8 @@ import {
 } from 'components'
 import {useUpdateApplication} from 'hooks/use-update-application'
 import {useEditApplicantDetails} from 'hooks/use-edit-applicant-details'
+
+import {AddressFields} from './address-fields'
 
 export default function EditApplicantInfo() {
   const {
@@ -224,38 +216,5 @@ export default function EditApplicantInfo() {
         </div>
       </form>
     </div>
-  )
-}
-
-function AddressFields({
-  control,
-  hasError,
-  register,
-  address,
-  address_2,
-  city,
-  state,
-  postal_code,
-}) {
-  return (
-    <React.Fragment>
-      <Input hasError={hasError} {...address} {...register(address.name)} />
-      <Input hasError={hasError} {...address_2} {...register(address_2.name)} />
-      <div
-        css={{
-          display: 'flex',
-          gap: '1rem',
-          '& > *': {width: 'calc((100% - 2rem)/3)'},
-        }}
-      >
-        <Input hasError={hasError} {...city} {...register(city.name)} />
-        <UsStateSelect control={control} hasError={hasError} {...state} />
-        <Input
-          hasError={hasError}
-          {...postal_code}
-          {...register(postal_code.name)}
-        />
-      </div>
-    </React.Fragment>
   )
 }

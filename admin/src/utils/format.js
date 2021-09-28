@@ -36,6 +36,14 @@ const address = ({address, address_2, city, state, postal_code}) => {
 
 const yesNo = val => (val ? 'Yes' : 'No')
 
+const snakeCaseToHumanized = field => {
+  const parts = field.split('_')
+  const capitalizedParts = parts.map(
+    part => part.charAt(0).toUpperCase() + part.slice(1),
+  )
+  return capitalizedParts.join(' ')
+}
+
 export {
   phone,
   join,
@@ -46,4 +54,5 @@ export {
   empty,
   currency,
   yesNo,
+  snakeCaseToHumanized,
 }

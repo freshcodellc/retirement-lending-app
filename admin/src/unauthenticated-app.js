@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import {Routes, Route} from 'react-router-dom'
-import ForgotPasswordScreen from './screens/forgot-password'
-import LoginScreen from './screens/login'
-import LoginVerifyScreen from './screens/login-verify'
-import SignupScreen from './screens/sign-up'
+import ForgotPasswordScreen from './screens/forgot-password/forgot-password'
+import LoginScreen from './screens/login/login'
+import LoginVerifyScreen from './screens/login-verify/login-verify'
+import SignupScreen from './screens/sign-up/sign-up'
 import {Header} from 'components'
 
 export default function UnauthenticatedApp() {

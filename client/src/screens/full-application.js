@@ -423,7 +423,6 @@ function DocumentUploads({
     case '401k_trust':
     case 'IRA_trust':
       selectedTypes = [
-        'adoption_agreement',
         'trust_agreement',
         'lease_agreement',
         'purchase_contract',

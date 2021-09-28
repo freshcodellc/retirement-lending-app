@@ -433,6 +433,9 @@ const disclosureFields = [
   {
     type: 'p',
     text: 'If you answered no to both questions 2 and 3, do not proceed as we cannot provide financing to non-resident aliens.',
+    styles: {
+      color: 'rgb(225, 64, 56)',
+    },
   },
   {
     type: 'radio',
@@ -481,10 +484,28 @@ const disclosureFields = [
       "If you answered 'YES' to any of questions 3 - 7, please provide a detailed explanation for each question you answered 'YES' to:",
   },
   {
+    type: 'radio',
+    name: 'agrees_in_borrowers_name',
+    label:
+      '8. You understand and agree that you will be taking ownership of the property in the name of the borrower (e.g. your IRA/401k, etc...)',
+    options: [],
+  },
+  {
     type: 'text',
     name: 'appraisal_initials',
-    label:
-      'We may order an appraisal to determine the property’s value and charge you for the appraisal. We will promptly give you a copy of the appraisal, even if your loan does not close. Please initial here to agree to these terms',
+    label: (
+      <>
+        <div>
+          Note: We may order an appraisal to determine the property’s value and
+          charge you for the appraisal. We will promptly give you a copy of the
+          appraisal, even if your loan does not close.
+        </div>
+        <div>
+          <br />
+          Please initial here to agree to these terms
+        </div>
+      </>
+    ),
     placeholder: 'Your initals here',
     maxLength: 3,
   },

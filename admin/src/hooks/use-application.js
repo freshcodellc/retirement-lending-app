@@ -376,10 +376,6 @@ function termSheetSignCertifyFields(app) {
       value: empty()(app.entity_name),
     },
     {
-      label: 'Legal name and title of authorized signer',
-      value: empty()(app.signature_title),
-    },
-    {
       label: 'Signature of authorized signer',
       value: empty()(app.term_sheet_signature),
     },

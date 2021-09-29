@@ -314,7 +314,7 @@ const step2Fields = [
   {
     type: 'disclaimer',
     name: 'requested_loan_amount_disclaimer',
-    text: '*The maximum loan to value will be restricted to 65% of the lesser of the purchase price or appraised value.',
+    text: '*The maximum loan to value will be restricted to 75% of the lesser of the purchase price or appraised value.',
   },
   {
     type: 'currency',

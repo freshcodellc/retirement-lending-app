@@ -349,7 +349,7 @@ const propertyFields = [
     type: 'currency',
     label: 'Requested loan amount*',
     name: 'requested_loan_amount',
-    helperText: '(note: max loan amount is 65% of purchase price)',
+    helperText: '(note: max loan amount is 75% of purchase price)',
   },
   {
     type: 'currency',

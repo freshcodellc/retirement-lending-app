@@ -29,8 +29,6 @@ function DashboardScreen() {
 
   if (!isFetched || isNull(user)) return null
 
-  console.log(data)
-
   return (
     <Layout>
       <h1>Welcome, {get(user, 'profile.first_name', 'Valued Customer')}</h1>

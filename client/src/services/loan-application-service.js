@@ -22,8 +22,14 @@ async function update({data, uuid}) {
   })
 }
 
+async function deleteDoc(uuid) {
+  return apiSecureClient(`loan-application-documents/${uuid}`, {
+    method: 'DELETE'
+  })
+}
+
 async function constants() {
   return apiSecureClient('loan-applications/constants')
 }
 
-export {create, get, list, update, constants}
+export {create, deleteDoc, get, list, update, constants}

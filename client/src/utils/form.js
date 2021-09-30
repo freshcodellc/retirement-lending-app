@@ -46,6 +46,8 @@ function setApplicationDefaultValues(app) {
           value = new Date()
         } else if (cur.name === 'signature_title') {
           value = `${app.first_name} ${app.last_name}, ${setTitle(app.entity_type)}`
+        } else if (cur.name === 'signature_entity_name') {
+          value = app.entity_name
         }
       }
       acc[key] = value

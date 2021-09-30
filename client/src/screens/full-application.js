@@ -480,6 +480,8 @@ function DocumentUploads({
             name={dc.name}
             key={dc.s3_key}
             blob={dc.presigned_url}
+            uuid={dc.uuid}
+            appUuid={uuid}
           />
         ))}
       <FileUploader multiple type={d.name} appUuid={uuid} canCancel={false} />

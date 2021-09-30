@@ -7,6 +7,7 @@ import {getDroppedOrSelectedFiles} from 'html5-file-selector'
 import {getToken} from 'services/auth-service'
 import {apiBaseUrl} from 'utils/api-client'
 import {queryClient} from 'context/index'
+import {deleteDoc} from '../services/loan-application-service'
 
 const cleanFileName = fileName => {
   const fileNameParts = fileName.split('.')
@@ -100,7 +101,9 @@ const Layout = ({
 const UploadPreview = ({meta, fileWithMeta}) => {
   const {name, status} = meta
   const isDone = status === 'done'
-  return <FilePreview name={name} isDone={isDone} />
+  return (
+    <FilePreview name={name} isDone={isDone} />
+  )
 }
 
 function Input({accept, onFiles, files, multiple = true, getFilesFromEvent}) {
@@ -144,7 +147,7 @@ function Input({accept, onFiles, files, multiple = true, getFilesFromEvent}) {
   )
 }
 
-function FilePreview({isDone, blob, name}) {
+function FilePreview({isDone, blob, name, uuid, appUuid}) {
   const uploadStatus = isDone ? null : <Spinner />
 
   const downloadFile = () => {
@@ -161,12 +164,30 @@ function FilePreview({isDone, blob, name}) {
         alignItems: 'center',
         position: 'relative',
         marginBottom: '2rem',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
       }}
     >
       <TextLink onClick={downloadFile} disabled={!isDone}>
         {name}
       </TextLink>
+      {isDone && (
+        <button
+          type="button"
+          onClick={async () => {
+            await deleteDoc(uuid)
+            await queryClient.fetchQuery(['loan-application', appUuid])
+          }}
+          css={{
+            cursor: 'pointer',
+            border: 'none',
+            backgroundColor: 'transparent',
+            fontSize: '32px',
+            '&:hover': {color: 'var(--primary)'},
+          }}
+        >
+          &times;
+        </button>
+      )}
       <div css={{position: 'absolute', right: 0}}>{uploadStatus}</div>
     </div>
   )

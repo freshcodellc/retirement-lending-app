@@ -4,6 +4,9 @@ export const apiBaseUrl = process.env.REACT_APP_API_BASE_URL
 
 async function request(endpoint, config) {
   const response = await window.fetch(`${apiBaseUrl}/${endpoint}`, config)
+  if (response.status === 204) {
+    return JSON.stringify({})
+  }
   const result = await response.json()
   if (response.ok) {
     return result

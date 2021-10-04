@@ -107,7 +107,7 @@ function TermsSheetScreen() {
         <div>
           <h3>Repayment Terms:</h3>
           <p>
-            Monthly payments of principal and interest based on a 25 year
+            Monthly payments of principal and interest based on a 30 year
             amortization. Payments will be re-amortized at each rate change.
             Property taxes and Property Insurance costs will also be escrowed
             each month.
@@ -115,7 +115,7 @@ function TermsSheetScreen() {
         </div>
         <div>
           <h3>Maturity:</h3>
-          <p>25 years from closing</p>
+          <p>30 years from closing</p>
         </div>
         <div>
           <h3>Collateral:</h3>

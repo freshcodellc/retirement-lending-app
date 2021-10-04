@@ -28,12 +28,14 @@ function LoginForm({onSubmit}) {
   })
 
   useEffect(() => {
-    if (error?.error === 'Unauthorized') {
-      notifyError(
-        'Whoops! The email or password is incorrect. Please try again.',
-      )
-    } else {
-      notifyError('An unhandled error occurred. Please try again.')
+    if (error) {
+      if (error.error === 'Unauthorized') {
+        notifyError(
+          'Whoops! The email or password is incorrect. Please try again.',
+        )
+      } else {
+        notifyError('An unhandled error occurred. Please try again.')
+      }
     }
   }, [error])
 

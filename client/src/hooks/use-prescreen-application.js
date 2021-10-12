@@ -314,7 +314,7 @@ const step2Fields = [
   {
     type: 'disclaimer',
     name: 'requested_loan_amount_disclaimer',
-    text: '*The maximum loan to value will be restricted to 75% of the lesser of the purchase price or appraised value.',
+    text: '*The maximum loan to value will be restricted to 70% of the lesser of the purchase price or appraised value.',
   },
   {
     type: 'currency',
@@ -392,7 +392,9 @@ const step3Fields = [
 const step3Resolver = yupResolver(
   yup.object().shape({
     number_rental_properties: yup.number().required('Required'),
-    estimated_net_worth_bracket: yup.mixed().notOneOf(['empty', null, undefined], 'Required'),
+    estimated_net_worth_bracket: yup
+      .mixed()
+      .notOneOf(['empty', null, undefined], 'Required'),
     referrer: yup.mixed().notRequired(),
   }),
 )

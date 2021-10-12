@@ -421,6 +421,13 @@ function DocumentUploads({
       ]
       break
     case '401k_trust':
+      selectedTypes = [
+        'adoption_agreement',
+        'trust_agreement',
+        'lease_agreement',
+        'purchase_contract',
+      ]
+      break
     case 'IRA_trust':
       selectedTypes = [
         'trust_agreement',

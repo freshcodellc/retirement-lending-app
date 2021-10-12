@@ -537,7 +537,6 @@ const signatureFields = [
     name: 'signature_title',
     label: 'Legal name and title of authorized signer',
     placeholder: 'Legal name and title',
-    disabled: true,
   },
   {
     type: 'text',

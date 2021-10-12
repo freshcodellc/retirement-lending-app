@@ -298,11 +298,11 @@ function custodianFields(app) {
     },
     {
       label: 'Is the IRA account a Roth or Traditional?',
-      value: empty()(app?.custodian?.name?.account_type),
+      value: empty()(app?.custodian?.account_type),
     },
     {
       label: 'What is the IRA account number?',
-      value: empty()(app?.custodian?.name?.account_number),
+      value: empty()(app?.custodian?.account_number),
     },
   ]
 }

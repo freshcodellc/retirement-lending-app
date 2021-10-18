@@ -138,7 +138,8 @@ export function ActionsPanel({activeTab, application}) {
   const handleSaveActionsPanel = handleSubmit(({status, admin, ...rates}) => {
     mutate({
       ...rates,
-      estimated_appraisal_cost: rates.estimated_appraisal_cost * 100,
+      estimated_appraisal_cost:
+        parseFloat(rates.estimated_appraisal_cost) * 100,
       status,
       assigned_admin_user_uuid: admin,
       uuid: application.uuid,

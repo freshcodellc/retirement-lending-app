@@ -7,6 +7,8 @@
     "@emotion/styled": "^11.3.0",
     "@hookform/error-message": "^2.0.0",
     "@hookform/resolvers": "^2.6.0",
+    "@sentry/react": "^6.13.3",
+    "@sentry/tracing": "^6.13.3",
     "@solera/ui": "1.0.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

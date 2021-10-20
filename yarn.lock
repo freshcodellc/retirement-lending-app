@@ -1852,6 +1852,81 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@sentry/browser@6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-6.13.3.tgz#d4511791b1e484ad48785eba3bce291fdf115c1e"
+  integrity sha512-jwlpsk2/u1cofvfYsjmqcnx50JJtf/T6HTgdW+ih8+rqWC5ABEZf4IiB/H+KAyjJ3wVzCOugMq5irL83XDCfqQ==
+  dependencies:
+    "@sentry/core" "6.13.3"
+    "@sentry/types" "6.13.3"
+    "@sentry/utils" "6.13.3"
+    tslib "^1.9.3"
+
+"@sentry/core@6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-6.13.3.tgz#5cbbb995128e793ebebcbf1d3b7514e0e5e8b221"
+  integrity sha512-obm3SjgCk8A7nB37b2AU1eq1q7gMoJRrGMv9VRIyfcG0Wlz/5lJ9O3ohUk+YZaaVfZMxXn6hFtsBiOWmlv7IIA==
+  dependencies:
+    "@sentry/hub" "6.13.3"
+    "@sentry/minimal" "6.13.3"
+    "@sentry/types" "6.13.3"
+    "@sentry/utils" "6.13.3"
+    tslib "^1.9.3"
+
+"@sentry/hub@6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.13.3.tgz#cc09623a69b5343315fdb61c7fdd0be74b72299f"
+  integrity sha512-eYppBVqvhs5cvm33snW2sxfcw6G20/74RbBn+E4WDo15hozis89kU7ZCJDOPkXuag3v1h9igns/kM6PNBb41dw==
+  dependencies:
+    "@sentry/types" "6.13.3"
+    "@sentry/utils" "6.13.3"
+    tslib "^1.9.3"
+
+"@sentry/minimal@6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.13.3.tgz#a675a79bcc830142e4f95e6198a2efde2cd3901e"
+  integrity sha512-63MlYYRni3fs5Bh8XBAfVZ+ctDdWg0fapSTP1ydIC37fKvbE+5zhyUqwrEKBIiclEApg1VKX7bkKxVdu/vsFdw==
+  dependencies:
+    "@sentry/hub" "6.13.3"
+    "@sentry/types" "6.13.3"
+    tslib "^1.9.3"
+
+"@sentry/react@^6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-6.13.3.tgz#f9607e0a60d52efd0baa96a14e694b6059f9379a"
+  integrity sha512-fdfmD9XNpGDwdkeLyd+iq+kqtNeghpH3wiez2rD81ZBvrn70uKaO2/yYDE71AXC6fUOwQuJmdfAuqBcNJkYIEw==
+  dependencies:
+    "@sentry/browser" "6.13.3"
+    "@sentry/minimal" "6.13.3"
+    "@sentry/types" "6.13.3"
+    "@sentry/utils" "6.13.3"
+    hoist-non-react-statics "^3.3.2"
+    tslib "^1.9.3"
+
+"@sentry/tracing@^6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-6.13.3.tgz#ca657d4afa99c50f15e638fe38405bac33e780ee"
+  integrity sha512-yyOFIhqlprPM0g4f35Icear3eZk2mwyYcGEzljJfY2iU6pJwj1lzia5PfSwiCW7jFGMmlBJNhOAIpfhlliZi8Q==
+  dependencies:
+    "@sentry/hub" "6.13.3"
+    "@sentry/minimal" "6.13.3"
+    "@sentry/types" "6.13.3"
+    "@sentry/utils" "6.13.3"
+    tslib "^1.9.3"
+
+"@sentry/types@6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.13.3.tgz#63ad5b6735b0dfd90b3a256a9f8e77b93f0f66b2"
+  integrity sha512-Vrz5CdhaTRSvCQjSyIFIaV9PodjAVFkzJkTRxyY7P77RcegMsRSsG1yzlvCtA99zG9+e6MfoJOgbOCwuZids5A==
+
+"@sentry/utils@6.13.3":
+  version "6.13.3"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.13.3.tgz#188754d40afe693c3fcae410f9322531588a9926"
+  integrity sha512-zYFuFH3MaYtBZTeJ4Yajg7pDf0pM3MWs3+9k5my9Fd+eqNcl7dYQYJbT9gyC0HXK1QI4CAMNNlHNl4YXhF91ag==
+  dependencies:
+    "@sentry/types" "6.13.3"
+    tslib "^1.9.3"
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
@@ -4336,13 +4411,6 @@ currency.js@^2.0.4:
   resolved "https://registry.yarnpkg.com/currency.js/-/currency.js-2.0.4.tgz#a8a4d69be3b2e509bf67a560c78220bc04809cf1"
   integrity sha512-6/OplJYgJ0RUlli74d93HJ/OsKVBi8lB1+Z6eJYS1YZzBuIp4qKKHpJ7ad+GvTlWmLR/hLJOWTykN5Nm8NJ7+w==
 
-customize-cra@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/customize-cra/-/customize-cra-1.0.0.tgz#73286563631aa08127ad4d30a2e3c89cf4e93c8d"
-  integrity sha512-DbtaLuy59224U+xCiukkxSq8clq++MOtJ1Et7LED1fLszWe88EoblEYFBJ895sB1mC6B4uu3xPT/IjClELhMbA==
-  dependencies:
-    lodash.flow "^3.5.0"
-
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
@@ -6097,7 +6165,7 @@ hmac-drbg@^1.0.1:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.1:
+hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
@@ -7649,11 +7717,6 @@ lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
-
-lodash.flow@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.flow/-/lodash.flow-3.5.0.tgz#87bf40292b8cf83e4e8ce1a3ae4209e20071675a"
-  integrity sha1-h79AKSuM+D5OjOGjrkIJ4gBxZ1o=
 
 lodash.memoize@^4.1.2:
   version "4.1.2"
@@ -9955,13 +10018,6 @@ react-app-polyfill@^2.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
-
-react-app-rewired@^2.1.8:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/react-app-rewired/-/react-app-rewired-2.1.8.tgz#e192f93b98daf96889418d33d3e86cf863812b56"
-  integrity sha512-wjXPdKPLscA7mn0I1de1NHrbfWdXz4S1ladaGgHVKdn1hTgKK5N6EdGIJM0KrS6bKnJBj7WuqJroDTsPKKr66Q==
-  dependencies:
-    semver "^5.6.0"
 
 react-clientside-effect@^1.2.2:
   version "1.2.5"

@@ -21,7 +21,7 @@ function useUpdateApplication({onSuccess = () => {}} = {onSuccess: () => {}}) {
             ...(cached.custodian || {}),
             ...(updated.custodian || {}),
           }
-        : null
+        : cached.custodian
 
       return loanApplicationService.update({
         uuid,
